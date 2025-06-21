@@ -12,8 +12,8 @@
   "type": "module",
   "main": "server.mjs",
   "scripts": {
-    "start": "node server/server.mjs",
-    "init-db": "node server/init-db/init.js",
+    "start": "node server.mjs",
+    "init-db": "node init-db/init.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
