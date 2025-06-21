@@ -1,7 +1,7 @@
 import { createServer } from "node:http";
 import { aboutRoute } from "./routes/about.route.js";
 
-const host = "127.0.0.1";
+const host = "0.0.0.0";
 const port = 8080;
 
 const routes = {

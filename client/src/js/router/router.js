@@ -1,10 +1,8 @@
-import buildPage from '../pages/about/build-page.js';
-
 export function setupRouting() {
     const routes = {
-        '/': 'components/home.html',
-        '/about': 'components/about.html',
-    }
+        '/': '/components/home.html',
+        '/about': '/components/about.html',
+    };
 
     const container = document.getElementById('view-container');
 
@@ -14,7 +12,8 @@ export function setupRouting() {
         const html = await res.text();
         container.innerHTML = html;
 
-        if (path === "/about") {
+        if (path === '/about') {
+            const { default: buildPage } = await import('../pages/about/build-page.js');
             buildPage();
         }
     }

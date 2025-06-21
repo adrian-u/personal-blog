@@ -1,6 +1,6 @@
 export default async function loadAboutData() {
 
-	const res = await fetch('http://127.0.0.1:8080/api/v1/about');
+	const res = await fetch(`${import.meta.env.VITE_API_URL}/about`);
 	return await res.json();
 
 }
