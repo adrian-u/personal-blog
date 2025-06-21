@@ -1,0 +1,60 @@
+.header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background: var(--color-footer-nav-bg);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+    z-index: 1000;
+    transition: all 0.3s ease;
+}
+
+.footer {
+    background: var(--color-footer-nav-bg);
+    border-top: 1px solid var(--color-footer-border);
+    padding: 3rem 0 2 rem;
+    margin-top: 4rem;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in {
+    animation: fadeInUp 1s ease forwards;
+}
+
+.section {
+    padding: 3rem 0;
+    margin-bottom: 2rem;
+}
+
+.section-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.section-title {
+    font-size: 2.5rem;
+    font-weight: var(--text-font-weight-700)    ;
+    margin-bottom: 1rem;
+    background: linear-gradient(135deg, var(--color-text), var(--color-muted));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.section-subtitle {
+    color: var(--color-muted);
+    font-size: 1.1rem;
+    max-width: 600px;
+    margin: 0 auto;
+}

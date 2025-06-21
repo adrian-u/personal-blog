@@ -1,0 +1,21 @@
+:root {
+    --max-width-container: 1200px;
+    --space-sm: 1rem;
+    --space-md: 2rem;
+    --color-text: #e2e8f0;
+    --color-muted: #94a3b8;
+    --color-accent: #3b82f6;
+    --color-accent-alt: #8b5cf6;
+    --color-bg: #0f172a;
+    --color-bg-alt: #1e293b;
+    --text-font-weight-400: 400;
+    --text-font-weight-500: 500;
+    --text-font-weight-600: 600;
+    --text-font-weight-700: 700;
+    --text-font-size-lg: 1.5rem;
+    --color-footer-border: rgba(255, 255, 255, 0.1);
+    --color-footer-nav-bg: rgba(15, 23, 42, 0.9);
+    --color-btn-primary-shadow: rgba(59, 130, 246, 0.4);
+    --color-btn-secondary-bg: rgba(255, 255, 255, 0.1);
+    --color-btn-secondary-hover: rgba(255, 255, 255, 0.2);
+  }

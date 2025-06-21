@@ -1,0 +1,39 @@
+.cta-buttons {
+    display: flex;
+    gap: var(--space-sm);
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.btn {
+    padding: 0.75rem var(--space-md);
+    border: none;
+    border-radius: 50px;
+    font-weight: var(--text-font-weight-600);
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--color-accent), var(--color-accent-alt));
+    color: var(--color-text);
+    box-shadow: 0 4px 15px var(--color-btn-primary-shadow);
+}
+
+.btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px var(--color-btn-primary-shadow);
+}
+
+.btn-secondary {
+    background: var(--color-btn-secondary-bg);
+    color: var(--color-text);
+    border: 1px solid var(--color-btn-secondary-hover);
+}
+
+.btn-secondary:hover {
+    background: var(--color-btn-secondary-hover);
+    transform: translateY(-3px);
+}
