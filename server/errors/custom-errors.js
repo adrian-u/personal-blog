@@ -1,0 +1,23 @@
+export class NotFoundError extends Error {
+    constructor(message) {
+        super(message);
+        this.name = "Not found error";
+        this.statusCode = 404;
+    }
+}
+
+export class ValidationError extends Error {
+    constructor(message) {
+        super(message);
+        this.name = "Validation error";
+        this.statusCode = 400;
+    }
+}
+
+export class DbError extends Error {
+    constructor(message) {
+        super(message);
+        this.name = "Database error";
+        this.statusCode = 500;
+    }
+}

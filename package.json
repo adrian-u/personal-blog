@@ -1,0 +1,23 @@
+{
+  "name": "personal-blog-server",
+  "version": "1.0.0",
+  "description": "The node server for my personal blog",
+  "license": "ISC",
+  "author": "Ungureanu Adrian Bogdan",
+  "keywords": [
+    "nodejs",
+    "blog",
+    "backend"
+  ],
+  "type": "module",
+  "main": "server.mjs",
+  "scripts": {
+    "start": "node server/server.mjs",
+    "init-db": "node server/init-db/init.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "dotenv": "^16.5.0",
+    "pg": "^8.16.2"
+  }
+}
