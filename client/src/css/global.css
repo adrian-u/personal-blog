@@ -1,8 +1,8 @@
 /* Base */
+@import url('./base/global-media.css');
 @import url('./base/variables.css');
 @import url('./base/reset.css');
 @import url('./base/typography.css');
-@import url('./base/media.css');
 
 /* Layout */
 @import url('./layout/container.css');

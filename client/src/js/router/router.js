@@ -1,7 +1,7 @@
 export function setupRouting() {
     const routes = {
-        '/': '/components/home.html',
-        '/about': '/components/about.html',
+        '/': './src/views/home.html',
+        '/about': './src/views/about.html',
     };
 
     const container = document.getElementById('view-container');

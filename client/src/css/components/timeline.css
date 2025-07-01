@@ -1,12 +1,9 @@
 .timeline {
     display: flex;
-    overflow-x: auto;
     gap: 2rem;
     padding: 2rem 1rem;
     position: relative;
     scroll-snap-type: x mandatory;
-    width: 100%;
-    max-width: 100%;
     overflow-y: hidden;
     scrollbar-width: none;
     scroll-behavior: smooth;
@@ -150,4 +147,14 @@
 
 .timeline::-webkit-scrollbar {
     display: none;
+}
+
+@media (max-width: 768px) {
+    .section-title {
+        display: none;
+    }
+
+    .timeline {
+        display: none;
+    }
 }

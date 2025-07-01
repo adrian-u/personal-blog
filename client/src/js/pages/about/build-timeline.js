@@ -18,6 +18,6 @@ export default function buildTimeline(data) {
 			  </div>
 			`
             }).join('')}
-		</div>
+		</div> 
 	`;
 }
