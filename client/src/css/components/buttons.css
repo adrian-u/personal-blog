@@ -37,3 +37,24 @@
     background: var(--color-btn-secondary-hover);
     transform: translateY(-3px);
 }
+
+.btn-login {
+    font-weight: var(--text-font-weight-400);
+    background: linear-gradient(135deg, var(--color-accent), var(--color-accent-alt));
+    color: var(--color-text);
+    box-shadow: 0 4px 15px var(--color-btn-primary-shadow);
+}
+
+.btn-login:hover {
+    box-shadow: 0 8px 25px var(--color-btn-primary-shadow);
+}
+
+.btn-logout {
+    background: var(--color-btn-secondary-bg);
+    color: var(--color-text);
+    border: 1px solid var(--color-btn-secondary-hover);
+}
+
+.btn-logout:hover {
+    background: var(--color-btn-secondary-hover);
+}

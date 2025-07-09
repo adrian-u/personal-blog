@@ -17,6 +17,18 @@ const createAboutTable = `
     );
 `;
 
+const createUserTable = `
+    CREATE TABLE IF NOT EXISTS users (
+        id SERIAL PRIMARY KEY,
+        email TEXT UNIQUE NOT NULL,
+        name  TEXT NOT NULL,
+        avatarUrl TEXT,
+        role TEXT NOT NULL CHECK (role in ('creator', 'user')),
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+`;
+
 const insertDefaultAbout = `
     INSERT INTO about (title, location, developer, investor, timeline, skills, investments, interests)
     VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
@@ -27,6 +39,7 @@ async function init() {
     try {
         console.log("Creating tables")
         await db.query(createAboutTable);
+        await db.query(createUserTable);
         console.log("Tables created successfully");
 
         console.log("Inserting default about data");

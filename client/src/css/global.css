@@ -12,6 +12,7 @@
 /* Pages */
 @import url('./pages/home.css');
 @import url('./pages/about.css');
+@import url('./pages/loading-spinner.css');
 
 /* Components */
 @import url('./components/hero.css');
@@ -19,3 +20,5 @@
 @import url('./components/cards.css');
 @import url('./components/timeline.css');
 @import url('./components/skills-grid.css');
+@import url('./components/toast.css');
+@import url('./components/modal.css');

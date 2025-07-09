@@ -1,5 +1,7 @@
 import { createServer } from "node:http";
 import { aboutRoute } from "./routes/about.route.js";
+import { oauthRoute } from './routes/oauth.route.js';
+import { handleCors } from './middlewares/cors.js';
 
 const host = "0.0.0.0";
 const port = 8080;
@@ -12,6 +14,10 @@ const routes = {
 
 const server = createServer((req, res) => {
     
+    if(handleCors(req, res)) return;
+
+    if (req.url.startsWith('/api/v1/oauth/google/token')) return oauthRoute(req, res);
+
     const handler = routes[req.method]?.[req.url];
 
     if(handler) {

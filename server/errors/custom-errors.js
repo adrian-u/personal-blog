@@ -21,3 +21,11 @@ export class DbError extends Error {
         this.statusCode = 500;
     }
 }
+
+export class SavingError extends Error {
+    constructor(message) {
+        super(message);
+        this.name = "Saving error";
+        this.statusCode = 500;
+    }
+}
