@@ -49,18 +49,26 @@ async function init() {
         await db.query(createUserIndex);
         console.log("Tables created successfully");
 
-        console.log("Inserting default about data");
-        await db.query(insertDefaultAbout, [
-            aboutData.title,
-            aboutData.location,
-            aboutData.developer,
-            aboutData.investor,
-            JSON.stringify(aboutData.timeline),
-            JSON.stringify(aboutData.skills),
-            aboutData.investments,
-            aboutData.interests
-        ]);
-        console.log("Default about data inserted successfully");
+        console.log("Checking if about data already exists...");
+        const result = await db.query(`SELECT COUNT(*) FROM about`);
+        const count = parseInt(result.rows[0].count);
+
+        if (count === 0) {
+            console.log("Inserting default about data");
+            await db.query(insertDefaultAbout, [
+                aboutData.title,
+                aboutData.location,
+                aboutData.developer,
+                aboutData.investor,
+                JSON.stringify(aboutData.timeline),
+                JSON.stringify(aboutData.skills),
+                aboutData.investments,
+                aboutData.interests
+            ]);
+            console.log("Default about data inserted successfully");
+        } else {
+            console.log("Default about data already present, skipping insert.");
+        }
     } catch (error) {
         console.error("Error initializing database:", error);
     } finally {
