@@ -1,25 +1,34 @@
 import htmlImporter from '../utils/html-importer.js';
 import { openLoginModal } from '../utils/login-modal.js';
-import { getUserFromJWT, logout, authGoogle } from '../auth/auth.js';
+import { authGoogle } from '../auth/auth.js';
+import { getUserData } from '../apis/user.js';
+import { userAvatar } from '../utils/user-details.js';
 
 export async function initNavbar() {
-  await htmlImporter('navbar-container', './src/components/navbar.html', () => {
+  await htmlImporter('navbar-container', './src/components/navbar.html', async () => {
     const loginBtn = document.getElementById('login-btn');
-    const logoutBtn = document.getElementById('logout-btn');
-    const user = getUserFromJWT();
+    const loggedUser = document.getElementById('logged-user');
+    const user = await getUserData();
 
-    if (!loginBtn || !logoutBtn) return;
+    const toggle = document.getElementById('menu-toggle');
+    const menu = document.getElementById('nav-menu');
+
+    toggle.addEventListener('click', () => {
+      menu.classList.toggle('show');
+    });
+
+    if (!loginBtn || !loggedUser) return;
 
     if (user) {
       loginBtn.style.display = 'none';
-      logoutBtn.style.display = 'inline-block';
+      loggedUser.style.display = 'inline-block';
+      userAvatar(user);
     } else {
       loginBtn.style.display = 'inline-block';
-      logoutBtn.style.display = 'none';
+      loggedUser.style.display = 'none';
     }
 
     loginBtn.addEventListener('click', openLoginModal);
-    logoutBtn.addEventListener('click', logout);
   });
 }
 

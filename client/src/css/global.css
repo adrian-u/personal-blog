@@ -1,5 +1,4 @@
 /* Base */
-@import url('./base/global-media.css');
 @import url('./base/variables.css');
 @import url('./base/reset.css');
 @import url('./base/typography.css');
@@ -22,3 +21,4 @@
 @import url('./components/skills-grid.css');
 @import url('./components/toast.css');
 @import url('./components/modal.css');
+@import url('./components/user-info.css');

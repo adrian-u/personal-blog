@@ -38,7 +38,7 @@ export async function handleGoogleCallback() {
     const { token } = await response.json();
     localStorage.setItem('jwt', token);
 
-    await _initOnRedirects('Login successful!');
+    await _initOnRedirects();
 
   } catch (err) {
     console.error('OAuth callback failed:', err);
@@ -73,11 +73,6 @@ async function _handleLoginError() {
   await _initOnRedirects();
 }
 
-async function _initOnRedirects(successMessage = null) {
-  if (successMessage) {
-    sessionStorage.setItem('toastMessage', successMessage);
-  }
-
+async function _initOnRedirects() {
   navigateTo('/');
-
 }

@@ -1,7 +1,6 @@
 import { getAbout } from "../controllers/about.controller.js";
+import { registerRoute } from './router.manager.js';
 
-export async function aboutRoute(req, res) {
-    if (req.method === 'GET' && req.url === '/api/v1/about') {
-        return await getAbout(res);
-    }
-}
+registerRoute('GET', '/api/v1/about', async (req, res) => {
+    await getAbout(res);
+});

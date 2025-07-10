@@ -1,32 +1,27 @@
 import { createServer } from "node:http";
-import { aboutRoute } from "./routes/about.route.js";
-import { oauthRoute } from './routes/oauth.route.js';
 import { handleCors } from './middlewares/cors.js';
+import { findRoute } from "./routes/router.manager.js";
+
+// Importing routes to enable registration through the router.manager
+import './routes/about.route.js';
+import './routes/user.route.js';
+import './routes/oauth.route.js';
 
 const host = "0.0.0.0";
 const port = 8080;
 
-const routes = {
-    "GET": {
-        "/api/v1/about": aboutRoute
-    }
-}
+const server = createServer(async (req, res) => {
 
-const server = createServer((req, res) => {
-    
-    if(handleCors(req, res)) return;
+    if (handleCors(req, res)) return;
 
-    if (req.url.startsWith('/api/v1/oauth/google/token')) return oauthRoute(req, res);
+    const match = findRoute(req);
 
-    const handler = routes[req.method]?.[req.url];
-
-    if(handler) {
-        return handler(req, res);
+    if (match) {
+        return await match.handler(req, res, match.params);
     }
 
-    res.writeHead(404, {
-        'Content-Type': 'application/json'});
-    res.end(JSON.stringify({ error: "Not found" }));
+    res.writeHead(404, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ error: 'Not found' }));
 });
 
 server.listen(port, host, () => {

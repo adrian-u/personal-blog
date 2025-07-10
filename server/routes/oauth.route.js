@@ -1,7 +1,4 @@
 import { handleGoogleToken } from '../controllers/oauth.controller.js';
+import { registerRoute } from './router.manager.js';
 
-export async function oauthRoute(req, res) {
-    if (req.method === 'POST' && req.url === '/api/v1/oauth/google/token') {
-      return await handleGoogleToken(req, res);
-    }
-  }
+registerRoute('POST', '/api/v1/oauth/google/token', handleGoogleToken)

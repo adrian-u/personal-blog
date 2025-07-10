@@ -1,14 +1,17 @@
-<nav class="container">
-    <div class="logo">Ungureanu Adrian Bogdan</div>
-    <ul class="nav-links">
-        <li><a href="/">Home</a></li>
-        <li><a href="/about" data-nav="spa">About</a></li>
-        <li><a href="/projects">Projects</a></li>
-        <li><a href="/finance">Finance</a></li>
-        <li><a href="/contact">Contact</a></li>
+<nav class="navbar container">
+    <div class="navbar-left">
+      <div class="logo">Ungureanu Adrian Bogdan</div>
+    </div>
+    <div class="navbar-toggle" id="menu-toggle">☰</div>
+    <ul class="nav-links" id="nav-menu">
+      <li><a href="/">Home</a></li>
+      <li><a href="/about" data-nav="spa">About</a></li>
+      <li><a href="/projects">Projects</a></li>
+      <li><a href="/finance">Finance</a></li>
+      <li><a href="/contact">Contact</a></li>
     </ul>
     <span id="auth-buttons">
-        <button id="login-btn" class="btn btn-login">Login</button>
-        <button id="logout-btn" class="btn btn-logout" style="display: none;">Logout</button>
-      </span>
-</nav>
+      <button id="login-btn" class="btn btn-login">Login</button>
+      <div id="logged-user" class="logged-user" style="display: none;"></div>
+    </span>
+  </nav>

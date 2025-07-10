@@ -1,24 +1,41 @@
 <div id="login-modal" class="modal-container hidden">
     <div class="modal">
         <div class="modal-header">
-            <h2>Sign in with</h2>
+            <h2 id="modal-title">Welcome back</h2>
+            <p>Choose your preferred sign-in method</p>
         </div>
         <div class="modal-content">
-            <button id="btn-google" class="btn-oauth btn-google">
-                <img src="/assets/images/google-logo.png" alt="Google logo" />
-                Sign in with Google
-            </button>
-            <button id="btn-apple" class="btn-oauth btn-apple">
-                <img src="/assets/images/apple-logo.png" alt="Apple logo" />
-                Sign in with Apple
-            </button>
-            <button id="btn-github" class=" btn-oauth btn-github">
-                <img src="/assets/images/github-logo.png" alt="GitHub logo" />
-                Sign in with GitHub
-            </button>
+            <div class="oauth-buttons">
+                <button id="btn-google" class="btn-oauth btn-google" type="button">
+                    <div class="icon">
+                         <img src="/assets/images/google-logo.png" alt="Google" width="20" height="20" />
+                    </div>
+                    Continue with Google
+                </button>
+                <button id="btn-apple" class="btn-oauth btn-apple" type="button">
+                    <div class="icon">
+                        <div class="icon">
+                            <img src="/assets/images/apple-logo.png" alt="Google" width="20" height="20" />
+                       </div>
+                    </div>
+                    Continue with Apple
+                </button>
+                <button id="btn-github" class="btn-oauth btn-github" type="button">
+                    <div class="icon">
+                        <div class="icon">
+                            <img src="/assets/images/github-logo.png" alt="Google" width="20" height="20" />
+                       </div>
+                    </div>
+                    Continue with GitHub
+                </button>
+            </div>
         </div>
         <div class="modal-footer">
-            <button id="btn-close-modal" class="btn-close-modal">Cancel</button>
+            <div class="footer-actions">
+                <button id="btn-close-modal" class="btn-close-modal" type="button">
+                    Cancel
+                </button>
+            </div>
         </div>
     </div>
 </div>
