@@ -1,6 +1,6 @@
 import htmlImporter from '../utils/html-importer.js';
 import { openLoginModal } from '../utils/login-modal.js';
-import { authGoogle } from '../auth/auth.js';
+import { authWithProvider } from '../auth/auth.js';
 import { getUserData } from '../apis/user.js';
 import { userAvatar } from '../utils/user-details.js';
 
@@ -40,26 +40,27 @@ export async function initLoginModal() {
   await htmlImporter('body', './src/components/login-modal.html', () => {
     const modal = document.getElementById('login-modal');
 
-    document.getElementById('btn-close-modal')?.addEventListener('click', () => {
+    function closeModal() {
       modal.classList.remove('show');
       setTimeout(() => {
         modal.classList.add('hidden');
       }, 300);
+    }
+
+    document.getElementById('btn-close-modal')?.addEventListener('click', closeModal);
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && !modal.classList.contains('hidden')) {
+        closeModal();
+      }
     });
 
-    document.getElementById('btn-google')?.addEventListener('click', () => {
-      authGoogle();
-      modal.classList.add('hidden');
+    document.querySelectorAll('[data-provider]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const provider = btn.dataset.provider;
+        authWithProvider(provider);
+        closeModal();
+      });
     });
-
-    document.getElementById('btn-apple')?.addEventListener('click', () => {
-      alert("Apple Signup not implemented yet");
-      modal.classList.add('hidden');
-    });
-
-    document.getElementById('btn-github')?.addEventListener('click', () => {
-      alert("GitHub Signup not implemented yet");
-      modal.classList.add('hidden');
-    })
   });
 }

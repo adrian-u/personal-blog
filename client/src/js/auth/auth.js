@@ -1,19 +1,37 @@
 import { navigateTo } from '../router/router.js';
+import { OAUTH_PROVIDERS } from './providers.js';
 
-export function authGoogle() {
-  const scope = "openid profile email";
-  const authUrl = `https://accounts.google.com/o/oauth2/v2/auth` +
+export function authWithProvider(providerKey) {
+  const provider = OAUTH_PROVIDERS[providerKey];
+  if (!provider) throw new Error(`Unknown provider: ${providerKey}`);
+
+  const authUrl = `${provider.authUrl}` +
     `?response_type=code` +
-    `&client_id=${import.meta.env.VITE_GOOGLE_CLIENT_ID}` +
-    `&redirect_uri=${encodeURIComponent(import.meta.env.VITE_GOOGLE_REDIRECT_URI)}` +
-    `&scope=${encodeURIComponent(scope)}`;
+    `&client_id=${provider.clientId}` +
+    `&redirect_uri=${encodeURIComponent(provider.redirectUri)}` +
+    `&scope=${encodeURIComponent(provider.scope)}` +
+    `&state=${providerKey}`;
 
   window.location.href = authUrl;
 }
 
-export async function handleGoogleCallback() {
+export async function handleOAuthCallback() {
   const params = new URLSearchParams(window.location.search);
   const code = params.get('code');
+  const providerKey = params.get('state');
+
+  if (!providerKey) {
+    console.error('No provider state found');
+    await _handleLoginError();
+    return;
+  }
+
+  const provider = OAUTH_PROVIDERS[providerKey];
+  if (!provider) {
+    console.error(`Invalid provider: ${providerKey}`);
+    await _handleLoginError();
+    return;
+  }
 
   if (!code) {
     console.error('No authorization code found');
@@ -22,12 +40,13 @@ export async function handleGoogleCallback() {
   }
 
   try {
-    const response = await fetch(`${import.meta.env.VITE_API_URL}/oauth/google/token`, {
+    const response = await fetch(provider.tokenEndpoint, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
+        provider: providerKey,
         code,
-        redirect_uri: import.meta.env.VITE_GOOGLE_REDIRECT_URI
+        redirect_uri: provider.redirectUri
       })
     });
 
@@ -37,9 +56,7 @@ export async function handleGoogleCallback() {
 
     const { token } = await response.json();
     localStorage.setItem('jwt', token);
-
     await _initOnRedirects();
-
   } catch (err) {
     console.error('OAuth callback failed:', err);
     await _handleLoginError();

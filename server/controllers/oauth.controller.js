@@ -1,28 +1,36 @@
-import User from '../models/user.model.js';
-import { exchangeCodeForToken, decodeJwt, createJWT } from '../services/oauth.service.js';
+import { OAUTH_PROVIDERS } from '../strategies/oauth-strategies.js';
 import { saveUser } from '../services/user.service.js';
+import { createJWT } from '../services/oauth.service.js';
 import { SavingError } from '../errors/custom-errors.js';
 import dotenv from "dotenv";
 
 dotenv.config();
 
-export async function handleGoogleToken(req, res) {
+export async function handleOAuthToken(req, res) {
 
     try {
         let body = '';
         for await (const chunk of req) body += chunk;
-        const { code, redirect_uri } = JSON.parse(body);
+        const { code, redirect_uri, provider } = JSON.parse(body);
 
-        const token = await exchangeCodeForToken(code, redirect_uri);
-        const googlePayload = await decodeJwt(await token.id_token);
+        const strategy = OAUTH_PROVIDERS[provider];
+        if (!strategy) {
+            res.writeHead(400);
+            return res.end(JSON.stringify({ error: 'Unsupported provider' }));
+        }
 
-        const user = new User(googlePayload.email,
-            googlePayload.email === process.env.CREATOR_EMAIL ? 'creator' : 'user',
-            googlePayload.name,
-            googlePayload.picture);
+        const tokens = await strategy.exchangeCodeForToken(code, redirect_uri);
+        const userData = await strategy.getUserInfo(tokens);
+
+        const user = {
+            email: userData.email,
+            role: userData.email === process.env.CREATOR_EMAIL ? 'creator' : 'user',
+            name: userData.name,
+            avatar: userData.picture,
+            provider: provider
+        };
 
         await saveUser(user);
-
         const jwt = await createJWT(user);
 
         res.writeHead(200, { 'Content-Type': 'application/json' });

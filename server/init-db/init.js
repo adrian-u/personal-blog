@@ -24,9 +24,15 @@ const createUserTable = `
         name  TEXT NOT NULL,
         avatarUrl TEXT,
         role TEXT NOT NULL CHECK (role in ('creator', 'user')),
+        provider TEXT NOT NULL CHECK (provider in ('google', 'github', 'apple')),
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
+`;
+
+const createUserIndex = `
+    CREATE UNIQUE INDEX IF NOT EXISTS user_email_provider_idx
+    ON users(email, provider);
 `;
 
 const insertDefaultAbout = `
@@ -40,6 +46,7 @@ async function init() {
         console.log("Creating tables")
         await db.query(createAboutTable);
         await db.query(createUserTable);
+        await db.query(createUserIndex);
         console.log("Tables created successfully");
 
         console.log("Inserting default about data");

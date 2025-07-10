@@ -2,10 +2,10 @@ import { db } from '../config/db.js';
 import { DbError, NotFoundError } from '../errors/custom-errors.js';
 
 export async function saveUser(user) {
-    const { email, role, name, avatar } = user;
+    const { email, role, name, avatar, provider } = user;
     const query = `
-        INSERT INTO users (email, name, avatarUrl, role)
-        VALUES ($1, $2, $3, $4)
+        INSERT INTO users (email, name, avatarUrl, role, provider)
+        VALUES ($1, $2, $3, $4, $5)
         ON CONFLICT (email)
         DO UPDATE SET
             name = EXCLUDED.name,
@@ -13,7 +13,7 @@ export async function saveUser(user) {
             role = EXCLUDED.role,
             updated_at = NOW();`;
     try {
-        await db.query(query, [email, name, avatar, role]);
+        await db.query(query, [email, name, avatar, role, provider]);
     } catch (error) {
         console.error(`DB query failed to save user data: [${error}]`);
         throw new DbError("Failed to save user data to database");
