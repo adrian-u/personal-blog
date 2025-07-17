@@ -13,6 +13,7 @@
 @import url('./pages/about.css');
 @import url('./pages/loading-spinner.css');
 @import url('./pages/projects.css');
+@import url('./pages/create-article.css');
 
 /* Components */
 @import url('./components/hero.css');

@@ -6,6 +6,7 @@ const routes = {
     '/oauth2/auth': null,
     '/about': './src/views/about.html',
     '/projects': './src/views/projects.html',
+    '/create': './src/views/create.html',
 };
 
 export async function setupRouting() {
@@ -62,6 +63,11 @@ export async function renderRoute(path = location.pathname) {
     if (path === '/projects') {
         const { default: buildProjectsPage } = await import('../pages/projects/build-projects-page.js');
         buildProjectsPage();
+    }
+
+    if (path === '/create') {
+        const { default: buildCreatePage } = await import('../pages/create/build-create-page.js');
+        buildCreatePage();
     }
 
     requestAnimationFrame(() => {

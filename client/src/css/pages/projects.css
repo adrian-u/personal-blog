@@ -38,7 +38,7 @@
 }
 
 .project-card:hover {
-    transform: translate(-8px);
+    transform: translate(0, -8px);
     border-color: #3b82f6;
     background: rgba(30, 41, 59, 0.9);
     box-shadow: 0 20px 40px rgba(59, 130, 246, 0.1);
@@ -124,7 +124,7 @@
 
 .project-btn.primary:hover {
     background: #2563eb;
-    transform: translate(-2px);
+    transform: translate(0, -2px);
 }
 
 .project-btn.secondary {
@@ -136,7 +136,7 @@
 .project-btn.secondary:hover {
     color: #3b82f6;
     border-color: #3b82f6;
-    transform: translate(-2px);
+    transform: translate(0, -2px);
 }
 
 .load-more {
@@ -157,7 +157,7 @@
 
 .load-more-btn:hover {
     background: rgba(59, 130, 246, 0.2);
-    transform: translate(-2px);
+    transform: translate(0, -2px);
 }
 
 @media (max-width: 768px) {

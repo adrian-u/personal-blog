@@ -1,0 +1,59 @@
+export default function buildCreateArticleMain() {
+    return `
+        <main class="editor-container">
+            <div class="editor-header">
+                <h1 class="editor-title">Create New Article</h1>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Title</label>
+                        <input type="text" class="form-input" id="articleTitle" placeholder="Enter article title..." value="">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Icon</label>
+                        <input type="text" class="form-input" id="selectedIcon" placeholder="Select icon" value="" readonly>
+                        <div class="icon-selector">
+                            <div class="icon-option selected" onclick="selectIcon('📊')">📊</div>
+                            <div class="icon-option" onclick="selectIcon('💻')">💻</div>
+                            <div class="icon-option" onclick="selectIcon('🚀')">🚀</div>
+                            <div class="icon-option" onclick="selectIcon('⚡')">⚡</div>
+                            <div class="icon-option" onclick="selectIcon('🔧')">🔧</div>
+                            <div class="icon-option" onclick="selectIcon('🎯')">🎯</div>
+                            <div class="icon-option" onclick="selectIcon('💡')">💡</div>
+                            <div class="icon-option" onclick="selectIcon('🌟')">🌟</div>
+                            <div class="icon-option" onclick="selectIcon('🔥')">🔥</div>
+                            <div class="icon-option" onclick="selectIcon('⭐')">⭐</div>
+                            <div class="icon-option" onclick="selectIcon('🎨')">🎨</div>
+                            <div class="icon-option" onclick="selectIcon('📱')">📱</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group full-width">
+                    <label class="form-label">Short Description</label>
+                    <textarea class="form-input form-textarea" id="articleDescription" placeholder="Brief description of your article..."></textarea>
+                </div>
+
+                <div class="form-group full-width">
+                    <label class="form-label">Tags</label>
+                    <div class="tags-input-container">
+                        <div class="tags-display" id="tagsDisplay">
+                            <div class="tag-item">React <span class="tag-remove" onclick="removeTag('React')">×</span></div>
+                            <div class="tag-item">Node.js <span class="tag-remove" onclick="removeTag('Node.js')">×</span></div>
+                            <div class="tag-item">Finance <span class="tag-remove" onclick="removeTag('Finance')">×</span></div>
+                        </div>
+                        <input type="text" class="form-input" id="tagInput" placeholder="Add tags (press Enter to add)..." onkeypress="addTag(event)">
+                    </div>
+                </div>
+            </div>
+
+            <div class="markdown-editor">
+                <div class="editor-pane">
+                    <h3>Markdown Editor</h3>
+                    <textarea class="markdown-textarea" id="markdownContent" placeholder="Write the article" oninput="updatePreview()">
+                    </textarea>
+                </div>
+            </div>
+        </main>
+    `;
+}

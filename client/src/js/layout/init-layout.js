@@ -3,12 +3,16 @@ import { openLoginModal } from '../utils/login-modal.js';
 import { authWithProvider } from '../auth/auth.js';
 import { getUserData } from '../apis/user.js';
 import { userAvatar } from '../utils/user-details.js';
+import { setUser, isCreator } from '../context/user-context.js';
 
 export async function initNavbar() {
   await htmlImporter('navbar-container', './src/components/navbar.html', async () => {
     const loginBtn = document.getElementById('login-btn');
     const loggedUser = document.getElementById('logged-user');
+    const createPage = document.getElementById('create-page');
     const user = await getUserData();
+    setUser(user);
+
 
     const toggle = document.getElementById('menu-toggle');
     const menu = document.getElementById('nav-menu');
@@ -23,6 +27,7 @@ export async function initNavbar() {
       loginBtn.style.display = 'none';
       loggedUser.style.display = 'inline-block';
       userAvatar(user);
+      isCreator() ? createPage.style.display = 'inline-block' : createPage.style.display = 'none';
     } else {
       loginBtn.style.display = 'inline-block';
       loggedUser.style.display = 'none';
