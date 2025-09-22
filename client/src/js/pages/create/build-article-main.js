@@ -11,21 +11,16 @@ export default function buildCreateArticleMain() {
                     </div>
                     <div class="form-group">
                         <label class="form-label">Icon</label>
-                        <input type="text" class="form-input" id="selectedIcon" placeholder="Select icon" value="" readonly>
-                        <div class="icon-selector">
-                            <div class="icon-option selected" onclick="selectIcon('📊')">📊</div>
-                            <div class="icon-option" onclick="selectIcon('💻')">💻</div>
-                            <div class="icon-option" onclick="selectIcon('🚀')">🚀</div>
-                            <div class="icon-option" onclick="selectIcon('⚡')">⚡</div>
-                            <div class="icon-option" onclick="selectIcon('🔧')">🔧</div>
-                            <div class="icon-option" onclick="selectIcon('🎯')">🎯</div>
-                            <div class="icon-option" onclick="selectIcon('💡')">💡</div>
-                            <div class="icon-option" onclick="selectIcon('🌟')">🌟</div>
-                            <div class="icon-option" onclick="selectIcon('🔥')">🔥</div>
-                            <div class="icon-option" onclick="selectIcon('⭐')">⭐</div>
-                            <div class="icon-option" onclick="selectIcon('🎨')">🎨</div>
-                            <div class="icon-option" onclick="selectIcon('📱')">📱</div>
-                        </div>
+                        <select class="form-input select-input" name="icons" id="icons">
+                            <option class="icon-option" value="graph" >📊</option>
+                            <option class="icon-option" value="pc">💻</option>
+                            <option class="icon-option" value="rocket">🚀</option>
+                            <option class="icon-option" value="star">⭐</option>
+                            <option class="icon-option" value="fire">🔥</option>
+                            <option class="icon-option" value="target">🎯</option>
+                            <option class="icon-option" value="mobile">📱</option>
+                            <option class="icon-option" value="light-bulb">💡</option>
+                        </select>
                     </div>
                 </div>
 
@@ -47,12 +42,10 @@ export default function buildCreateArticleMain() {
                 </div>
             </div>
 
-            <div class="markdown-editor">
-                <div class="editor-pane">
-                    <h3>Markdown Editor</h3>
-                    <textarea class="markdown-textarea" id="markdownContent" placeholder="Write the article" oninput="updatePreview()">
-                    </textarea>
-                </div>
+            <div class="editor-pane">
+                <h3>Markdown Editor</h3>
+                <textarea class="markdown-textarea" id="markdownContent" placeholder="Write the article">
+                </textarea>
             </div>
         </main>
     `;
