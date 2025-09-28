@@ -1,0 +1,161 @@
+.profile-flex {
+    display: flex;
+    margin-left: 400px;
+}
+
+.container {
+    margin-top: 40px;
+    max-width: 700px;
+    padding: 0 1rem; 
+}
+
+.avatar-box {
+    width: 100%;
+    height: 225px;
+}
+
+.cover {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 24px;
+}
+
+.profile-name {
+    font-size: 28px;
+    line-height: 34px;
+    margin: 32px 0 16px;
+    font-weight: 700;
+    text-align: initial;
+    color: var(--color-snow);
+}
+
+.user-name {
+    color: var(--color-gray);
+    font-size: 17px;
+    font-weight: 500;
+    line-height: 20px;
+}
+
+.extra-details {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.extra-details>p {
+    color: var(--color-snow);
+    line-height: 34px;
+    margin-top: 10px;
+}
+
+.detail-role {
+    color: var(--color-snow);
+    line-height: 34px;
+    text-align: center;
+}
+
+.role-badge {
+    padding: 0.75rem 2rem;
+    border-radius: 16px;
+    text-decoration: none;
+    height: 50px;
+    font-size: var(--font-size);
+    letter-spacing: var(--letter-spacing);
+    text-transform: uppercase;
+    font-weight: 700;
+    background-color: var(--color-primary);
+    color: var(--color-snow);
+    width: 25%;
+}
+
+.role-badge:active {
+    border-bottom-width: 0;
+}
+
+.role-badge:hover {
+    background-color: var(--color-primary-hover);
+}
+
+.empty-row {
+    margin: 20px 15px 0px 15px;
+    border: 2px solid var(--color-gray);
+    border-radius: 24px;
+}
+
+.profile-container > h2 {
+    color: var(--color-snow);
+    font-size: 24px;
+    line-height: 26px;
+    margin: 0 0 25px;
+    font-weight: 700;
+}
+
+.liked-container {
+    margin-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.liked-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    border: 2px solid var(--color-gray);
+    border-radius: 24px;
+    width: 45%;
+    height: 45%;
+}
+
+.liked-article-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid var(--color-gray);
+}
+
+.like-icon {
+    width: 40px;
+    height: 40px;
+    margin-right: 25px;
+}
+
+.liked-title {
+    font-size: 24px;
+    line-height: 34px;
+    margin-top: 4px 0;
+    font-weight: 700;
+    text-align: initial;
+    color: var(--color-snow);
+}
+
+.liked-date {
+    color: var(--color-gray);
+    line-height: 20px;
+    font-size: 17px;
+    font-weight: 500;
+}
+
+.liked-content {
+    margin: 10px;
+}
+
+.profile-buttons-box {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    gap: 20px;
+    padding: 2em;
+    border: 2px solid var(--color-gray);
+    border-radius: 24px;
+}
+
+.latest-container {
+    width: 100%;
+    gap: 10px;
+}

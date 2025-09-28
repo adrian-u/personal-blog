@@ -1,17 +1,17 @@
-let currentUser = null;
+let _currentUser = null;
 
 export function setUser(user) {
-    currentUser = user;
+    _currentUser = user;
 }
 
 export function getUser() {
-    return currentUser;
+    return _currentUser;
 }
 
 export function isLoggedIn() {
-    return !!currentUser;
+    return !!_currentUser;
 }
 
 export function isCreator() {
-    return currentUser?.role === 'creator';
+    return _currentUser?.role === 'creator';
 }

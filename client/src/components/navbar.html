@@ -1,18 +1,42 @@
-<nav class="navbar container">
-    <div class="navbar-left">
-      <div class="logo">Ungureanu Adrian Bogdan</div>
-    </div>
-    <div class="navbar-toggle" id="menu-toggle">☰</div>
-    <ul class="nav-links" id="nav-menu">
-      <li><a href="/">Home</a></li>
-      <li><a href="/about" data-nav="spa">About</a></li>
-      <li><a href="/projects">Projects</a></li>
-      <li><a href="/finance">Finance</a></li>
-      <li><a href="/contact">Contact</a></li>
-      <li id="create-page" style="display: none;"><a href="/create">Create</a></li>
-    </ul>
-    <span id="auth-buttons">
-      <button id="login-btn" class="btn btn-login">Login</button>
-      <div id="logged-user" class="logged-user" style="display: none;"></div>
-    </span>
-  </nav>
+<nav class="navbar flex-navbar">
+  <!--TODO: <div class="navbar-toggle" id="menu-toggle" style="display: none;">☰</div>  Handle the mobile toggle of the sidebar-->
+  <img src="/assets/images/shipu-logo.svg" class="logo" alt="shipu logo" />
+  <ul class="nav-links" id="nav-menu">
+    <li class="navbar-buttons">
+      <img src="/assets/images/home.png" alt="home icon" class="navbar-icons png">
+      <a class="navbar-text" href="/">Home</a>
+    </li>
+
+    <li class="navbar-buttons">
+      <img src="/assets/images/about.png" alt="home icon" class="navbar-icons png">
+      <a class="navbar-text" href="/about" data-nav="spa">About</a>
+    </li>
+
+    <li class="navbar-buttons">
+      <img src="/assets/images/projects.png" alt="home icon" class="navbar-icons png">
+      <a class="navbar-text" href="/projects">Projects</a>
+    </li>
+
+    <li class="navbar-buttons">
+      <img src="/assets/images/finance.png" alt="home icon" class="navbar-icons png">
+      <a class="navbar-text" href="/finance">Finance</a>
+    </li>
+
+    <li class="navbar-buttons">
+      <img src="/assets/images/contact.png" alt="home icon" class="navbar-icons png">
+      <a class="navbar-text" href="/contact">Contact</a>
+    </li>
+
+    <li class="navbar-buttons" id="create-page">
+      <img src="/assets/images/create.png" alt="home icon" class="navbar-icons png">
+      <a class="navbar-text" href="/create">Create</a>
+    </li>
+
+    <li class="navbar-buttons" id="profile" style="display: none;">
+    </li>
+  </ul>
+
+  <span id="auth-buttons">
+    <button id="login-btn" class="btn btn-flex btn-login">Login</button>
+  </span>
+</nav>

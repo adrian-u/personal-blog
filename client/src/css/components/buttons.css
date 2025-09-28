@@ -1,19 +1,75 @@
+.btn {
+    padding: 0.75rem 2rem;
+    border-radius: 16px;
+    text-decoration: none;
+    cursor: pointer;
+    border-style: solid;
+    border-width: 0 0 4px 0;
+    height: 50px;
+    font-size: var(--font-size);
+    letter-spacing: var(--letter-spacing);
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+.btn-flex {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    touch-action: manipulation;
+    transform: translateZ(0);
+}
+
+.btn:active {
+    /* transform: translateY(4px); */
+    border-bottom-width: 0;
+}
+
+#auth-buttons {
+    width: 80%;
+    margin-top: 50px;
+}
+
+.btn-login {
+    background-color: var(--color-secondary);
+    color: var(--color-snow);
+    border-color: var(--color-borders-blue-cosmo);
+    width: 100%;
+}
+
+.btn-login:hover {
+    background-color: var(--color-secondary-hover);
+}
+
+.btn-danger {
+    background-color: var(--color-danger);
+    border-color: var(--color-danger-border);
+    width: 100%;
+    color: var(--color-snow);
+}
+
+.btn-danger:hover {
+    background-color: var(--color-danger-hover);
+}
+
+.btn-green {
+    background-color: var(--color-primary);
+    color: var(--color-snow);
+    border-color: var(--color-primary-border);
+    width: 100%;
+}
+
+.btn-green:hover {
+    background-color: var(--color-primary-hover);
+}
+
+/* OLD BUTTONS */
 .cta-buttons {
     display: flex;
     gap: var(--space-sm);
     justify-content: center;
     flex-wrap: wrap;
-}
-
-.btn {
-    padding: 0.75rem var(--space-md);
-    border: none;
-    border-radius: 50px;
-    font-weight: var(--text-font-weight-600);
-    text-decoration: none;
-    display: inline-block;
-    transition: all 0.3s ease;
-    cursor: pointer;
 }
 
 .btn-primary {
@@ -36,17 +92,6 @@
 .btn-secondary:hover {
     background: var(--color-btn-secondary-hover);
     transform: translateY(-3px);
-}
-
-.btn-login {
-    font-weight: var(--text-font-weight-400);
-    background: linear-gradient(135deg, var(--color-accent), var(--color-accent-alt));
-    color: var(--color-text);
-    box-shadow: 0 4px 15px var(--color-btn-primary-shadow);
-}
-
-.btn-login:hover {
-    box-shadow: 0 8px 25px var(--color-btn-primary-shadow);
 }
 
 .btn-logout {

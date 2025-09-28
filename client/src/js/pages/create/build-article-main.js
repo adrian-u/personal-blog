@@ -22,6 +22,13 @@ export default function buildCreateArticleMain() {
                             <option class="icon-option" value="light-bulb">💡</option>
                         </select>
                     </div>
+                    <div class="form-group">
+                        <lable class="form-label">Section</label>
+                        <select class="form-input" name="sections" id="sections">
+                            <option class="" value="projects">Projects</option>
+                            <option class="" value="finance">Finance</option>
+                        </select>
+                    </div>
                 </div>
 
                 <div class="form-group full-width">

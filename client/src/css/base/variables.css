@@ -1,4 +1,26 @@
 :root {
+    --color-primary: rgb(88, 204, 2);
+    --color-primary-border: rgb(65, 150, 0);
+    --color-primary-hover: rgb(74, 170, 0);
+    --color-secondary: rgb(60, 77, 255);
+    --color-secondary-hover: rgb(55, 70, 240);
+    --color-danger: rgb(238, 85, 85);
+    --color-danger-border: rgb(119, 0, 16);
+    --color-danger-hover: rgb(233, 56, 56);
+    --color-snow: rgb(255, 255, 255);
+    --color-gray: rgb(82, 101, 109);
+    --color-picked-element: rgb(73, 192, 248);
+    --color-background: rgb(19, 31, 36);
+    --color-borders: rgb(55, 70, 79);
+    --color-borders-blue: rgb(63, 133, 167);
+    --color-borders-blue-cosmo: rgb(63, 34, 236);
+    --color-hover: rgb(32, 47, 54);
+
+    --font-size: 15px;
+    --letter-spacing: 1px;
+
+
+    /* OLD STYLE COLORS AND STYLES: TO BE REPLACED AND DELETED*/
     --max-width-container: 1200px;
     --space-sm: 1rem;
     --space-md: 2rem;

@@ -5,7 +5,6 @@
 
 /* Layout */
 @import url('./layout/container.css');
-@import url('./layout/footer.css');
 @import url('./layout/navbar.css');
 
 /* Pages */
@@ -14,6 +13,7 @@
 @import url('./pages/loading-spinner.css');
 @import url('./pages/projects.css');
 @import url('./pages/create-article.css');
+@import url('./pages/profile.css');
 
 /* Components */
 @import url('./components/hero.css');
@@ -23,4 +23,3 @@
 @import url('./components/skills-grid.css');
 @import url('./components/toast.css');
 @import url('./components/modal.css');
-@import url('./components/user-info.css');

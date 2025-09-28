@@ -8,37 +8,32 @@ import { setUser, isCreator } from '../context/user-context.js';
 export async function initNavbar() {
   await htmlImporter('navbar-container', './src/components/navbar.html', async () => {
     const loginBtn = document.getElementById('login-btn');
-    const loggedUser = document.getElementById('logged-user');
     const createPage = document.getElementById('create-page');
+    const profileNavbar = document.getElementById('profile');
     const user = await getUserData();
     setUser(user);
 
 
-    const toggle = document.getElementById('menu-toggle');
+    // const toggle = document.getElementById('menu-toggle');
     const menu = document.getElementById('nav-menu');
-
-    toggle.addEventListener('click', () => {
-      menu.classList.toggle('show');
-    });
-
-    if (!loginBtn || !loggedUser) return;
+    /* toggle.addEventListener('click', () => {
+       menu.classList.toggle('show');
+     });
+ */
+    if (!loginBtn || !profileNavbar) return;
 
     if (user) {
       loginBtn.style.display = 'none';
-      loggedUser.style.display = 'inline-block';
+      profileNavbar.style.display = 'flex'
       userAvatar(user);
-      isCreator() ? createPage.style.display = 'inline-block' : createPage.style.display = 'none';
+      isCreator() ? createPage.style.display = 'flex' : createPage.style.display = 'none';
     } else {
-      loginBtn.style.display = 'inline-block';
-      loggedUser.style.display = 'none';
+      loginBtn.style.display = 'flex';
+      profileNavbar.style.display = 'none';
     }
 
     loginBtn.addEventListener('click', openLoginModal);
   });
-}
-
-export async function initFooter() {
-  await htmlImporter('footer-container', './src/components/footer.html');
 }
 
 export async function initLoginModal() {
@@ -67,5 +62,26 @@ export async function initLoginModal() {
         closeModal();
       });
     });
+  });
+}
+
+export function setActiveNav(path) {
+  const navItems = document.querySelectorAll('.nav-links .navbar-buttons');
+
+  navItems.forEach(item => {
+    const link = item.querySelector('a.navbar-text');
+    if (!link) return;
+
+    const href = link.getAttribute('href');
+
+    const isActive = path === href || path.startsWith(href + '/');
+
+    if (isActive) {
+      item.classList.add('active');
+      link.classList.add('active');
+    } else {
+      item.classList.remove('active');
+      link.classList.remove('active');
+    }
   });
 }

@@ -1,4 +1,4 @@
-import { initFooter, initNavbar, initLoginModal } from '../layout/init-layout.js';
+import { initNavbar, initLoginModal, setActiveNav} from '../layout/init-layout.js';
 import { handleErrorToastFromSession } from '../utils/toast.js';
 
 const routes = {
@@ -7,6 +7,7 @@ const routes = {
     '/about': './src/views/about.html',
     '/projects': './src/views/projects.html',
     '/create': './src/views/create.html',
+    '/profile': './src/views/profile.html',
 };
 
 export async function setupRouting() {
@@ -52,8 +53,8 @@ export async function renderRoute(path = location.pathname) {
     }
 
     await initNavbar();
-    await initFooter();
     await initLoginModal();
+    setActiveNav(path)
 
     if (path === '/about') {
         const { default: buildPage } = await import('../pages/about/build-page.js');
@@ -68,6 +69,11 @@ export async function renderRoute(path = location.pathname) {
     if (path === '/create') {
         const { default: buildCreatePage } = await import('../pages/create/build-create-page.js');
         buildCreatePage();
+    }
+
+    if (path === '/profile') {
+        const { default: buildProfile } = await import ('../pages/profile/build-profile.js');
+        buildProfile();
     }
 
     requestAnimationFrame(() => {

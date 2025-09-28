@@ -1,19 +1,18 @@
 .modal-container {
-  background: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(8px);
+  background: rgba(rgb(var(--color-background)), 0.6);
+  backdrop-filter: blur(5px);
   position: fixed;
   top: 0;
   left: 0;
-  height: 100vh;
-  width: 100vw;
+  height: 100%;
+  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
   opacity: 0;
   visibility: hidden;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  z-index: 1000;
-  padding: 20px;
+  z-index: 2000;
 }
 
 .modal-container.show {
@@ -22,11 +21,9 @@
 }
 
 .modal {
-  background: #ffffff;
   width: 100%;
   max-width: 400px;
   border-radius: 24px;
-  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.2);
   transform: translateY(20px) scale(0.95);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
@@ -40,51 +37,35 @@
 .modal-header {
   padding: 32px 32px 24px;
   text-align: center;
-  background: linear-gradient(135deg, var(--color-accent), var(--color-accent-alt));
-  color: white;
-  position: relative;
-}
-
-.modal-header::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  background: var(--color-primary);
+  color: var(--color-snow);
+  font-size: var(--font-size);
+  letter-spacing: var(--letter-spacing);
 }
 
 .modal-header h2 {
   font-size: 24px;
   font-weight: 700;
-  margin: 0;
-  letter-spacing: -0.5px;
 }
 
 .modal-header p {
-  margin-top: 8px;
-  opacity: 0.9;
-  font-size: 14px;
-  font-weight: 400;
+  margin-top: 10px;
 }
 
 .modal-content {
   padding: 32px;
-  background: #ffffff;
+  background: var(--color-snow);
 }
 
 .modal-footer {
   padding: 0 32px 32px;
-  background: #ffffff;
+  background: var(--color-snow);
 }
 
 .footer-actions {
   display: flex;
   justify-content: center;
-  gap: 16px;
-  padding-top: 24px;
-  border-top: 1px solid #f3f4f6;
+  padding-top: 10px;
 }
 
 .oauth-buttons {
@@ -98,7 +79,7 @@
   width: 100%;
   padding: 16px 20px;
   font-weight: 600;
-  font-size: 15px;
+  font-size: var(--font-size);
   border: 2px solid transparent;
   border-radius: 16px;
   cursor: pointer;
@@ -174,51 +155,4 @@
 
 .btn-github:hover {
   background: #2f363d;
-}
-
-.btn-close-modal {
-  background: #f9fafb;
-  color: #6b7280;
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
-  padding: 12px 24px;
-  font-weight: 600;
-  font-size: 14px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.btn-close-modal:hover {
-  background: #f3f4f6;
-  color: #374151;
-  transform: translateY(-1px);
-}
-
-@media (max-width: 480px) {
-  .modal {
-    max-width: 100%;
-    margin: 0 16px;
-    border-radius: 20px;
-  }
-
-  .modal-header,
-  .modal-content,
-  .modal-footer {
-    padding-left: 24px;
-    padding-right: 24px;
-  }
-
-  .modal-header {
-    padding-top: 28px;
-    padding-bottom: 20px;
-  }
-
-  .modal-content {
-    padding-top: 28px;
-    padding-bottom: 0;
-  }
-
-  .modal-footer {
-    padding-bottom: 28px;
-  }
 }
