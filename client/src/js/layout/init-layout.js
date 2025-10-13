@@ -1,22 +1,19 @@
 import htmlImporter from '../utils/html-importer.js';
-import { openLoginModal } from '../utils/login-modal.js';
+import { closeModal, openLoginModal, handleEscape } from '../utils/modals.js';
 import { authWithProvider } from '../auth/auth.js';
-import { getUserData } from '../apis/user.js';
 import { userAvatar } from '../utils/user-details.js';
-import { setUser, isCreator } from '../context/user-context.js';
+import { isCreator, getCurrentUser } from '../context/user-context.js';
 
 export async function initNavbar() {
   await htmlImporter('navbar-container', './src/components/navbar.html', async () => {
     const loginBtn = document.getElementById('login-btn');
     const createPage = document.getElementById('create-page');
     const profileNavbar = document.getElementById('profile');
-    const user = await getUserData();
-    setUser(user);
+    const user = await getCurrentUser();
 
-
-    // const toggle = document.getElementById('menu-toggle');
+    /* const toggle = document.getElementById('menu-toggle');
     const menu = document.getElementById('nav-menu');
-    /* toggle.addEventListener('click', () => {
+     toggle.addEventListener('click', () => {
        menu.classList.toggle('show');
      });
  */
@@ -40,28 +37,19 @@ export async function initLoginModal() {
   await htmlImporter('body', './src/components/login-modal.html', () => {
     const modal = document.getElementById('login-modal');
 
-    function closeModal() {
-      modal.classList.remove('show');
-      setTimeout(() => {
-        modal.classList.add('hidden');
-      }, 300);
-    }
-
-    document.getElementById('btn-close-modal')?.addEventListener('click', closeModal);
-
-    document.addEventListener('keydown', (event) => {
-      if (event.key === 'Escape' && !modal.classList.contains('hidden')) {
-        closeModal();
+    modal.addEventListener('click', (e) => {
+      if (e.target.closest('#btn-close-modal')) {
+        closeModal(modal);
+      }
+      if (e.target.closest('[data-provider]')) {
+        const provider = e.target.closest('[data-provider]').dataset.provider;
+        authWithProvider(provider);
+        closeModal(modal);
       }
     });
 
-    document.querySelectorAll('[data-provider]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const provider = btn.dataset.provider;
-        authWithProvider(provider);
-        closeModal();
-      });
-    });
+    document.removeEventListener('keydown', handleEscape);
+    document.addEventListener('keydown', handleEscape);
   });
 }
 

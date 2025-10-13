@@ -2,9 +2,6 @@ import { OAUTH_PROVIDERS } from '../strategies/oauth-strategies.js';
 import { saveUser } from '../services/user.service.js';
 import { createJWT } from '../services/oauth.service.js';
 import { SavingError } from '../errors/custom-errors.js';
-import dotenv from "dotenv";
-
-dotenv.config();
 
 export async function handleOAuthToken(req, res) {
 

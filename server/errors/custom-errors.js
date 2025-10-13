@@ -29,3 +29,11 @@ export class SavingError extends Error {
         this.statusCode = 500;
     }
 }
+
+export class ArticleValidationError extends Error {
+    constructor(message) {
+        super(message);
+        this.name = "Article Validation Error";
+        this.statusCode = 400;
+    }
+}

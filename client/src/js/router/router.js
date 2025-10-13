@@ -1,5 +1,7 @@
-import { initNavbar, initLoginModal, setActiveNav} from '../layout/init-layout.js';
+import { initNavbar, initLoginModal, setActiveNav } from '../layout/init-layout.js';
 import { handleErrorToastFromSession } from '../utils/toast.js';
+
+const HTMLFilesCache = {};
 
 const routes = {
     '/': './src/views/home.html',
@@ -11,6 +13,7 @@ const routes = {
 };
 
 export async function setupRouting() {
+    await initLoginModal();
     window.onpopstate = () => renderRoute(location.pathname);
 
     document.addEventListener('click', e => {
@@ -28,33 +31,18 @@ export async function setupRouting() {
 
 export async function renderRoute(path = location.pathname) {
     const container = document.getElementById('view-container');
-    container.innerHTML = '';
+    const file = routes[path] || routes['/'];
+
+    container.innerHTML = await _fetchHTML(file);
+
+    await initNavbar();
+    setActiveNav(path)
 
     if (path === '/oauth2/auth') {
         const { default: buildLoadingPage } = await import('../pages/loading/loading-spinner.js');
         await buildLoadingPage();
         return;
     }
-
-    const file = routes[path] || routes['/'];
-
-    try {
-        const res = await fetch(file);
-        if (!res.ok) {
-            throw new Error(`Failed to load ${file}: ${res.status}`);
-        }
-
-        const html = await res.text();
-        container.innerHTML = html;
-
-    } catch (error) {
-        console.error('Error loading route:', error);
-        container.innerHTML = '<p>Error loading page</p>';
-    }
-
-    await initNavbar();
-    await initLoginModal();
-    setActiveNav(path)
 
     if (path === '/about') {
         const { default: buildPage } = await import('../pages/about/build-page.js');
@@ -72,8 +60,8 @@ export async function renderRoute(path = location.pathname) {
     }
 
     if (path === '/profile') {
-        const { default: buildProfile } = await import ('../pages/profile/build-profile.js');
-        buildProfile();
+        const { default: buildProfile } = await import('../pages/profile/build-profile.js');
+        await buildProfile();
     }
 
     requestAnimationFrame(() => {
@@ -84,4 +72,25 @@ export async function renderRoute(path = location.pathname) {
 export function navigateTo(path) {
     history.pushState({}, '', path);
     window.dispatchEvent(new PopStateEvent('popstate'));
+}
+
+async function _fetchHTML(file) {
+    try {
+        if (HTMLFilesCache[file]) {
+            return HTMLFilesCache[file];
+        } else {
+            const res = await fetch(file);
+            if (!res.ok) {
+                throw new Error(`Failed to load ${file}: ${res.status}`);
+            }
+
+            const html = await res.text();
+            HTMLFilesCache[file] = html;
+            return html;
+        }
+
+    } catch (error) {
+        console.error('Error loading route:', error);
+        return '<p>Error loading page</p>';
+    }
 }

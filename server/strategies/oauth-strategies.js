@@ -1,7 +1,4 @@
-import dotenv from "dotenv";
 import { Buffer } from 'node:buffer';
-
-dotenv.config();
 
 export const OAUTH_PROVIDERS = {
     google: {

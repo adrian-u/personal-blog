@@ -12,12 +12,11 @@
   "type": "module",
   "main": "server.mjs",
   "scripts": {
-    "start": "node server.mjs",
+    "start": "node --env-file-if-exists=.env server.js",
     "init-db": "node init-db/init.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "dotenv": "^16.5.0",
     "pg": "^8.16.2"
   }
 }

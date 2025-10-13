@@ -30,6 +30,20 @@ const createUserTable = `
     );
 `;
 
+const createArticleTable = `
+    CREATE TABLE IF NOT EXISTS articles (
+        id SERIAL PRIMARY KEY,
+        title TEXT NOT NULL,
+        icon TEXT NOT NULL,
+        category TEXT NOT NULL,
+        description TEXT NOT NULL,
+        markdown TEXT NOT NULL,
+        published BOOLEAN NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+`;
+
 const createUserIndex = `
     CREATE UNIQUE INDEX IF NOT EXISTS user_email_provider_idx
     ON users(email, provider);
@@ -47,6 +61,7 @@ async function init() {
         await db.query(createAboutTable);
         await db.query(createUserTable);
         await db.query(createUserIndex);
+        await db.query(createArticleTable);
         console.log("Tables created successfully");
 
         console.log("Checking if about data already exists...");

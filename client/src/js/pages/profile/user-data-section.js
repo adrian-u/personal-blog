@@ -1,11 +1,12 @@
-import { getUser } from '../../context/user-context.js';
+import anonymous from '../../../assets/images/anonymous.png';
+import { getCurrentUser } from '../../context/user-context.js';
 
-export default function buildUserDataSection() {
-    const user = getUser();
+export default async function buildUserDataSection() {
+    const user = await getCurrentUser();
 
     return `
         <div class="avatar-box"> 
-            <img src=${user.avatarurl} alt="user avatar url" class="cover"/>
+            <img src=${/*user.avatarurl ?? */anonymous} alt="user avatar url" class="cover"/>
         </div>
         <h1 class="profile-name">
             ${user.name} 

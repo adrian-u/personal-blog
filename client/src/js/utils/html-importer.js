@@ -1,5 +1,3 @@
-"use strict";
-
 export default async function htmlImporter(id, path, callback) {
   try {
     const res = await fetch(path);

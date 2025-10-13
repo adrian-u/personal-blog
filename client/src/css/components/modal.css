@@ -57,6 +57,18 @@
   background: var(--color-snow);
 }
 
+.modal.large {
+  max-width: 1000px;
+  width: 90%;
+  height: auto;
+  max-height: 90vh;
+}
+
+.modal.large .modal-content {
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
 .modal-footer {
   padding: 0 32px 32px;
   background: var(--color-snow);

@@ -31,14 +31,14 @@
     margin-top: 50px;
 }
 
-.btn-login {
+.btn-blue {
     background-color: var(--color-secondary);
     color: var(--color-snow);
     border-color: var(--color-borders-blue-cosmo);
     width: 100%;
 }
 
-.btn-login:hover {
+.btn-blue:hover {
     background-color: var(--color-secondary-hover);
 }
 

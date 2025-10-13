@@ -1,10 +1,11 @@
+import { getUserData } from '../apis/user.js';
+
 let _currentUser = null;
 
-export function setUser(user) {
-    _currentUser = user;
-}
+export async function getCurrentUser() {
 
-export function getUser() {
+    if (_currentUser) return _currentUser;
+    _currentUser = await getUserData();
     return _currentUser;
 }
 
