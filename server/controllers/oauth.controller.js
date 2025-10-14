@@ -6,9 +6,7 @@ import { SavingError } from '../errors/custom-errors.js';
 export async function handleOAuthToken(req, res) {
 
     try {
-        let body = '';
-        for await (const chunk of req) body += chunk;
-        const { code, redirect_uri, provider } = JSON.parse(body);
+        const { code, redirect_uri, provider } = req.body;
 
         const strategy = OAUTH_PROVIDERS[provider];
         if (!strategy) {
