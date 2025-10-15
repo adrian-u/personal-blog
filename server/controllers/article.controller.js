@@ -1,4 +1,4 @@
-import { saveArticle, getArticles } from "../services/article.service.js";
+import { saveArticle, getArticles, getWipArt, updateWipArticle } from "../services/article.service.js";
 import logger from "../utils/logger.js";
 import { checkIfArticleBodyIsValid } from "../utils/article-utils.js";
 
@@ -11,10 +11,18 @@ export async function createArticle(req, res) {
 
     try {
         checkIfArticleBodyIsValid(req.body, req.traceId);
-        await saveArticle(req.body, req.traceId);
-
+        const article = await saveArticle(req.body, req.traceId);
         res.writeHead(201, { "Content-Type": "application/json" });
-        res.end(JSON.stringify({ message: "Article created" }));
+        res.end(JSON.stringify({
+            id: article.id,
+            title: article.title,
+            icon: article.icon,
+            category: article.category,
+            description: article.description,
+            markdown: article.markdown,
+            published: article.published,
+            created_at: article.created_at,
+        }));
     } catch (err) {
         logger("error", req.traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `${err.name}: ${err.message}`);
         res.writeHead(err.statusCode, { "Content-Type": "application/json" });
@@ -34,5 +42,38 @@ export async function getArticlesCreator(res) {
         console.error(`Error fetching articles without markdown content: [${error}]`);
         res.writeHead(500, { "Content-Type": "application/json" });
         res.end(JSON.stringify({ error: "Error fetching articles without markdown content" }))
+    }
+}
+
+export async function getWipArticle(res, req, id) {
+    const LOCAL_LOG_CONTEXT = "Get WIP Article";
+
+    logger("info", req.traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Start fetch article by id: [${id}]`);
+
+    try {
+        const article = await getWipArt(id, req.traceId);
+        res.writeHead(200, { "Content-Type": "application/json" });
+        res.end(JSON.stringify(article));
+    } catch (err) {
+        logger("error", req.traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `${err.name}: ${err.message}`);
+        res.writeHead(err.statusCode, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ name: err.name, error: err.message }));
+    }
+
+}
+
+export async function updateArticle(req, res) {
+    const LOCAL_LOG_CONTEXT = "Update WIP Article";
+
+    logger("info", req.traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Start updadint article with id: [${req.body.id}]`);
+
+    try {
+        const article = await updateWipArticle(req.body, req.traceId);
+        res.writeHead(200, { "Content-Type": "application/json" });
+        res.end(JSON.stringify(article));
+    } catch (error) {
+        logger("error", req.traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `${err.name}: ${err.message}`);
+        res.writeHead(error.statusCode, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ name: error.name, error: err.message }));
     }
 }

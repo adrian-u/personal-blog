@@ -21,7 +21,8 @@ export async function initNavbar() {
 
     if (user) {
       loginBtn.style.display = 'none';
-      profileNavbar.style.display = 'flex'
+      profileNavbar.style.display = 'flex';
+      createPage.style.display = 'flex';
       userAvatar(user);
       isCreator() ? createPage.style.display = 'flex' : createPage.style.display = 'none';
     } else {

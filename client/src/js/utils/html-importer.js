@@ -1,3 +1,5 @@
+import logger from "./logger.js";
+
 export default async function htmlImporter(id, path, callback) {
   try {
     const res = await fetch(path);
@@ -10,14 +12,16 @@ export default async function htmlImporter(id, path, callback) {
     } else {
       const container = document.getElementById(id);
       if (!container) {
-        console.warn(`Element with id '${id}' not found.`);
+        logger("warn", "HTML Importer", `Element with id '${id}' not found.`);
         return;
       }
       container.innerHTML = html;
     }
 
-    if (typeof callback === 'function') callback();
+    if (typeof callback === 'function') {
+      requestAnimationFrame(callback);
+    }
   } catch (err) {
-    console.error(`Failed to load ${path}:`, err);
+    logger("error", "HTML Importer", `Failed to load ${path}:`, err);
   }
 }

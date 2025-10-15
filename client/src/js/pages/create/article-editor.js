@@ -1,6 +1,6 @@
 import { MDEditor } from "@pardnchiu/nanomd";
 
-export default function buildArticleEditor() {
+export default function buildArticleEditor(content = "") {
 
     const articleEditor = document.getElementById('article-editor');
 
@@ -16,7 +16,7 @@ export default function buildArticleEditor() {
 
     const domEditor = new MDEditor({
         id: "nanomd-editor",
-        defaultContent: "",
+        defaultContent: content,
         hotKey: 1,
         preventRefresh: 0,
         tabPin: 1,

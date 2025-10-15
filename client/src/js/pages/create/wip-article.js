@@ -1,16 +1,25 @@
 import { getArticlesWithoutMarkdown } from "../../apis/article";
+import { loadWipArticle } from "./build-create-page";
 
 export default async function buildArticleWip() {
     const wipArticle = document.getElementById("wip-article");
     (await getArticlesWithoutMarkdown()).forEach(article => {
-        const workInProgressBox = document.createElement("div");
-        workInProgressBox.className = "article-wip-box";
-        workInProgressBox.id = article.id;
-        workInProgressBox.appendChild(_createHeaderSection(article));
-        workInProgressBox.appendChild(_createCategoryDateSection(article));
-        workInProgressBox.appendChild(_createDescriptionSection(article));
-        wipArticle.appendChild(workInProgressBox);
-    })
+        const box = renderArticle(article);
+        wipArticle.appendChild(box);
+    });
+}
+
+export function renderArticle(article) {
+    const workInProgressBox = document.createElement("div");
+    workInProgressBox.className = "article-wip-box";
+    workInProgressBox.id = article.id;
+    workInProgressBox.addEventListener('click', () => {
+        loadWipArticle(workInProgressBox.id);
+    });
+    workInProgressBox.appendChild(_createHeaderSection(article));
+    workInProgressBox.appendChild(_createCategoryDateSection(article));
+    workInProgressBox.appendChild(_createDescriptionSection(article));
+    return workInProgressBox;
 }
 
 function _createHeaderSection(article) {

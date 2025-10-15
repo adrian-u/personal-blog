@@ -11,6 +11,9 @@ export default function logger(type, context, message) {
             case "error":
                 console.error(`[ERROR]-[${new Date().toISOString()}]-[CONTEXT: ${context}]-[MESSAGE: ${message}]`);
                 break;
+            case "warn":
+                console.warn(`[WARN]-[${new Date().toISOString()}]-[CONTEXT: ${context}]-[MESSAGE: ${message}]`);
+                break;
             default:
                 console.log(`[LOG]-[${new Date().toISOString()}]-[CONTEXT: ${context}]-[MESSAGE: ${message}]`);
         }
