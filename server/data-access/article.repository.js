@@ -36,7 +36,7 @@ export async function save(article, traceId) {
 
 export async function getArticlesWithoutMarkdown() {
 
-    const query = `SELECT id, title, icon, category, description, published, created_at FROM articles`;
+    const query = `SELECT id, title, icon, category, description, published, created_at FROM articles ORDER BY articles.created_at ASC`;
 
     try {
         const articles = await db.query(query);
@@ -52,7 +52,7 @@ export async function getWipArticle(id, traceId) {
 
     logger("info", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Fetching wip article with id: [${id}] from the database`);
 
-    const query = `SELECT id, title, icon, category, description, markdown FROM articles WHERE articles.id = $1`;
+    const query = `SELECT id, title, icon, category, description, markdown FROM articles WHERE articles.id = $1;`;
 
     try {
         const article = await db.query(query, [id]);
@@ -60,5 +60,28 @@ export async function getWipArticle(id, traceId) {
     } catch (error) {
         logger("error", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `DB query failed to fetch the article with id: [${id}]. Error: [${error}]`);
         throw new DbError(`Failed to fetch the wip article with id: [${id}]`);
+    }
+}
+
+export async function updateArticle(article, id, traceId) {
+    const LOCAL_LOG_CONTEXT = "Update Wip";
+
+    logger("info", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Start update wip article with id: [${id}]`);
+
+    const keys = Array.from(article.keys());
+    const values = Array.from(article.values());
+
+    const setClauses = keys.map((key, index) => `"${key}" = $${index + 1}`);
+
+    const query = `UPDATE articles SET ${setClauses.join(", ")} WHERE id = $${keys.length + 1} RETURNING *;`;
+
+    logger("debug", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Builded query: [${query}] for wip article with id: [${id}]`);
+
+    try {
+        const article = await db.query(query, [...values, id]);
+        return article.rows[0];
+    } catch (error) {
+        logger("error", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `DB query failed to update the article with id: [${id}]. Error: [${error}]`);
+        throw new DbError(`Failed to update the wip article with id: [${id}]`);
     }
 }

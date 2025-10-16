@@ -1,4 +1,5 @@
-import { save, getArticlesWithoutMarkdown, getWipArticle } from "../data-access/article.repository.js";
+import { save, getArticlesWithoutMarkdown, getWipArticle, updateArticle } from "../data-access/article.repository.js";
+import { isEmpty } from "../utils/general.js";
 import logger from "../utils/logger.js";
 
 const LOG_CONTEXT = "Article Service";
@@ -35,8 +36,26 @@ export async function getWipArt(id, traceId) {
     }
 }
 
-export async function updateWipArticle(article, traceId) {
+export async function updateWipArticle(article, id, traceId) {
     const LOCAL_LOG_CONTEXT = "Update WIP Article";
 
-    logger("info", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, "Sending request to the repository layer");
+    logger("debug", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Handling request with id: [${id}] and body: ${JSON.stringify(article, null, 4)}`);
+
+    if (isEmpty(article)) return;
+
+    const articleUpdatesMap = new Map();
+    article.forEach(item => {
+        if (item.op === "update") {
+            articleUpdatesMap.set(item.field, item.value);
+        }
+    });
+    logger("info", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Sending request to the repository layer for article id: [${id}]`);
+
+    try {
+        const updatedArticle = await updateArticle(articleUpdatesMap, id, traceId);
+        return updatedArticle;
+    } catch (error) {
+        logger("error", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Error updating the wip article with id: [${id}]. Error: [${error.message}]`);
+        throw error;
+    }
 }

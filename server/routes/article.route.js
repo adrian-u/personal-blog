@@ -24,10 +24,12 @@ registerRoute("GET", "/api/v1/article/wip/:id", async (req, res, params) => {
     await getWipArticle(res, req, id);
 });
 
-registerRoute("PATCH", "/api/v1/article/wip", async (req, res) => {
+registerRoute("PATCH", "/api/v1/article/wip/:id", async (req, res, params) => {
+    const { id } = params;
+
     _creatorOperations(req, res);
 
-    await updateArticle(req, res);
+    await updateArticle(req, res, id);
 })
 
 function _creatorOperations(req, res) {

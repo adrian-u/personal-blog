@@ -62,18 +62,18 @@ export async function getWipArticle(res, req, id) {
 
 }
 
-export async function updateArticle(req, res) {
+export async function updateArticle(req, res, id) {
     const LOCAL_LOG_CONTEXT = "Update WIP Article";
 
-    logger("info", req.traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Start updadint article with id: [${req.body.id}]`);
+    logger("info", req.traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Start update article with id: [${id}]`);
 
     try {
-        const article = await updateWipArticle(req.body, req.traceId);
+        const article = await updateWipArticle(req.body, id, req.traceId);
         res.writeHead(200, { "Content-Type": "application/json" });
         res.end(JSON.stringify(article));
     } catch (error) {
-        logger("error", req.traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `${err.name}: ${err.message}`);
+        logger("error", req.traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `${error.name}: ${error.message}`);
         res.writeHead(error.statusCode, { "Content-Type": "application/json" });
-        res.end(JSON.stringify({ name: error.name, error: err.message }));
+        res.end(JSON.stringify({ name: error.name, error: error.message }));
     }
 }

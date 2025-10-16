@@ -2,12 +2,13 @@ import buildArticleMetadata from "./article-metadata";
 import buildArticleEditor from "./article-editor";
 import buildArticleWip, { renderArticle } from "./wip-article";
 import htmlImporter from "../../utils/html-importer";
-import { createArticle, getWipArticle } from "../../apis/article";
+import { createArticle, getWipArticle, updateArticle } from "../../apis/article";
 import { openArticlePreviewModal } from "../../utils/modals";
 import { MDViewer } from "@pardnchiu/nanomd";
 import { showToast } from "../../utils/toast";
 import validateCreateArticleForm from "./form-validator";
 import logger from "../../utils/logger";
+import { isEmpty } from "../../utils/general";
 
 const LOG_CONTEXT = "Build Create Page";
 
@@ -67,6 +68,25 @@ export async function loadWipArticle(id) {
         const article = await getWipArticle(id);
         _fillArticleMetadata(article);
         _reloadArticleEditor(article.markdown);
+
+        const saveButton = document.getElementById("save");
+        const oldButton = document.getElementById("update");
+        const newButton = oldButton.cloneNode(oldButton);
+        oldButton.replaceWith(newButton);
+
+        saveButton.style = "display: none";
+        newButton.style = "display: block";
+        newButton.addEventListener('click', async (event) => {
+            event.preventDefault();
+            _updateArticle(id, {
+                title: article.title,
+                icon: article.icon,
+                category: article.category,
+                description: article.description,
+                markdown: article.markdown,
+            });
+        });
+
         showToast(`Loaded ${article.title}`, "success", 3000);
     } catch (error) {
         logger("error", `${LOG_CONTEXT} - "Loading WIP Data"`, error);
@@ -75,10 +95,34 @@ export async function loadWipArticle(id) {
 
 }
 
+async function _updateArticle(id, oldValues) {
+
+    const formData = new FormData(document.getElementById("article-form"));
+    const title = formData.get("article-title");
+    const icon = formData.get("article-icon");
+    const category = formData.get("article-category");
+    const description = formData.get("article-description");
+    const markdown = mdEditor?.text || "";
+
+    const updates = [];
+
+    if (title.trim() !== oldValues.title.trim()) updates.push({ "op": "update", "field": "title", "value": title });
+    if (icon.trim() !== oldValues.icon.trim()) updates.push({ "op": "update", "field": "icon", "value": icon });
+    if (category.trim() !== oldValues.category.trim()) updates.push({ "op": "update", "field": "category", "value": category });
+    if (description.trim() !== oldValues.description.trim()) updates.push({ "op": "update", "field": "description", "value": description });
+    if (markdown.trim() !== oldValues.markdown.trim()) updates.push({ "op": "update", "field": "markdown", "value": markdown });
+
+    if (!isEmpty(updates)) {
+        const updatedArticle = await updateArticle(id, updates);
+        const box = renderArticle(updatedArticle);
+        const oldBox = document.getElementById(id);
+        oldBox.replaceWith(box);
+    }
+}
+
 function _fillArticleMetadata(article) {
     const form = document.getElementById("article-form");
     if (!form) return;
-
 
     const titleInput = form.querySelector('[name="article-title"]');
     const iconInput = form.querySelector('[name="article-icon"]');
@@ -97,6 +141,7 @@ function _reloadArticleEditor(content) {
 
     mdEditor = buildArticleEditor(content);
 }
+
 function _formToJson(title, icon, category, description, text) {
     return {
         "title": title,

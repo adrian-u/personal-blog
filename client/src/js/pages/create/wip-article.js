@@ -3,6 +3,11 @@ import { loadWipArticle } from "./build-create-page";
 
 export default async function buildArticleWip() {
     const wipArticle = document.getElementById("wip-article");
+
+    while (wipArticle.firstChild) {
+        wipArticle.removeChild(wipArticle.firstChild);
+    }
+
     (await getArticlesWithoutMarkdown()).forEach(article => {
         const box = renderArticle(article);
         wipArticle.appendChild(box);
