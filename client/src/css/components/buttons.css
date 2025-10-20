@@ -103,3 +103,19 @@
 .btn-logout:hover {
     background: var(--color-btn-secondary-hover);
 }
+
+.delete-btn {
+    background: none;
+    border: none;
+    color: var(--color-danger);
+    font-size: 1.2rem;
+    cursor: pointer;
+    opacity: 0;
+    transform: scale(0.8);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.delete-btn:hover {
+    color: var(--color-danger-hover);
+    transform: scale(1.2);
+}

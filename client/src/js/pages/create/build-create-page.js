@@ -133,6 +133,11 @@ function _fillArticleMetadata(article) {
     iconInput.value = article.icon || "";
     categorySelect.value = article.category || "";
     descriptionInput.value = article.description || "";
+
+    const iconSelected = document.getElementById("icon");
+    iconSelected.querySelector('[class="selected"]').textContent = article.icon;
+    const categorySelected = document.getElementById("category");
+    categorySelected.querySelector('[class="selected"]').textContent = article.category;
 }
 
 function _reloadArticleEditor(content) {

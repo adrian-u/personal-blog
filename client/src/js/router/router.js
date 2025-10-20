@@ -1,4 +1,4 @@
-import { initNavbar, initLoginModal, setActiveNav } from '../layout/init-layout.js';
+import { initNavbar, initLoginModal, setActiveNav, initConfirmationModal } from '../layout/init-layout.js';
 import { handleErrorToastFromSession } from '../utils/toast.js';
 
 const HTMLFilesCache = {};
@@ -14,6 +14,7 @@ const routes = {
 
 export async function setupRouting() {
     await initLoginModal();
+    await initConfirmationModal();
     window.onpopstate = () => renderRoute(location.pathname);
 
     document.addEventListener('click', e => {

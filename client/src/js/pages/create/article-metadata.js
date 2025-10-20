@@ -1,3 +1,5 @@
+import { select } from "./utils/custom-select.js";
+
 export default function buildArticleMetadata() {
 
     const articleMetadata = document.getElementById('article-metadata');
@@ -5,12 +7,9 @@ export default function buildArticleMetadata() {
     const div = document.createElement("div")
     div.className = "article-metadata";
 
-    const divMetadataBoxRow = document.createElement("div")
-    divMetadataBoxRow.className = "article-metadata-row";
-
-    divMetadataBoxRow.appendChild(_createTitleBox());
-    divMetadataBoxRow.appendChild(_createIconSelector());
-    divMetadataBoxRow.appendChild(_createCategorySelector());
+    div.appendChild(_createIconSelector());
+    div.appendChild(_createTitleBox());
+    div.appendChild(_createCategorySelector());
 
     const articleDescription = document.createElement("div");
     articleDescription.className = "article-description";
@@ -19,80 +18,86 @@ export default function buildArticleMetadata() {
     textareaDescription.placeholder = "Type here a description of the article";
     articleDescription.appendChild(textareaDescription);
 
-    div.appendChild(divMetadataBoxRow);
-
     articleMetadata.appendChild(div);
     articleMetadata.appendChild(articleDescription)
+
+    select();
 }
 
 function _createTitleBox() {
 
-    const div = document.createElement("div");
-    div.className = "metadata-box";
-
-    const p = document.createElement("p");
-    p.textContent = "Title";
-
     const input = document.createElement("input");
+    input.className = "title";
     input.type = "text";
     input.name = "article-title";
+    input.placeholder = "Untitled Article - give it a name...";
 
-    div.appendChild(p);
-    div.appendChild(input);
-
-    return div;
-}
-
-function _createIconSelector() {
-
-    const iconOptions = ['📝', '💡', '🚀', '💼', '📊', '🎯', '✨', '🔥', '💻', '🌟'];
-
-    const div = document.createElement("div");
-    div.className = "metadata-box";
-
-    const select = document.createElement("select");
-    select.className = "icon";
-    select.name = "article-icon";
-
-    const p = document.createElement("p");
-    p.textContent = "Icon";
-
-
-    iconOptions.forEach(icon => {
-        const option = document.createElement("option");
-        option.textContent = icon;
-
-        select.appendChild(option);
-    });
-
-    div.appendChild(p);
-    div.appendChild(select);
-
-    return div;
+    return input;
 }
 
 function _createCategorySelector() {
     const categories = ["Projects", "Finance"];
 
-    const div = document.createElement("div");
-    div.className = "metadata-box";
+    const dropDown = document.createElement("div");
+    dropDown.classList.add("custom-dropdown", "categories");
+    dropDown.id = "category";
 
-    const select = document.createElement("select");
-    select.className = "category";
-    select.name = "article-category";
+    const hiddenInput = document.createElement("input");
+    hiddenInput.type = "hidden";
+    hiddenInput.name = "article-category";
+    hiddenInput.value = categories[0];
 
-    const p = document.createElement("p");
-    p.textContent = "Category";
+    const selected = document.createElement("div");
+    selected.className = "selected";
+    selected.textContent = categories[0];
+
+    const options = document.createElement("div");
+    options.className = "options";
 
     categories.forEach(category => {
-        const option = document.createElement("option");
+        const option = document.createElement("div");
+        option.className = "option";
         option.textContent = category;
-
-        select.appendChild(option);
+        options.appendChild(option);
     });
 
-    div.appendChild(p);
-    div.appendChild(select);
+    dropDown.appendChild(hiddenInput);
+    dropDown.appendChild(selected);
+    dropDown.appendChild(options);
 
-    return div;
+    return dropDown;
+}
+
+function _createIconSelector() {
+    const iconOptions = ['📝', '💡', '🚀', '💼', '📊', '🎯', '✨', '🔥', '💻', '🌟'];
+
+    const dropDown = document.createElement("div");
+    dropDown.className = "custom-dropdown";
+    dropDown.id = "icon";
+
+    const hiddenInput = document.createElement("input");
+    hiddenInput.type = "hidden";
+    hiddenInput.name = "article-icon";
+    hiddenInput.value = iconOptions[0];
+
+    const selected = document.createElement("div");
+    selected.className = "selected";
+    selected.textContent = iconOptions[0];
+    selected.name = "article-icon";
+
+    const options = document.createElement("div");
+    options.className = "options";
+
+    iconOptions.forEach(icon => {
+        const option = document.createElement("div");
+        option.className = "option";
+        option.textContent = icon;
+        options.appendChild(option);
+    });
+
+    dropDown.appendChild(hiddenInput);
+    dropDown.appendChild(selected);
+    dropDown.appendChild(options);
+
+    return dropDown;
 }

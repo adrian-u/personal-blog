@@ -74,3 +74,7 @@ export function setActiveNav(path) {
     }
   });
 }
+
+export async function initConfirmationModal() {
+  await htmlImporter("body", "./src/components/confirmation-modal.html");
+}
