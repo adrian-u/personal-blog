@@ -1,5 +1,7 @@
-import { getArticlesWithoutMarkdown } from "../../apis/article";
+import { getArticlesWithoutMarkdown, deleteWipArticle } from "../../apis/article";
+import logger from "../../utils/logger";
 import { closeModal, openConfirmationModal } from "../../utils/modals";
+import { showToast } from "../../utils/toast";
 import { loadWipArticle } from "./build-create-page";
 
 export default async function buildArticleWip() {
@@ -14,6 +16,8 @@ export default async function buildArticleWip() {
         const box = renderArticle(article);
         wipArticle.appendChild(box);
     });
+
+    if (!wipArticle.hasChildNodes()) wipArticle.style = "display: none";
 }
 
 export function renderArticle(article) {
@@ -21,7 +25,8 @@ export function renderArticle(article) {
     workInProgressBox.className = "article-wip-box";
     workInProgressBox.id = article.id;
     workInProgressBox.addEventListener('click', () => {
-        loadWipArticle(workInProgressBox.id);
+        _buildLoadWipArticleConfirmationModal(article.title, workInProgressBox.id);
+        openConfirmationModal();
     });
     workInProgressBox.appendChild(_createIconSection(article.icon));
     workInProgressBox.appendChild(_createInfoSection(article));
@@ -50,7 +55,7 @@ function _createInfoSection(article) {
     deleteButton.textContent = "✕";
     deleteButton.addEventListener("click", (e) => {
         e.stopPropagation();
-        _buildDeleteConfirmationModal(article.title);
+        _buildDeleteConfirmationModal(article.title, article.id);
         openConfirmationModal();
     });
 
@@ -86,7 +91,32 @@ function _createInfoSection(article) {
     return infoSection;
 }
 
-function _buildDeleteConfirmationModal(title) {
+async function _buildLoadWipArticleConfirmationModal(title, id) {
+
+    const modalContainer = document.getElementById("confirmation-modal");
+    const contentModal = modalContainer.querySelector("#confirmation-content");
+    contentModal.classList.add("modal-confirmation");
+
+    const modalHeader = contentModal.querySelector("#conf-header");
+    const modalText = contentModal.querySelector("#conf-text");
+    const confirmButton = contentModal.querySelector("#confirm");
+    const cancelButton = contentModal.querySelector("#cancel");
+
+    modalHeader.textContent = "Load Article";
+    modalText.innerHTML = `
+    <span>This operation will overide all not saved work.</span>
+    <br> 
+    <span>Make sure to save all the current work before loading <strong class="modal-conf-title">${title}</strong> article</span>`
+
+    confirmButton.onclick = async () => {
+        await loadWipArticle(id);
+        closeModal(modalContainer);
+    };
+    cancelButton.onclick = () => closeModal(modalContainer);
+
+}
+
+function _buildDeleteConfirmationModal(title, id) {
     const modalContainer = document.getElementById("confirmation-modal");
     const contentModal = modalContainer.querySelector("#confirmation-content");
     contentModal.classList.add("delete-confirmation");
@@ -102,9 +132,20 @@ function _buildDeleteConfirmationModal(title) {
     <br>
     <span class="delete-subtext">This action cannot be undone.</span>`
 
-    confirmButton.onclick = () => {
-        alert("Article Deleted!");
-        closeModal(modalContainer);
+    confirmButton.onclick = async () => {
+        try {
+            await deleteWipArticle(id);
+            document.getElementById(id)?.remove();
+            const wipArticle = document.getElementById("wip-article");
+            if (!wipArticle.hasChildNodes()) {
+                wipArticle.style = "display: none";
+            }
+            closeModal(modalContainer);
+            showToast("Article deleted", "success");
+        } catch (err) {
+            logger("error", "WIP-Delete Article", `Failed to delete the wip article with id: [${id}]. Error: [${err}]`);
+            showToast("Failed to delete article", "error");
+        }
     };
 
     cancelButton.onclick = () => closeModal(modalContainer);

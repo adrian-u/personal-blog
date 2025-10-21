@@ -1,4 +1,4 @@
-import { save, getArticlesWithoutMarkdown, getWipArticle, updateArticle } from "../data-access/article.repository.js";
+import { save, getArticlesWithoutMarkdown, getWipArticle, updateArticle, deleteWip } from "../data-access/article.repository.js";
 import { isEmpty } from "../utils/general.js";
 import logger from "../utils/logger.js";
 
@@ -39,7 +39,7 @@ export async function getWipArt(id, traceId) {
 export async function updateWipArticle(article, id, traceId) {
     const LOCAL_LOG_CONTEXT = "Update WIP Article";
 
-    logger("debug", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Handling request with id: [${id}] and body: ${JSON.stringify(article, null, 4)}`);
+    logger("info", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Handling request with id: [${id}] and body: ${JSON.stringify(article, null, 4)}`);
 
     if (isEmpty(article)) return;
 
@@ -56,6 +56,19 @@ export async function updateWipArticle(article, id, traceId) {
         return updatedArticle;
     } catch (error) {
         logger("error", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Error updating the wip article with id: [${id}]. Error: [${error.message}]`);
+        throw error;
+    }
+}
+
+export async function deleteWipArticle(id, traceId) {
+    const LOCAL_LOG_CONTEXT = "Delete WIP Article";
+
+    logger("info", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Deleting article with id: ${id}`);
+
+    try {
+        await deleteWip(id, traceId);
+    } catch (error) {
+        logger("error", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Error deleting wip article with id: [${id}]. Error: [${error.message}]`);
         throw error;
     }
 }

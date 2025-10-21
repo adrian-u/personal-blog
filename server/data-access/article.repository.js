@@ -85,3 +85,20 @@ export async function updateArticle(article, id, traceId) {
         throw new DbError(`Failed to update the wip article with id: [${id}]`);
     }
 }
+
+export async function deleteWip(id, traceId) {
+    const LOCAL_LOG_CONTEXT = "Delete Wip";
+
+    logger("info", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Deleting wip article with id: [${id}]`);
+
+    const query = `DELETE from articles WHERE id = $1;`;
+
+    logger("debug", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Builded query: [${query}] for wip article with id: [${id}]`);
+
+    try {
+        await db.query(query, [id]);
+    } catch (error) {
+        logger("error", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `DB query failed to delete the article with id: [${id}]. Error: [${error}]`);
+        throw new DbError(`Failed to delete the wip article with id: [${id}]`);
+    }
+}

@@ -52,7 +52,29 @@ function _saveEvent(button, articleForm) {
         try {
             const createdArticle = await createArticle(json);
             showToast("Article created successfully", "success");
+            _fillArticleMetadata(createdArticle);
+            _reloadArticleEditor(createdArticle.markdown);
+            const saveButton = document.getElementById("save");
+            const oldButton = document.getElementById("update");
+            const newButton = oldButton.cloneNode(true);
+            oldButton.replaceWith(newButton);
+
+            saveButton.style = "display: none";
+            newButton.style = "display: block";
+
+            newButton.addEventListener('click', async (event) => {
+                event.preventDefault();
+                _updateArticle(createdArticle.id, {
+                    title: createdArticle.title,
+                    icon: createdArticle.icon,
+                    category: createdArticle.category,
+                    description: createdArticle.description,
+                    markdown: createdArticle.markdown,
+                });
+            });
+
             const wipArticle = document.getElementById("wip-article");
+            wipArticle.style = "display: flex";
             const newArticleBox = renderArticle(createdArticle);
             wipArticle.appendChild(newArticleBox);
         } catch (error) {
@@ -71,7 +93,7 @@ export async function loadWipArticle(id) {
 
         const saveButton = document.getElementById("save");
         const oldButton = document.getElementById("update");
-        const newButton = oldButton.cloneNode(oldButton);
+        const newButton = oldButton.cloneNode(true);
         oldButton.replaceWith(newButton);
 
         saveButton.style = "display: none";
@@ -113,10 +135,15 @@ async function _updateArticle(id, oldValues) {
     if (markdown.trim() !== oldValues.markdown.trim()) updates.push({ "op": "update", "field": "markdown", "value": markdown });
 
     if (!isEmpty(updates)) {
-        const updatedArticle = await updateArticle(id, updates);
-        const box = renderArticle(updatedArticle);
-        const oldBox = document.getElementById(id);
-        oldBox.replaceWith(box);
+        try {
+            const updatedArticle = await updateArticle(id, updates);
+            const oldBox = document.getElementById(id);
+            if (oldBox) oldBox.replaceWith(renderArticle(updatedArticle));
+            showToast("Article updated successfully", "success");
+        } catch (err) {
+            logger("error", `${LOG_CONTEXT} - Update`, err);
+            showToast("Failed to update article", "error");
+        }
     }
 }
 
@@ -169,7 +196,7 @@ function _preview(mdEditor) {
         },
         sync: {
             editor: mdEditor,
-            delay: 50,
+            delay: 300,
             scrollSync: 1,
         },
         hashtag: {
