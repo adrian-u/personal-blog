@@ -110,6 +110,7 @@ async function _buildLoadWipArticleConfirmationModal(title, id) {
 
     confirmButton.onclick = async () => {
         await loadWipArticle(id);
+        setActiveWipArticle(id);
         closeModal(modalContainer);
     };
     cancelButton.onclick = () => closeModal(modalContainer);
@@ -149,4 +150,13 @@ function _buildDeleteConfirmationModal(title, id) {
     };
 
     cancelButton.onclick = () => closeModal(modalContainer);
+}
+
+export function setActiveWipArticle(id) {
+    document.querySelectorAll(".article-wip-box.active").forEach(el => {
+        el.classList.remove("active");
+    });
+
+    const selected = document.getElementById(id);
+    if (selected) selected.classList.add("active");
 }

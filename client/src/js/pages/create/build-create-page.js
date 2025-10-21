@@ -1,6 +1,6 @@
 import buildArticleMetadata from "./article-metadata";
 import buildArticleEditor from "./article-editor";
-import buildArticleWip, { renderArticle } from "./wip-article";
+import buildArticleWip, { renderArticle, setActiveWipArticle } from "./wip-article";
 import htmlImporter from "../../utils/html-importer";
 import { createArticle, getWipArticle, updateArticle } from "../../apis/article";
 import { openArticlePreviewModal } from "../../utils/modals";
@@ -14,14 +14,15 @@ const LOG_CONTEXT = "Build Create Page";
 
 let mdEditor = null;
 
-export default async function buildCreatePage() {
 
+export default async function buildCreatePage() {
+    
     await _createPreviewModal();
     buildArticleMetadata();
     mdEditor = buildArticleEditor();
     await buildArticleWip();
-    const articleForm = document.getElementById("article-form");
 
+    const articleForm = document.getElementById("article-form");
     const previewButton = document.getElementById("preview");
     _saveEvent(document.getElementById("save"), articleForm);
 
@@ -139,6 +140,7 @@ async function _updateArticle(id, oldValues) {
             const updatedArticle = await updateArticle(id, updates);
             const oldBox = document.getElementById(id);
             if (oldBox) oldBox.replaceWith(renderArticle(updatedArticle));
+            setActiveWipArticle(id);
             showToast("Article updated successfully", "success");
         } catch (err) {
             logger("error", `${LOG_CONTEXT} - Update`, err);
@@ -196,7 +198,7 @@ function _preview(mdEditor) {
         },
         sync: {
             editor: mdEditor,
-            delay: 300,
+            delay: 200,
             scrollSync: 1,
         },
         hashtag: {

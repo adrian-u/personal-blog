@@ -33,8 +33,6 @@
 }
 
 .articles-wip-section {
-    border: 1px solid var(--color-gray);
-    border-radius: 2rem;
     padding: 0.5rem;
     display: flex;
     flex-direction: column;
@@ -243,6 +241,18 @@
     transform: translateY(-5px);
     box-shadow: 0 0 0.5rem 0 var(--color-primary);
 }
+
+.article-wip-box.active {
+    box-shadow: 0 0 0.5rem 0 var(--color-primary);
+    border-color: var(--color-primary);
+    transform: scale(1.02) translateY(-5px);
+    pointer-events: none;
+}
+
+.article-wip-box.active .delete-btn {
+    display: none !important;
+}
+
 
 .custom-dropdown {
     position: relative;

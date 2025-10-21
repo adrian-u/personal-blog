@@ -1,6 +1,6 @@
 .btn {
     padding: 0.75rem 2rem;
-    border-radius: 16px;
+    border-radius: 1rem;
     text-decoration: none;
     cursor: pointer;
     border-style: solid;
@@ -62,6 +62,18 @@
 
 .btn-green:hover {
     background-color: var(--color-primary-hover);
+}
+
+.btn-neutral {
+    background-color: var(--color-background-details);
+    color: var(--color-snow);
+    width: 100%;
+    border-color: var(--color-borders);
+    outline: none;
+}
+
+.btn-neutral:hover {
+    background-color: var(--color-background-details-hover);
 }
 
 /* OLD BUTTONS */
