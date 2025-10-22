@@ -1,4 +1,4 @@
-import { saveArticle, getArticles, getWipArt, updateWipArticle, deleteWipArticle } from "../services/article.service.js";
+import { saveArticle, getArticlesWip, getWipArt, updateWipArticle, deleteWipArticle, getArticlesByCategory } from "../services/article.service.js";
 import logger from "../utils/logger.js";
 import { checkIfArticleBodyIsValid } from "../utils/article-utils.js";
 
@@ -34,7 +34,7 @@ export async function createArticle(req, res) {
 export async function getArticlesCreator(res) {
 
     try {
-        const articles = await getArticles();
+        const articles = await getArticlesWip();
 
         res.writeHead(200, { "Content-Type": "application/json" });
         res.end(JSON.stringify(articles));
@@ -87,6 +87,22 @@ export async function deleteArticle(req, res, id) {
         await deleteWipArticle(id, req.traceId);
         res.writeHead(200, { "Content-Type": "application/json" });
         res.end(JSON.stringify({ message: "Article deleted" }));
+    } catch (error) {
+        logger("error", req.traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `${error.name}: ${error.message}`);
+        res.writeHead(error.statusCode, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ name: error.name, error: error.message }));
+    }
+}
+
+export async function getArticles(req, res, category, limit, offset) {
+    const LOCAL_LOG_CONTEXT = "Get Articles by Category";
+
+    logger("info", req.traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Start fetching articles for category: [${category}]`);
+
+    try {
+        const articles = await getArticlesByCategory(category, req.traceId, limit, offset);
+        res.writeHead(200, { "Content-Type": "application/json" });
+        res.end(JSON.stringify(articles));
     } catch (error) {
         logger("error", req.traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `${error.name}: ${error.message}`);
         res.writeHead(error.statusCode, { "Content-Type": "application/json" });

@@ -1,119 +1,90 @@
-export default function buildProjectsOverview() {
-    return `
-        <div class="projects-grid">
-            <article class="project-card">
-                <div class="project-header">
-                    <div class="project-icon">📊</div>
-                    <div class="project-info">
-                        <h3>Portfolio Tracker</h3>
-                        <div class="project-date">December 2024</div>
-                    </div>
-                </div>
-                <p class="project-description">
-                    A comprehensive investment portfolio tracking application with real-time market data,
-                    performance analytics, and risk assessment tools. Built with React and Node.js
-                </p>
-                <div class="project-tags">
-                    <span class="project-tag">React</span>
-                    <span class="project-tag">Node.js</span>
-                    <span class="project-tag">MongoDB</span>
-                </div>
-                <div class="project-actions">
-                    <a href="#" class="project-btn primary">View Project</a>
-                    <a href="#" class="project-btn secondary">Live Demo</a>
-                </div>
-            </article>
-            <article class="project-card">
-                <div class="project-header">
-                    <div class="project-icon">📊</div>
-                    <div class="project-info">
-                        <h3>Portfolio Tracker</h3>
-                        <div class="project-date">December 2024</div>
-                    </div>
-                </div>
-                <p class="project-description">
-                    A comprehensive investment portfolio tracking application with real-time market data,
-                    performance analytics, and risk assessment tools. Built with React and Node.js
-                </p>
-                <div class="project-tags">
-                    <span class="project-tag">React</span>
-                    <span class="project-tag">Node.js</span>
-                    <span class="project-tag">MongoDB</span>
-                </div>
-                <div class="project-actions">
-                    <a href="#" class="project-btn primary">View Project</a>
-                    <a href="#" class="project-btn secondary">Live Demo</a>
-                </div>
-            </article>
-            <article class="project-card">
-                <div class="project-header">
-                    <div class="project-icon">📊</div>
-                    <div class="project-info">
-                        <h3>Portfolio Tracker</h3>
-                        <div class="project-date">December 2024</div>
-                    </div>
-                </div>
-                <p class="project-description">
-                    A comprehensive investment portfolio tracking application with real-time market data,
-                    performance analytics, and risk assessment tools. Built with React and Node.js
-                </p>
-                <div class="project-tags">
-                    <span class="project-tag">React</span>
-                    <span class="project-tag">Node.js</span>
-                    <span class="project-tag">MongoDB</span>
-                </div>
-                <div class="project-actions">
-                    <a href="#" class="project-btn primary">View Project</a>
-                    <a href="#" class="project-btn secondary">Live Demo</a>
-                </div>
-            </article>
-            <article class="project-card">
-                <div class="project-header">
-                    <div class="project-icon">📊</div>
-                    <div class="project-info">
-                        <h3>Portfolio Tracker</h3>
-                        <div class="project-date">December 2024</div>
-                    </div>
-                </div>
-                <p class="project-description">
-                    A comprehensive investment portfolio tracking application with real-time market data,
-                    performance analytics, and risk assessment tools. Built with React and Node.js
-                </p>
-                <div class="project-tags">
-                    <span class="project-tag">React</span>
-                    <span class="project-tag">Node.js</span>
-                    <span class="project-tag">MongoDB</span>
-                </div>
-                <div class="project-actions">
-                    <a href="#" class="project-btn primary">View Project</a>
-                    <a href="#" class="project-btn secondary">Live Demo</a>
-                </div>
-            </article>
-            <article class="project-card">
-                <div class="project-header">
-                    <div class="project-icon">📊</div>
-                    <div class="project-info">
-                        <h3>Portfolio Tracker</h3>
-                        <div class="project-date">December 2024</div>
-                    </div>
-                </div>
-                <p class="project-description">
-                    A comprehensive investment portfolio tracking application with real-time market data,
-                    performance analytics, and risk assessment tools. Built with React and Node.js
-                </p>
-                <div class="project-tags">
-                    <span class="project-tag">React</span>
-                    <span class="project-tag">Node.js</span>
-                    <span class="project-tag">MongoDB</span>
-                </div>
-                <div class="project-actions">
-                    <a href="#" class="project-btn primary">View Project</a>
-                    <a href="#" class="project-btn secondary">Live Demo</a>
-                </div>
-            </article>
-        </div>
-        <div class="load-more">
-            <button class="load-more-btn" id="load-more-btn">Load More Projects</button>
-        </div>
-    `;
+import { getArticlesByCategory } from "../../apis/article";
+import logger from "../../utils/logger";
+import { showToast } from "../../utils/toast";
+
+
+const LIMIT = 1;
+let offset = 0;
+const LOG_CONTEXT = "Projects Articles Overview"
+
+export default async function buildProjectsOverview() {
+
+    offset = 0;
+
+    const grid = document.createElement("div");
+    grid.classList.add("projects-grid");
+
+    const loadMoreButton = document.getElementById("load-more");
+    loadMoreButton.addEventListener("click", () => _loadArticles(grid, loadMoreButton));
+
+    _loadArticles(grid, loadMoreButton);
+
+    return grid;
+}
+
+async function _loadArticles(grid, loadMoreButton) {
+
+    try {
+        loadMoreButton.disabled = true;
+        loadMoreButton.classList.add("loading");
+        const articles = await getArticlesByCategory("Projects", LIMIT, offset);
+
+        articles.forEach((item) => {
+            const article = document.createElement("article");
+            article.classList.add("card");
+            article.id = item.id;
+            article.addEventListener("click", () => alert("TODO: Reading the article"));
+
+            article.appendChild(_buildCardHeader(item));
+            article.appendChild(_description(item));
+
+            grid.appendChild(article);
+
+            requestAnimationFrame(() => {
+                    setTimeout(() => article.classList.add("visible"), 50);
+                });
+        });
+
+        offset += LIMIT;
+        loadMoreButton.disabled = false;
+        loadMoreButton.classList.remove("loading");
+        loadMoreButton.textContent = "Load More";
+        
+    } catch (error) {
+        logger("error", `${LOG_CONTEXT} - "Loading Articles"`, error);
+        showToast("Failed to load articles", "error");
+    }
+}
+
+function _buildCardHeader(item) {
+    const cardHeader = document.createElement("div");
+    cardHeader.classList.add("card-header");
+
+    const cardIcon = document.createElement("div");
+    cardIcon.classList.add("card-icon");
+    cardIcon.textContent = item.icon;
+    cardHeader.appendChild(cardIcon);
+
+    const cardInfo = document.createElement("div");
+    cardInfo.classList.add("card-info");
+    cardHeader.appendChild(cardInfo);
+
+    const infoTitle = document.createElement("h3");
+    infoTitle.textContent = item.title;
+    cardInfo.appendChild(infoTitle);
+
+    const date = document.createElement("div");
+    date.classList.add("card-date");
+    date.textContent = new Date(item.created_at).toISOString().split("T")[0];
+    cardInfo.appendChild(date);
+
+    return cardHeader;
+}
+
+function _description(item) {
+    const description = document.createElement("p");
+    description.classList.add("card-description");
+    description.textContent = item.description;
+
+    return description;
 }

@@ -7,5 +7,5 @@ export default async function buildProjectsPage() {
     const projects = document.getElementById('projects-overview');
 
     header.innerHTML = buildProjectsHeader();
-    projects.innerHTML = buildProjectsOverview();
+    projects.appendChild(await buildProjectsOverview());
 }

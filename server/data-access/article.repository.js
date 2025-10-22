@@ -102,3 +102,20 @@ export async function deleteWip(id, traceId) {
         throw new DbError(`Failed to delete the wip article with id: [${id}]`);
     }
 }
+
+export async function fetchArticlesByCategory(category, traceId, limit = 10, offset = 0) {
+    const LOCAL_LOG_CONTEXT = "Fetch Articles by Category";
+
+    logger("info", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`,
+        `Fetching articles for category [${category}] with limit=${limit}, offset=${offset}`);
+
+    const query = ` SELECT id, title, icon, description, created_at FROM articles WHERE category = $1 ORDER BY created_at DESC LIMIT $2 OFFSET $3;`;
+
+    try {
+        const res = await db.query(query, [category, limit, offset]);
+        return res.rows;
+    } catch (error) {
+        logger("error", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `DB query failed to fetch articles for category: [${category}]. Error: [${error}]`);
+        throw new DbError(`Failed to fetch articles with category: [${category}]`);
+    }
+}

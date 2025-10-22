@@ -36,6 +36,7 @@
     color: var(--color-snow);
     border-color: var(--color-borders-blue-cosmo);
     width: 100%;
+    outline: none;
 }
 
 .btn-blue:hover {
@@ -47,6 +48,7 @@
     border-color: var(--color-danger-border);
     width: 100%;
     color: var(--color-snow);
+    outline: none;
 }
 
 .btn-danger:hover {
@@ -58,6 +60,7 @@
     color: var(--color-snow);
     border-color: var(--color-primary-border);
     width: 100%;
+    outline: none;
 }
 
 .btn-green:hover {

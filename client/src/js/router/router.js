@@ -13,6 +13,7 @@ const routes = {
 };
 
 export async function setupRouting() {
+    await initNavbar();
     await initLoginModal();
     await initConfirmationModal();
     window.onpopstate = () => renderRoute(location.pathname);
@@ -35,8 +36,6 @@ export async function renderRoute(path = location.pathname) {
     const file = routes[path] || routes['/'];
 
     container.innerHTML = await _fetchHTML(file);
-
-    await initNavbar();
     setActiveNav(path)
 
     if (path === '/oauth2/auth') {

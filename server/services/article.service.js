@@ -1,6 +1,7 @@
-import { save, getArticlesWithoutMarkdown, getWipArticle, updateArticle, deleteWip } from "../data-access/article.repository.js";
+import { save, getArticlesWithoutMarkdown, getWipArticle, updateArticle, deleteWip, fetchArticlesByCategory } from "../data-access/article.repository.js";
 import { isEmpty } from "../utils/general.js";
 import logger from "../utils/logger.js";
+import { ValidationError } from "../errors/custom-errors.js";
 
 const LOG_CONTEXT = "Article Service";
 
@@ -18,7 +19,7 @@ export async function saveArticle(article, traceId) {
 
 }
 
-export async function getArticles() {
+export async function getArticlesWip() {
     const articles = getArticlesWithoutMarkdown();
     return articles;
 }
@@ -69,6 +70,25 @@ export async function deleteWipArticle(id, traceId) {
         await deleteWip(id, traceId);
     } catch (error) {
         logger("error", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Error deleting wip article with id: [${id}]. Error: [${error.message}]`);
+        throw error;
+    }
+}
+
+export async function getArticlesByCategory(category, traceId, limit, offset) {
+    const LOCAL_LOG_CONTEXT = "Get Articles by Category";
+    const VALID_CATEGORIES = ["Projects", "Finance"];
+
+    logger("info", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Getting articles for category: ${category}`);
+
+    if (isEmpty(category) || !VALID_CATEGORIES.includes(category)) {
+        logger("error", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `This is not a valid category: [${category}]`);
+        throw new ValidationError(`The category: [${category}] is not a valid category`);
+    }
+
+    try {
+        return await fetchArticlesByCategory(category, traceId, limit, offset);
+    } catch (error) {
+        logger("error", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Error fetching articles for category: [${category}]. Error: [${error.message}]`);
         throw error;
     }
 }
