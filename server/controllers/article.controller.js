@@ -1,4 +1,7 @@
-import { saveArticle, getArticlesWip, getWipArt, updateWipArticle, deleteWipArticle, getArticlesByCategory } from "../services/article.service.js";
+import {
+    saveArticle, getArticlesWip, getWipArt, updateWipArticle,
+    deleteWipArticle, getArticlesByCategory, getReadArticle
+} from "../services/article.service.js";
 import logger from "../utils/logger.js";
 import { checkIfArticleBodyIsValid } from "../utils/article-utils.js";
 
@@ -107,5 +110,21 @@ export async function getArticles(req, res, category, limit, offset) {
         logger("error", req.traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `${error.name}: ${error.message}`);
         res.writeHead(error.statusCode, { "Content-Type": "application/json" });
         res.end(JSON.stringify({ name: error.name, error: error.message }));
+    }
+}
+
+export async function getArticleForReading(req, res, id) {
+    const LOCAL_LOG_CONTEXT = "Get Article for Reading";
+
+    logger("info", req.traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Start fetching article with id: [${id}]`);
+
+    try {
+        const article = await getReadArticle(id, req.traceId);
+        res.writeHead(200, { "Content-Type": "application/json" });
+        res.end(JSON.stringify(article));
+    } catch (error) {
+        logger("error", req.traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `${error.name}: ${error.message}`);
+        res.writeHead(error.statusCode, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ name: error.name, error: error.message }))
     }
 }

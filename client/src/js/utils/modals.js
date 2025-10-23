@@ -16,6 +16,12 @@ export function openConfirmationModal() {
   modal.classList.remove("hidden");
 }
 
+export function openReadModal() {
+  const modal = document.getElementById("read-article-modal");
+  modal.classList.add("show");
+  modal.classList.remove("hidden");
+}
+
 export function handleEscape(event) {
 
   if (event.key !== "Escape") return;

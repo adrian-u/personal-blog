@@ -1,9 +1,10 @@
 import { getArticlesByCategory } from "../../apis/article";
 import logger from "../../utils/logger";
 import { showToast } from "../../utils/toast";
+import { readArticle } from "../common/read";
 
 
-const LIMIT = 1;
+const LIMIT = 6;
 let offset = 0;
 const LOG_CONTEXT = "Projects Articles Overview"
 
@@ -27,13 +28,13 @@ async function _loadArticles(grid, loadMoreButton) {
     try {
         loadMoreButton.disabled = true;
         loadMoreButton.classList.add("loading");
-        const articles = await getArticlesByCategory("Projects", LIMIT, offset);
+        const { totalCount, articles } = await getArticlesByCategory("Projects", LIMIT, offset);
 
         articles.forEach((item) => {
             const article = document.createElement("article");
             article.classList.add("card");
             article.id = item.id;
-            article.addEventListener("click", () => alert("TODO: Reading the article"));
+            article.addEventListener("click", () => readArticle(article.id));
 
             article.appendChild(_buildCardHeader(item));
             article.appendChild(_description(item));
@@ -41,15 +42,19 @@ async function _loadArticles(grid, loadMoreButton) {
             grid.appendChild(article);
 
             requestAnimationFrame(() => {
-                    setTimeout(() => article.classList.add("visible"), 50);
-                });
+                setTimeout(() => article.classList.add("visible"), 50);
+            });
         });
 
         offset += LIMIT;
         loadMoreButton.disabled = false;
         loadMoreButton.classList.remove("loading");
         loadMoreButton.textContent = "Load More";
-        
+
+        if (offset >= totalCount) {
+            loadMoreButton.style = "display: none";
+        }
+
     } catch (error) {
         logger("error", `${LOG_CONTEXT} - "Loading Articles"`, error);
         showToast("Failed to load articles", "error");

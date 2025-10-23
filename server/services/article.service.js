@@ -1,4 +1,7 @@
-import { save, getArticlesWithoutMarkdown, getWipArticle, updateArticle, deleteWip, fetchArticlesByCategory } from "../data-access/article.repository.js";
+import {
+    save, getArticlesWithoutMarkdown, getWipArticle,
+    updateArticle, deleteWip, fetchArticlesByCategory, getReadArticleById
+} from "../data-access/article.repository.js";
 import { isEmpty } from "../utils/general.js";
 import logger from "../utils/logger.js";
 import { ValidationError } from "../errors/custom-errors.js";
@@ -89,6 +92,19 @@ export async function getArticlesByCategory(category, traceId, limit, offset) {
         return await fetchArticlesByCategory(category, traceId, limit, offset);
     } catch (error) {
         logger("error", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Error fetching articles for category: [${category}]. Error: [${error.message}]`);
+        throw error;
+    }
+}
+
+export async function getReadArticle(id, traceId) {
+    const LOCAL_LOG_CONTEXT = "Get Read Article";
+
+    logger("info", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Getting article with id: ${id}`);
+
+    try {
+        return await getReadArticleById(id, traceId);
+    } catch (error) {
+        logger("error", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Error fetching article with id: [${id}]. Error: [${error.message}]`);
         throw error;
     }
 }

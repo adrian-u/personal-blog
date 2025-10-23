@@ -1,6 +1,9 @@
 import { verifyJWT, authorizeRole } from "../services/oauth.service.js";
 import { registerRoute } from "./router.manager.js";
-import { createArticle, getArticlesCreator, getWipArticle, updateArticle, deleteArticle, getArticles } from "../controllers/article.controller.js";
+import {
+    createArticle, getArticlesCreator, getWipArticle, updateArticle,
+    deleteArticle, getArticles, getArticleForReading
+} from "../controllers/article.controller.js";
 
 registerRoute("POST", "/api/v1/article", async (req, res) => {
 
@@ -40,7 +43,7 @@ registerRoute("DELETE", "/api/v1/article/wip/:id", async (req, res, params) => {
     await deleteArticle(req, res, id);
 })
 
-registerRoute("GET", "/api/v1/article/:category", async (req, res, params) => {
+registerRoute("GET", "/api/v1/article/category/:category", async (req, res, params) => {
     const { category } = params;
 
     const url = new URL(req.url, `http://${req.headers.host}`);
@@ -49,6 +52,12 @@ registerRoute("GET", "/api/v1/article/:category", async (req, res, params) => {
 
     await getArticles(req, res, category, limit, offset);
 })
+
+registerRoute("GET", "/api/v1/article/:id", async (req, res, params) => {
+    const { id } = params;
+
+    await getArticleForReading(req, res, id);
+});
 
 function _creatorOperations(req, res) {
     const user = verifyJWT(req, res);
