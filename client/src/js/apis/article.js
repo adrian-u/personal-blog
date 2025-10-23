@@ -40,9 +40,9 @@ export async function getArticlesWithoutMarkdown() {
 
     try {
 
-        logger("debug", `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Calling backend url: [${import.meta.env.VITE_API_URL}/article]`);
+        logger("debug", `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Calling backend url: [${import.meta.env.VITE_API_URL}/article/wip]`);
 
-        const res = await fetch(`${import.meta.env.VITE_API_URL}/article`, {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/article/wip`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -110,6 +110,50 @@ export async function deleteWipArticle(id) {
             headers: {
                 "Content-Type": "application/json",
                 "Authorization": `Bearer ${getJWT()}`
+            }
+        });
+
+        return await res.json();
+    } catch (error) {
+        logger("error", `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, error);
+        throw error;
+    }
+}
+
+export async function getArticlesByCategory(category, limit = 10, offset = 0) {
+    const LOCAL_LOG_CONTEXT = "Get Articles by Category";
+
+    const url = `${import.meta.env.VITE_API_URL}/article/category/${category}?limit=${limit}&offset=${offset}`;
+
+    try {
+        logger("debug", `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Calling backend url: [${url}]`);
+
+        const res = await fetch(`${url}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        });
+
+        return await res.json();
+    } catch (error) {
+        logger("error", `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, error);
+        throw error;
+    }
+}
+
+export async function getArticleForReading(id) {
+    const LOCAL_LOG_CONTEXT = "Get Article for Readiing";
+
+    const url = `${import.meta.env.VITE_API_URL}/article/${id}`;
+
+    try {
+        logger("debug", `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Calling backend url: [${url}]`);
+
+        const res = await fetch(`${url}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
             }
         });
 

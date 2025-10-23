@@ -235,6 +235,13 @@
     font-size: 1rem;
     font-weight: 500;
     letter-spacing: var(--letter-spacing);
+    overflow-y: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+#article-preview-content.modal-content::-webkit-scrollbar {
+    display: none;
 }
 
 .article-wip-box:hover {
@@ -253,10 +260,9 @@
     display: none !important;
 }
 
-
 .custom-dropdown {
     position: relative;
-    background: linear-gradient(to right bottom, var(--color-primary), var(--color-primary-background));
+    background: linear-gradient(45deg, var(--color-primary), var(--color-primary-background));
     border-radius: 1rem;
     cursor: pointer;
     font-size: 1.5rem;
