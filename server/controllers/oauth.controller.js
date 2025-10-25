@@ -25,8 +25,8 @@ export async function handleOAuthToken(req, res) {
             provider: provider
         };
 
-        await saveUser(user);
-        const jwt = await createJWT(user);
+        const createdUser = await saveUser(user);
+        const jwt = createJWT(createdUser);
 
         res.writeHead(200, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ token: jwt }));

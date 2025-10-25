@@ -1,15 +1,18 @@
 .btn {
-    padding: 0.75rem 2rem;
+    padding: 0.75rem 1.5rem;
     border-radius: 1rem;
     text-decoration: none;
     cursor: pointer;
     border-style: solid;
     border-width: 0 0 4px 0;
-    height: 50px;
     font-size: var(--font-size);
     letter-spacing: var(--letter-spacing);
     text-transform: uppercase;
     font-weight: 700;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .btn-flex {
@@ -17,17 +20,13 @@
     justify-content: center;
     align-items: center;
     position: relative;
-    touch-action: manipulation;
-    transform: translateZ(0);
 }
 
 .btn:active {
-    /* transform: translateY(4px); */
     border-bottom-width: 0;
 }
 
 #auth-buttons {
-    width: 80%;
     margin-top: 50px;
 }
 
@@ -35,7 +34,6 @@
     background-color: var(--color-secondary);
     color: var(--color-snow);
     border-color: var(--color-borders-blue-cosmo);
-    width: 100%;
     outline: none;
 }
 
@@ -46,7 +44,6 @@
 .btn-danger {
     background-color: var(--color-danger);
     border-color: var(--color-danger-border);
-    width: 100%;
     color: var(--color-snow);
     outline: none;
 }
@@ -59,7 +56,6 @@
     background-color: var(--color-primary);
     color: var(--color-snow);
     border-color: var(--color-primary-border);
-    width: 100%;
     outline: none;
 }
 
@@ -70,53 +66,12 @@
 .btn-neutral {
     background-color: var(--color-background-details);
     color: var(--color-snow);
-    width: 100%;
     border-color: var(--color-borders);
     outline: none;
 }
 
 .btn-neutral:hover {
     background-color: var(--color-background-details-hover);
-}
-
-/* OLD BUTTONS */
-.cta-buttons {
-    display: flex;
-    gap: var(--space-sm);
-    justify-content: center;
-    flex-wrap: wrap;
-}
-
-.btn-primary {
-    background: linear-gradient(135deg, var(--color-accent), var(--color-accent-alt));
-    color: var(--color-text);
-    box-shadow: 0 4px 15px var(--color-btn-primary-shadow);
-}
-
-.btn-primary:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 25px var(--color-btn-primary-shadow);
-}
-
-.btn-secondary {
-    background: var(--color-btn-secondary-bg);
-    color: var(--color-text);
-    border: 1px solid var(--color-btn-secondary-hover);
-}
-
-.btn-secondary:hover {
-    background: var(--color-btn-secondary-hover);
-    transform: translateY(-3px);
-}
-
-.btn-logout {
-    background: var(--color-btn-secondary-bg);
-    color: var(--color-text);
-    border: 1px solid var(--color-btn-secondary-hover);
-}
-
-.btn-logout:hover {
-    background: var(--color-btn-secondary-hover);
 }
 
 .delete-btn {

@@ -2,13 +2,13 @@ import { isEmpty } from "./general.js";
 import logger from "./logger.js";
 import { BodyRequestValidationError } from "../errors/custom-errors.js";
 
-const LOG_CONTEXT = "Article Utils";
+const LOG_CONTEXT = "Comment Utils";
 
-export function checkIfArticleBodyIsValid(article, traceId) {
+export function checkIfCommentBodyIsValid(article, traceId) {
     const LOCAL_LOG_CONTEXT = "Body Validation";
 
     logger("debug", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Validation of body: ${JSON.stringify(article, null, 4)}`);
-    const FIELDS = ["title", "icon", "category", "description", "markdown"];
+    const FIELDS = ["articleId", "userId", "content"];
     const invalidFields = FIELDS.filter(field => isEmpty(article[field]));
     logger("debug", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Invalid fields array: [${invalidFields.join(", ")}]`)
 

@@ -11,9 +11,10 @@ export async function saveUser(user) {
             name = EXCLUDED.name,
             avatarUrl = EXCLUDED.avatarUrl,
             role = EXCLUDED.role,
-            updated_at = NOW();`;
+            updated_at = NOW() RETURNING *;`;
     try {
-        await db.query(query, [email, name, avatar, role, provider]);
+        const res = await db.query(query, [email, name, avatar, role, provider]);
+        return res.rows[0];
     } catch (error) {
         console.error(`DB query failed to save user data: [${error}]`);
         throw new DbError("Failed to save user data to database");
@@ -22,7 +23,7 @@ export async function saveUser(user) {
 
 export async function getUserDetailsByEmail(email) {
     const query = `
-        SELECT email, name, avatarUrl, role, created_at
+        SELECT id, email, name, avatarUrl, role, created_at
         FROM users
         WHERE users.email = $1;`;
     try {

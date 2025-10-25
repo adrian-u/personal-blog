@@ -2,6 +2,7 @@
 @import url('./base/variables.css');
 @import url('./base/reset.css');
 @import url('./base/typography.css');
+@import url('./base/utils.css');
 
 /* Layout */
 @import url('./layout/navbar.css');

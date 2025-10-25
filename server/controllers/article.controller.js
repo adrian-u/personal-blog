@@ -26,15 +26,21 @@ export async function createArticle(req, res) {
             published: article.published,
             created_at: article.created_at,
         }));
-    } catch (err) {
-        logger("error", req.traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `${err.name}: ${err.message}`);
-        res.writeHead(err.statusCode, { "Content-Type": "application/json" });
-        res.end(JSON.stringify({ name: err.name, error: err.message }));
+    } catch (error) {
+        logger("error", req.traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `${error.name}: ${error.message}`);
+        const status = error.statusCode || 500;
+        res.writeHead(status, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({
+            name: error.name || "InternalServerError",
+            error: error.message
+        }));
     }
 
 }
 
-export async function getArticlesCreator(res) {
+export async function getArticlesCreator(req, res) {
+
+    const LOCAL_LOG_CONTEXT = "Get Articles Creator";
 
     try {
         const articles = await getArticlesWip();
@@ -42,13 +48,14 @@ export async function getArticlesCreator(res) {
         res.writeHead(200, { "Content-Type": "application/json" });
         res.end(JSON.stringify(articles));
     } catch (error) {
-        console.error(`Error fetching articles without markdown content: [${error}]`);
-        res.writeHead(500, { "Content-Type": "application/json" });
-        res.end(JSON.stringify({ error: "Error fetching articles without markdown content" }))
+        logger("error", req.traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Error fetching articles without markdown content: [${error}]`);
+        const status = error.statusCode || 500;
+        res.writeHead(status, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ name: "Error Fetching Articles", error: "Error fetching articles without markdown content" }))
     }
 }
 
-export async function getWipArticle(res, req, id) {
+export async function getWipArticle(req, res, id) {
     const LOCAL_LOG_CONTEXT = "Get WIP Article";
 
     logger("info", req.traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Start fetch article by id: [${id}]`);
@@ -57,10 +64,11 @@ export async function getWipArticle(res, req, id) {
         const article = await getWipArt(id, req.traceId);
         res.writeHead(200, { "Content-Type": "application/json" });
         res.end(JSON.stringify(article));
-    } catch (err) {
-        logger("error", req.traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `${err.name}: ${err.message}`);
-        res.writeHead(err.statusCode, { "Content-Type": "application/json" });
-        res.end(JSON.stringify({ name: err.name, error: err.message }));
+    } catch (error) {
+        logger("error", req.traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `${error.name}: ${error.message}`);
+        const status = error.statusCode || 500;
+        res.writeHead(status, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ name: error.name, error: `Error fetching wip article with id: [${id}]` }));
     }
 
 }
@@ -76,8 +84,9 @@ export async function updateArticle(req, res, id) {
         res.end(JSON.stringify(article));
     } catch (error) {
         logger("error", req.traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `${error.name}: ${error.message}`);
-        res.writeHead(error.statusCode, { "Content-Type": "application/json" });
-        res.end(JSON.stringify({ name: error.name, error: error.message }));
+        const status = error.statusCode || 500;
+        res.writeHead(status, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ name: error.name, error: `Failed to update article with id: [${id}]` }));
     }
 }
 
@@ -92,8 +101,9 @@ export async function deleteArticle(req, res, id) {
         res.end(JSON.stringify({ message: "Article deleted" }));
     } catch (error) {
         logger("error", req.traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `${error.name}: ${error.message}`);
-        res.writeHead(error.statusCode, { "Content-Type": "application/json" });
-        res.end(JSON.stringify({ name: error.name, error: error.message }));
+        const status = error.statusCode || 500;
+        res.writeHead(status, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ name: error.name, error: `Failed to delete article with id: [${id}]` }));
     }
 }
 
@@ -108,8 +118,9 @@ export async function getArticles(req, res, category, limit, offset) {
         res.end(JSON.stringify(articles));
     } catch (error) {
         logger("error", req.traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `${error.name}: ${error.message}`);
-        res.writeHead(error.statusCode, { "Content-Type": "application/json" });
-        res.end(JSON.stringify({ name: error.name, error: error.message }));
+        const status = error.statusCode || 500;
+        res.writeHead(status, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ name: error.name, error: `Failed to fetch articles` }));
     }
 }
 
@@ -124,7 +135,8 @@ export async function getArticleForReading(req, res, id) {
         res.end(JSON.stringify(article));
     } catch (error) {
         logger("error", req.traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `${error.name}: ${error.message}`);
-        res.writeHead(error.statusCode, { "Content-Type": "application/json" });
-        res.end(JSON.stringify({ name: error.name, error: error.message }))
+        const status = error.statusCode || 500;
+        res.writeHead(status, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ name: error.name, error: `Failed to fetch read article with id: [${id}]` }))
     }
 }

@@ -1,9 +1,7 @@
 .modal-container {
-  background: rgba(rgb(var(--color-background)), 0.6);
   backdrop-filter: blur(5px);
   position: fixed;
   top: 0;
-  left: 0;
   height: 100%;
   width: 100%;
   display: flex;
@@ -15,6 +13,10 @@
   z-index: 2000;
 }
 
+.visibility {
+  z-index: 2100;
+}
+
 .modal-container.show {
   opacity: 1;
   visibility: visible;
@@ -22,22 +24,27 @@
 
 .modal {
   width: 100%;
-  max-width: 400px;
+  max-width: 700px;
   border-radius: 24px;
   transform: translateY(20px) scale(0.95);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
   position: relative;
+  background-color: var(--color-background-details);
 }
 
 .modal-container.show .modal {
   transform: translateY(0) scale(1);
 }
 
+.login {
+  max-width: 400px;
+}
+
 .modal-header {
   padding: 32px 32px 24px;
   text-align: center;
-  background: var(--color-primary);
+  background: var(--color-background-details);
   color: var(--color-snow);
   font-size: var(--font-size);
   letter-spacing: var(--letter-spacing);
@@ -53,7 +60,7 @@
 }
 
 .modal-content {
-  padding: 32px;
+  padding: 2rem;
 }
 
 .modal.large {
@@ -63,14 +70,19 @@
   max-height: 90vh;
 }
 
+.modal-confirmation {
+  border: 1px solid var(--color-gray);
+  border-radius: 2rem;
+}
+
 .modal.large .modal-content {
   max-height: 80vh;
   overflow-y: auto;
 }
 
 .modal-footer {
-  padding: 0 32px 32px;
-  background: var(--color-snow);
+  padding: 0 2rem 2rem;
+  background: var(--color-background-details);
 }
 
 .footer-actions {
@@ -166,4 +178,12 @@
 
 .btn-github:hover {
   background: #2f363d;
+}
+
+.delete-subtext {
+  margin-top: 0.5rem;
+  color: var(--color-snow);
+  font-weight: 500;
+  text-align: center;
+  display: block;
 }

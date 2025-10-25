@@ -1,4 +1,6 @@
-export default async function bodyParser(req) {
+import logger from "../utils/logger.js";
+
+export default async function bodyParser(req, res) {
     return new Promise((resolve, reject) => {
         try {
             let body = "";
@@ -14,16 +16,18 @@ export default async function bodyParser(req) {
                     }
                     resolve();
                 } catch (error) {
-                    console.error(`Invalid JSON: ${error}`);
-                    reject(new Error("Invalid JSON"));
+                    logger("error", req.traceId, "Body-Parser", `Invalid Body Request: ${error}`);
+                    res.writeHead(400, { "Content-Type": "application/json" });
+                    res.end(JSON.stringify({ name: "request body error", error: "Invalid Body Request" }));
                 }
             });
 
             req.on("error", err => reject(err));
 
         } catch (error) {
-            console.error(`Error reading body: ${error}`);
-            reject(error);
+            logger("error", req.traceId, "Body-Parser", `Error reading body: ${error}`);
+            res.writeHead(400, { "Content-Type": "application/json" });
+            res.end(JSON.stringify({ name: "request body error", error: "Error parsing body request" }));
         }
     });
 }

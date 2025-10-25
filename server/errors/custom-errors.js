@@ -30,10 +30,26 @@ export class SavingError extends Error {
     }
 }
 
-export class ArticleValidationError extends Error {
+export class BodyRequestValidationError extends Error {
     constructor(message) {
         super(message);
-        this.name = "Article Validation Error";
+        this.name = "Request Validation Error";
+        this.statusCode = 400;
+    }
+}
+
+export class AuthorizationError extends Error {
+    constructor(message) {
+        super(message);
+        this.name = "Authorization Error";
+        this.statusCode = 403;
+    }
+}
+
+export class BadInput extends Error {
+    constructor(message) {
+        super(message);
+        this.name = "Invalid Input";
         this.statusCode = 400;
     }
 }

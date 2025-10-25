@@ -8,14 +8,20 @@ export default async function buildArticleWip() {
     const wipArticle = document.getElementById("wip-article");
     wipArticle.className = "articles-wip-section";
 
-    while (wipArticle.firstChild) {
-        wipArticle.removeChild(wipArticle.firstChild);
+    if(wipArticle.firstChild) {
+        wipArticle.innerHTML = "";
     }
 
-    (await getArticlesWithoutMarkdown()).forEach(article => {
-        const box = renderArticle(article);
-        wipArticle.appendChild(box);
-    });
+    try {
+        const wipArticles = await getArticlesWithoutMarkdown();
+        wipArticles.forEach(article => {
+            const box = renderArticle(article);
+            wipArticle.appendChild(box);
+        });
+    } catch (error) {
+        logger("error", "WIP-Load Articles", `Failed to load wip articles. Error: [${error}]`);
+        showToast("Failed to load wip articles", "error");
+    }
 
     if (!wipArticle.hasChildNodes()) wipArticle.style = "display: none";
 }
@@ -78,7 +84,7 @@ function _createInfoSection(article) {
 
     const date = document.createElement("span");
     date.className = "article-date";
-    date.textContent = new Date(article.created_at).toISOString().split("T")[0];
+    date.textContent = new Date(article.created_at).toLocaleDateString();
 
     meta.appendChild(category);
     meta.appendChild(date);
@@ -91,7 +97,7 @@ function _createInfoSection(article) {
     return infoSection;
 }
 
-async function _buildLoadWipArticleConfirmationModal(title, id) {
+function _buildLoadWipArticleConfirmationModal(title, id) {
 
     const modalContainer = document.getElementById("confirmation-modal");
     const contentModal = modalContainer.querySelector("#confirmation-content");
@@ -120,7 +126,7 @@ async function _buildLoadWipArticleConfirmationModal(title, id) {
 function _buildDeleteConfirmationModal(title, id) {
     const modalContainer = document.getElementById("confirmation-modal");
     const contentModal = modalContainer.querySelector("#confirmation-content");
-    contentModal.classList.add("delete-confirmation");
+    contentModal.classList.add("modal-confirmation");
 
     const modalHeader = contentModal.querySelector("#conf-header");
     const modalText = contentModal.querySelector("#conf-text");
@@ -129,7 +135,7 @@ function _buildDeleteConfirmationModal(title, id) {
 
     modalHeader.textContent = "Confirm Deletion";
     modalText.innerHTML = `
-    <span>Are you sure you want to delete <strong class="delete-title">${title}</strong>?</span>
+    <span>Are you sure you want to delete <strong class="modal-conf-title">${title}</strong>?</span>
     <br>
     <span class="delete-subtext">This action cannot be undone.</span>`
 

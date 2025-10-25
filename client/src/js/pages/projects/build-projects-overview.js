@@ -80,7 +80,7 @@ function _buildCardHeader(item) {
 
     const date = document.createElement("div");
     date.classList.add("card-date");
-    date.textContent = new Date(item.created_at).toISOString().split("T")[0];
+    date.textContent = new Date(item.created_at).toLocaleDateString();
     cardInfo.appendChild(date);
 
     return cardHeader;

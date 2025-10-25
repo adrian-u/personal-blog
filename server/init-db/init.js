@@ -44,6 +44,18 @@ const createArticleTable = `
     );
 `;
 
+const createCommentTable = `
+    CREATE TABLE IF NOT EXISTS comments (
+        id SERIAL PRIMARY KEY,
+        article_id INTEGER REFERENCES articles(id) ON DELETE CASCADE,
+        user_id INTEGER REFERENCES users(id),
+        parent_id INTEGER REFERENCES comments(id) ON DELETE CASCADE,
+        content TEXT NOT NULL,
+        created_at TIMESTAMP DEFAULT now(),
+        updated_at TIMESTAMP DEFAULT now()
+    );
+`;
+
 const createUserIndex = `
     CREATE UNIQUE INDEX IF NOT EXISTS user_email_provider_idx
     ON users(email, provider);
@@ -62,6 +74,7 @@ async function init() {
         await db.query(createUserTable);
         await db.query(createUserIndex);
         await db.query(createArticleTable);
+        await db.query(createCommentTable);
         console.log("Tables created successfully");
 
         console.log("Checking if about data already exists...");
