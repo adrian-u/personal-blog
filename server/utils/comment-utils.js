@@ -4,13 +4,21 @@ import { BodyRequestValidationError } from "../errors/custom-errors.js";
 
 const LOG_CONTEXT = "Comment Utils";
 
-export function checkIfCommentBodyIsValid(article, traceId) {
+export function checkIfCommentBodyIsValid(comment, traceId) {
     const LOCAL_LOG_CONTEXT = "Body Validation";
 
-    logger("debug", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Validation of body: ${JSON.stringify(article, null, 4)}`);
-    const FIELDS = ["articleId", "userId", "content"];
-    const invalidFields = FIELDS.filter(field => isEmpty(article[field]));
-    logger("debug", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Invalid fields array: [${invalidFields.join(", ")}]`)
+    logger("debug", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Validation of body: ${JSON.stringify(comment, null, 4)}`);
+    const FIELDS_PARENT = ["articleId", "userId", "content"];
+    const FIELDS_REPLY = ["articleId", "userId", "content", "parentId"];
+    let invalidFields = [];
+
+    if (comment.isReply) {
+        invalidFields = FIELDS_REPLY.filter(field => isEmpty(comment[field]));
+        logger("debug", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Invalid fields array: [${invalidFields.join(", ")}]`)
+    } else {
+        invalidFields = FIELDS_PARENT.filter(field => isEmpty(comment[field]));
+        logger("debug", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Invalid fields array: [${invalidFields.join(", ")}]`)
+    }
 
     if (invalidFields.length > 0) {
         throw new BodyRequestValidationError(`The required fields: [${invalidFields.join(", ")}] are not present`);

@@ -1,5 +1,8 @@
 import logger from "../utils/logger.js";
-import { saveComment, getParentComments, deleteCommentByOwnerOrAdmin } from "../services/comment.service.js";
+import {
+    saveComment, getParentComments,
+    deleteCommentByOwnerOrAdmin, getRepliesByParentComment
+} from "../services/comment.service.js";
 import { checkIfCommentBodyIsValid } from "../utils/comment-utils.js";
 import { BadInput } from "../errors/custom-errors.js";
 import { isNumber } from "../utils/general.js";
@@ -59,6 +62,28 @@ export async function deleteComment(req, res, commentId, user) {
         res.end();
     } catch (error) {
         logger("error", req.traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Error deleting comment with id: [${commentId}]. Error [${error}]`)
+        const status = error.statusCode || 500;
+        res.writeHead(status, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({
+            name: error.name || "InternalServerError",
+            error: error.message
+        }));
+    }
+}
+
+export async function loadParentReplies(req, res, parentId, limit, offset) {
+    const LOCAL_LOG_CONTEXT = "Load Parent Replies";
+
+    try {
+        if (!isNumber(parentId)) {
+            throw new BadInput(`The parentId: [${parentId}] is not valid`);
+        }
+
+        const replies = await getRepliesByParentComment(parentId, limit, offset, req.traceId);
+        res.writeHead(200, { "Content-Type": "application/json" });
+        res.end(JSON.stringify(replies))
+    } catch (error) {
+        logger("error", req.traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Error fetching replies for parent comment with id: [${parentId}]. Error [${error}]`)
         const status = error.statusCode || 500;
         res.writeHead(status, { "Content-Type": "application/json" });
         res.end(JSON.stringify({

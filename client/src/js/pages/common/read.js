@@ -8,6 +8,7 @@ import anonymous from '../../../assets/images/anonymous.png';
 import { publishComment, getParentComments, deleteCommentByOwnerOrCreator } from "./comment-common";
 import { isEmpty } from "../../utils/general";
 import { getCurrentUser } from "../../context/user-context";
+import { fetchReplies } from "../../apis/comment";
 
 const LOG_CONTEXT = "Read Article";
 
@@ -107,25 +108,77 @@ function _createAddCommentSection(articleId, currentUser) {
         }
     });
     commentButton.onclick = async () => {
+        try {
+            const newComment = await publishComment({ content: commentText.value, isReply: false }, articleId);
 
-        const newComment = await publishComment(commentText.value, articleId);
-        if (!newComment) return;
+            commentText.value = "";
+            const commentsSection = document.querySelector(".parent-comment-section");
 
-        commentText.value = "";
-
-        const commentsSection = document.querySelector(".parent-comment-section");
-
-        if (commentsSection) {
-            const newCommentBox = _buildCommentBox(newComment, currentUser);
-            newCommentBox.classList.add("new");
-            commentsSection.prepend(newCommentBox);
+            if (commentsSection) {
+                const newCommentBox = _buildCommentBox(newComment, currentUser);
+                newCommentBox.classList.add("new");
+                commentsSection.prepend(newCommentBox);
+            }
+        } catch (error) {
+            showToast("Failed to save the comment", "error");
         }
+
     };
 
     addCommentRow.appendChild(userAvatar);
     addCommentRow.appendChild(commentText);
     addCommentRow.appendChild(commentButton);
 
+    return addCommentRow;
+}
+
+function _createReplyCommentSection(commentId, currentUser, articleId, depth = 0) {
+    const addCommentRow = document.createElement("div");
+    addCommentRow.classList.add("create-comment-row");
+
+    const userAvatar = document.createElement("img");
+    userAvatar.classList.add("comment-avatar");
+    userAvatar.src = anonymous;
+
+    const commentText = document.createElement("textarea");
+    commentText.classList.add("comment-text-area");
+    commentText.placeholder = "Write your reply...";
+
+    const commentButton = document.createElement("button");
+    commentButton.classList.add("btn", "btn-blue", "publish", "remove-from-layout");
+    commentButton.textContent = "Reply";
+    commentButton.disabled = true;
+
+    commentText.addEventListener("input", () => {
+        const value = commentText.value.trim();
+        commentButton.disabled = !value;
+        commentButton.classList.toggle("remove-from-layout", !value);
+    });
+
+    commentButton.onclick = async () => {
+        try {
+            const newComment = await publishComment({
+                content: commentText.value,
+                isReply: true,
+                parentId: commentId
+            }, articleId);
+
+            commentText.value = "";
+
+            let repliesSection = document.querySelector(`#comment-${commentId}`).closest(".comment-wrapper").querySelector(".replies-section");
+            if (!repliesSection) {
+                repliesSection = document.createElement("div");
+                repliesSection.classList.add("replies-section");
+                document.querySelector(`#comment-${commentId}`).closest(".comment-wrapper").appendChild(repliesSection);
+            }
+
+            repliesSection.prepend(_buildCommentBox(newComment, currentUser, depth + 1));
+        } catch (err) {
+            showToast("Failed to publish reply", "error");
+        }
+    };
+
+    addCommentRow.append(userAvatar, commentText, commentButton);
     return addCommentRow;
 }
 
@@ -179,7 +232,7 @@ function _buildCommentBox(comment, currentUser) {
 
     const commentBox = document.createElement("div");
     commentBox.classList.add("comment-box");
-    commentBox.id = comment.id;
+    commentBox.id = `comment-${comment.id}`;
 
     const userAvatar = document.createElement("img");
     userAvatar.classList.add("comment-avatar");
@@ -230,18 +283,61 @@ function _buildCommentBox(comment, currentUser) {
     const reply = document.createElement("div");
     reply.classList.add("comment-reply-btn");
     reply.textContent = "Reply";
-    reply.onclick = () => alert("TODO: Implement Reply Logic");
+    reply.onclick = () => {
+        _buildReplySection(comment.id, currentUser, comment.articleId);
+    }
+
     commentBoxFooter.appendChild(reply);
 
     const showReplies = document.createElement("p");
     showReplies.classList.add("show-replies");
     showReplies.textContent = "View Replies";
+    showReplies.onclick = async () => {
+        const parentWrapper = document.querySelector(`#comment-${comment.id}`).closest(".comment-wrapper");
+
+        let repliesSection = parentWrapper.querySelector(".replies-section");
+        if (repliesSection) {
+            repliesSection.remove();
+            showReplies.textContent = "View Replies";
+            return;
+        }
+
+        const { comments: replies } = await fetchReplies(comment.id, 10, 0);
+        if (!replies || replies.length === 0) {
+            showToast("No replies yet", "info");
+            return;
+        }
+
+        repliesSection = document.createElement("div");
+        repliesSection.classList.add("replies-section");
+
+        replies.forEach(reply => {
+            repliesSection.appendChild(_buildCommentBox(reply, currentUser));
+        });
+
+        parentWrapper.appendChild(repliesSection);
+
+        showReplies.textContent = "Hide Replies";
+    };
     commentBoxFooter.appendChild(showReplies);
 
     commentData.appendChild(commentBoxFooter);
     commentBox.appendChild(commentData);
 
-    return commentBox;
+    const wrapper = document.createElement("div");
+    wrapper.classList.add("comment-wrapper");
+    wrapper.appendChild(commentBox);
+
+    if (comment.replies && comment.replies.length > 0) {
+        const repliesSection = document.createElement("div");
+        repliesSection.classList.add("replies-section");
+        comment.replies.forEach(reply => {
+            repliesSection.appendChild(_buildCommentBox(reply, currentUser));
+        });
+        wrapper.appendChild(repliesSection);
+    }
+
+    return wrapper;
 }
 
 function _buildDeleteConfirmationModal(comment) {
@@ -276,4 +372,22 @@ function _buildDeleteConfirmationModal(comment) {
     };
 
     cancelButton.onclick = () => closeModal(modalContainer);
+}
+
+function _buildReplySection(commentId, currentUser, articleId, depth = 0) {
+    const parentWrapper = document.querySelector(`#comment-${commentId}`).closest(".comment-wrapper");
+
+    const existing = parentWrapper.querySelector(".reply-box");
+    if (existing) {
+        existing.remove();
+        return;
+    }
+
+    const replyBox = document.createElement("div");
+    replyBox.classList.add("reply-box");
+
+    const addReplySection = _createReplyCommentSection(commentId, currentUser, articleId, depth);
+    replyBox.appendChild(addReplySection);
+
+    parentWrapper.appendChild(replyBox);
 }

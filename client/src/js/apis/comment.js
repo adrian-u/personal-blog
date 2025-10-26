@@ -17,8 +17,13 @@ export async function createComment(comment, userId, articleId) {
                 "Content-Type": "application/json",
                 "Authorization": `Bearer ${getJWT()}`
             },
-            body: JSON.stringify({ articleId: articleId, userId: userId, content: comment }),
+            body: JSON.stringify({ articleId, userId, content: comment.content, isReply: comment.isReply, parentId: comment.parentId }),
         });
+
+        if (!createdComment.ok) {
+            const errorData = await createdComment.json();
+            throw new Error(errorData.error || `Request failed with ${res.status}`);
+        }
 
         return await createdComment.json();
     } catch (error) {
@@ -43,6 +48,11 @@ export async function fetchParentComments(articleId, limit = 10, offset = 0) {
             }
         });
 
+        if (!parentComments.ok) {
+            const errorData = await parentComments.json();
+            throw new Error(errorData.error || `Request failed with ${res.status}`);
+        }
+
         return await parentComments.json();
     } catch (error) {
         logger("error", `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, error);
@@ -64,6 +74,32 @@ export async function deleteComment(commentId) {
                 "Authorization": `Bearer ${getJWT()}`
             }
         });
+    } catch (error) {
+        logger("error", `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, error);
+        throw error;
+    }
+}
+
+export async function fetchReplies(parentId, limit = 10, offset = 0) {
+    const LOCAL_LOG_CONTEXT = "Fetch Replies";
+
+    const url = `${import.meta.env.VITE_API_URL}/comment/parent/${parentId}/replies?limit=${limit}&offset=${offset}`;
+
+    try {
+        logger("debug", `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Calling backend url: [${url}]`);
+        const replies = await fetch(`${url}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        });
+
+        if (!replies.ok) {
+            const errorData = await replies.json();
+            throw new Error(errorData.error || `Request failed with ${res.status}`);
+        }
+
+        return await replies.json();
     } catch (error) {
         logger("error", `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, error);
         throw error;

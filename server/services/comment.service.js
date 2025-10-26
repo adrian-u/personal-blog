@@ -1,4 +1,7 @@
-import { save, fetchParentComments, cancel, fetchCommentById } from "../data-access/comment.repository.js";
+import {
+    save, fetchParentComments, cancel, fetchCommentById,
+    fetchReplies
+} from "../data-access/comment.repository.js";
 import { AuthorizationError } from "../errors/custom-errors.js";
 import { isEmpty } from "../utils/general.js";
 import logger from "../utils/logger.js";
@@ -81,6 +84,41 @@ export async function deleteCommentByOwnerOrAdmin(commentId, user, traceId) {
         await cancel(commentId, traceId);
     } catch (error) {
         logger("error", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Error deleting comment with id: [${commentId}]. Error: [${error.message}]`);
+        throw error;
+    }
+}
+
+export async function getRepliesByParentComment(parentId, limit, offset, traceId) {
+    const LOCAL_LOG_CONTEXT = "Get Replies by Parent";
+
+    logger("info", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Get replies to parent comment: [${parentId}]`);
+
+    try {
+        const res = await fetchReplies(parentId, limit, offset, traceId);
+
+        if (isEmpty(res.comments)) {
+            return { totalCount: 0, comments: [] };
+        }
+
+        const replies = res.comments.map(comment => {
+            return {
+                id: comment.id,
+                userId: comment.user_id,
+                articleId: comment.article_id,
+                parentId: comment.parent_id,
+                content: comment.content,
+                createdAt: comment.created_at,
+                author: {
+                    name: comment.name,
+                    avatar: comment.avatarurl,
+                }
+            }
+        });
+
+        return { totalCount: res.totalCount, comments: replies };
+
+    } catch (error) {
+        logger("error", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Error fetching replies for parentId: [${parentId}]. Error: [${error.message}]`);
         throw error;
     }
 }

@@ -10,37 +10,75 @@ export async function save(comment, traceId) {
 
     logger("info", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, "Saving the comment on the database (transactional)");
 
-    const insertQuery = `INSERT INTO comments (article_id, user_id, content) VALUES ($1, $2, $3) RETURNING id;`;
+    if (comment.isReply) {
+        try {
+            logger("info", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Saving the reply comment to parentId: [${comment.parentId}]
+                 and articleId: [${comment.articleId}] on the database `);
+            const insertQuery = `INSERT INTO comments (article_id, user_id, content, parent_id) VALUES ($1, $2, $3, $4) RETURNING id;`
 
-    const fetchQuery = `SELECT c.id, c.user_id, c.article_id, c.content, c.created_at, u.name, u.avatarurl
+            const fetchQuery = `SELECT c.id, c.user_id, c.article_id, c.content, c.created_at, u.name, u.avatarurl
                         FROM comments AS c JOIN users AS u ON c.user_id = u.id WHERE c.id = $1;`;
+            await client.query("BEGIN");
 
-    try {
-        await client.query("BEGIN");
+            const inserted = await client.query(insertQuery, [
+                comment.articleId,
+                comment.userId,
+                comment.content,
+                comment.parentId,
+            ]);
 
-        const inserted = await client.query(insertQuery, [
-            comment.articleId,
-            comment.userId,
-            comment.content,
-        ]);
+            const commentId = inserted.rows[0]?.id;
 
-        const commentId = inserted.rows[0]?.id;
+            if (!commentId) {
+                throw new DbError("Insert did not return a valid comment ID");
+            }
 
-        if (!commentId) {
-            throw new DbError("Insert did not return a valid comment ID");
+            const fullComment = await client.query(fetchQuery, [commentId]);
+
+            await client.query("COMMIT");
+
+            return fullComment.rows[0];
+        } catch (error) {
+            await client.query("ROLLBACK");
+            logger("error", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Transaction failed: [${error.message}]`);
+            throw new DbError("Failed to save the comment");
+        } finally {
+            client.release();
         }
 
-        const fullComment = await client.query(fetchQuery, [commentId]);
+    } else {
+        try {
+            logger("info", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Saving the comment to articleId: [${comment.articleId}]`);
+            const insertQuery = `INSERT INTO comments (article_id, user_id, content) VALUES ($1, $2, $3) RETURNING id;`;
 
-        await client.query("COMMIT");
+            const fetchQuery = `SELECT c.id, c.user_id, c.article_id, c.content, c.created_at, u.name, u.avatarurl
+                        FROM comments AS c JOIN users AS u ON c.user_id = u.id WHERE c.id = $1;`;
+            await client.query("BEGIN");
 
-        return fullComment.rows[0];
-    } catch (error) {
-        await client.query("ROLLBACK");
-        logger("error", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Transaction failed: [${error.message}]`);
-        throw new DbError("Failed to save the comment");
-    } finally {
-        client.release();
+            const inserted = await client.query(insertQuery, [
+                comment.articleId,
+                comment.userId,
+                comment.content,
+            ]);
+
+            const commentId = inserted.rows[0]?.id;
+
+            if (!commentId) {
+                throw new DbError("Insert did not return a valid comment ID");
+            }
+
+            const fullComment = await client.query(fetchQuery, [commentId]);
+
+            await client.query("COMMIT");
+
+            return fullComment.rows[0];
+        } catch (error) {
+            await client.query("ROLLBACK");
+            logger("error", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Transaction failed: [${error.message}]`);
+            throw new DbError("Failed to save the comment");
+        } finally {
+            client.release();
+        }
     }
 }
 
@@ -96,5 +134,27 @@ export async function cancel(commentId, traceId) {
     } catch (error) {
         logger("error", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, error.message);
         throw new DbError("Failed to delete comment");
+    }
+}
+
+export async function fetchReplies(parentId, limit, offset, traceId) {
+    const LOCAL_LOG_CONTEXT = "Fetch Replies";
+
+    logger("info", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Fetching replies for parentId: [${parentId}]`);
+
+    const query = `SELECT c.id, c.article_id, c.user_id, c.parent_id, c.content, c.created_at, u.name, u.avatarurl, COUNT(*) OVER() AS total_count
+                FROM comments as c JOIN users as u ON c.user_id = u.id 
+                WHERE c.parent_id = $1 ORDER BY c.created_at DESC LIMIT $2 OFFSET $3`;
+
+    try {
+        const result = await db.query(query, [parentId, limit, offset]);
+        if (result.rowCount === 0) {
+            return { totalCount: 0, comments: [] };
+        }
+
+        return { totalCount: result.rows[0].total_count, comments: result.rows };
+    } catch (error) {
+        logger("error", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `DB query failed to get parent replies for parent: [${parentId}]. Error: [${error}]`);
+        throw new DbError(`Failed to fetch replies for parent commetn with id: [${parentId}]`);
     }
 }

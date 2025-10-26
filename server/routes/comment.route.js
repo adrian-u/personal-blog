@@ -1,6 +1,6 @@
 import { registerRoute } from "./router.manager.js";
 import { verifyJWT } from "../services/oauth.service.js";
-import { createComment, loadParentComments, deleteComment } from "../controllers/comment.controller.js";
+import { createComment, loadParentComments, deleteComment, loadParentReplies } from "../controllers/comment.controller.js";
 
 registerRoute("POST", "/api/v1/comment", async (req, res) => {
 
@@ -29,6 +29,19 @@ registerRoute("DELETE", "/api/v1/comment/:id", async (req, res, params) => {
     if (!user) return;
 
     await deleteComment(req, res, id, user);
+});
+
+registerRoute("GET", "/api/v1/comment/parent/:parentId/replies", async (req, res, params) => {
+    const { parentId } = params;
+
+    const protocol = req.headers['x-forwarded-proto'] || 'http';
+
+    const url = new URL(req.url, `${protocol}://${req.headers.host}`);
+    const limit = parseInt(url.searchParams.get("limit")) || 10;
+    const offset = parseInt(url.searchParams.get("offset")) || 0;
+
+    await loadParentReplies(req, res, parentId, limit, offset);
+
 });
 
 function _isLoggedUser(req, res) {
