@@ -67,175 +67,6 @@
     opacity: 0.9;
 }
 
-.create-comment-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    margin: 2rem 0 0 0;
-    padding: 1.5rem;
-    border-radius: 1.5rem;
-    gap: 1rem;
-}
-
-.comment-avatar {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    flex-shrink: 0;
-}
-
-.comment-text-area {
-    flex: 1;
-    min-width: 180px;
-    min-height: 75px;
-    outline: none;
-    border-radius: 1rem;
-    padding: 1rem;
-    border: 1px solid var(--color-secondary);
-    background-color: var(--color-background-details);
-    color: var(--color-snow);
-    letter-spacing: var(--letter-spacing);
-    font-size: 1rem;
-    resize: none;
-    overflow-y: auto;
-}
-
-.comment-text-area::-webkit-scrollbar {
-    display: none;
-}
-
-.btn.publish {
-    width: auto;
-    min-width: 100px;
-    flex-shrink: 0;
-}
-
-.parent-comment-section {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    border-top: 2px solid var(--color-secondary);
-    border-radius: 1rem;
-    margin-top: 2rem;
-    padding: 1rem;
-    gap: 1rem;
-}
-
-.comment-wrapper {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-}
-
-
-
-.comment-box {
-    display: flex;
-    align-items: flex-start;
-    gap: 1rem;
-    width: 100%;
-    border-bottom: 1px solid var(--color-secondary);
-    padding: 1rem;
-}
-.comment-box:hover {
-    background-color: var(--color-background-details-hover);
-    border-radius: 1rem;
-    transform: translateX(-10px);
-    border-left: 1px solid var(--color-secondary);
-}
-
-.comment-box.new {
-    animation: fadeInScale 0.25s ease-out;
-}
-
-.date-delete-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 2rem;
-}
-
-.comment-data {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-}
-
-.comment-info-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-}
-
-.comment-info-row>p {
-    color: var(--color-primary);
-    letter-spacing: var(--letter-spacing);
-    font-weight: 500;
-    word-break: break-word;
-}
-
-.comment-date {
-    color: var(--color-primary);
-    opacity: 0.7;
-    font-weight: 200;
-    font-size: 0.8rem;
-}
-
-.comment-box:hover .delete-btn {
-    opacity: 1;
-    transform: scale(1);
-}
-
-.comment-content {
-    margin-top: 0.5rem;
-    color: var(--color-snow);
-    letter-spacing: var(--letter-spacing);
-    word-break: break-word;
-}
-
-.comment-footer {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin: 1rem 2.5rem -2rem 2.5rem;
-}
-
-.comment-reply-btn {
-    border: 1px solid var(--color-primary);
-    border-radius: 1rem;
-    padding: 1px 20px 1px 16px;
-    cursor: pointer;
-    background-color: var(--color-background-details);
-}
-
-.show-replies {
-    font-size: 0.8rem;
-}
-
-.reply-box {
-    margin-top: 2rem;
-    animation: fadeInScale 0.5s ease-out;
-    border-left: 1px solid var(--color-primary);
-}
-
-.replies-section {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    margin-left: 4rem;
-    border-left: 2px solid var(--color-secondary);
-    padding-left: 1rem;
-    gap: 1rem;
-}
-
-#load-more-comments.btn {
-    width: 25%;
-    margin-top: 1.5rem;
-}
-
 @keyframes fadeInScale {
     from {
         opacity: 0;
@@ -260,40 +91,15 @@
         align-items: flex-start;
     }
 
-    .create-comment-row {
-        flex-direction: column;
-        align-items: stretch;
-        padding: 1rem;
-    }
-
-    .comment-text-area {
-        width: 100%;
-        min-width: unset;
-    }
-
     .btn.publish,
     .btn.close {
         width: 100%;
     }
-
-    .comment-info-row {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0.25rem;
-    }
 }
 
 @media (max-width: 480px) {
-    .comment-avatar {
-        width: 40px;
-        height: 40px;
-    }
-
     .article-body p {
         font-size: 0.9rem;
     }
 
-    .create-comment-row {
-        gap: 0.75rem;
-    }
 }

@@ -1,7 +1,7 @@
 import { getArticlesByCategory } from "../../apis/article";
 import logger from "../../utils/logger";
 import { showToast } from "../../utils/toast";
-import { readArticle } from "../common/read";
+import { readArticle } from "../read/read-modal";
 
 
 const LIMIT = 6;

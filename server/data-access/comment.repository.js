@@ -16,7 +16,7 @@ export async function save(comment, traceId) {
                  and articleId: [${comment.articleId}] on the database `);
             const insertQuery = `INSERT INTO comments (article_id, user_id, content, parent_id) VALUES ($1, $2, $3, $4) RETURNING id;`
 
-            const fetchQuery = `SELECT c.id, c.user_id, c.article_id, c.content, c.created_at, u.name, u.avatarurl
+            const fetchQuery = `SELECT c.id, c.user_id, c.article_id, c.content, c.created_at, u.name, u.avatarurl, u.role,
                         FROM comments AS c JOIN users AS u ON c.user_id = u.id WHERE c.id = $1;`;
             await client.query("BEGIN");
 
@@ -51,7 +51,7 @@ export async function save(comment, traceId) {
             logger("info", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Saving the comment to articleId: [${comment.articleId}]`);
             const insertQuery = `INSERT INTO comments (article_id, user_id, content) VALUES ($1, $2, $3) RETURNING id;`;
 
-            const fetchQuery = `SELECT c.id, c.user_id, c.article_id, c.content, c.created_at, u.name, u.avatarurl
+            const fetchQuery = `SELECT c.id, c.user_id, c.article_id, c.content, c.created_at, u.name, u.avatarurl, u.role,
                         FROM comments AS c JOIN users AS u ON c.user_id = u.id WHERE c.id = $1;`;
             await client.query("BEGIN");
 
@@ -87,7 +87,7 @@ export async function fetchParentComments(articleId, traceId, limit, offset) {
 
     logger("info", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Fetching the parent comments for articleId: [${articleId}]`);
 
-    const query = `SELECT c.id, c.article_id, c.user_id, c.content, c.created_at, u.name, u.avatarurl, COUNT(*) OVER() AS total_count
+    const query = `SELECT c.id, c.article_id, c.user_id, c.content, c.created_at, u.name, u.avatarurl, u.role, COUNT(*) OVER() AS total_count
                 FROM comments as c JOIN users as u ON c.user_id = u.id 
                 WHERE c.article_id = $1 AND c.parent_id IS NULL ORDER BY c.created_at DESC LIMIT $2 OFFSET $3`;
 
@@ -142,7 +142,7 @@ export async function fetchReplies(parentId, limit, offset, traceId) {
 
     logger("info", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Fetching replies for parentId: [${parentId}]`);
 
-    const query = `SELECT c.id, c.article_id, c.user_id, c.parent_id, c.content, c.created_at, u.name, u.avatarurl, COUNT(*) OVER() AS total_count
+    const query = `SELECT c.id, c.article_id, c.user_id, c.parent_id, c.content, c.created_at, u.name, u.avatarurl, u.role, COUNT(*) OVER() AS total_count
                 FROM comments as c JOIN users as u ON c.user_id = u.id 
                 WHERE c.parent_id = $1 ORDER BY c.created_at DESC LIMIT $2 OFFSET $3`;
 

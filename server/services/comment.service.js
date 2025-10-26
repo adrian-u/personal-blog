@@ -24,6 +24,7 @@ export async function saveComment(comment, traceId) {
             author: {
                 name: savedComment.name,
                 avatar: savedComment.avatarurl,
+                role: savedComment.role,
             }
         }
     } catch (error) {
@@ -53,6 +54,7 @@ export async function getParentComments(articleId, traceId, limit, offset) {
                 author: {
                     name: parentComment.name,
                     avatar: parentComment.avatarurl,
+                    role: parentComment.role,
                 }
             }
         });
@@ -111,6 +113,7 @@ export async function getRepliesByParentComment(parentId, limit, offset, traceId
                 author: {
                     name: comment.name,
                     avatar: comment.avatarurl,
+                    role: comment.role,
                 }
             }
         });
