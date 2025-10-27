@@ -56,9 +56,21 @@ const createCommentTable = `
     );
 `;
 
-const createUserIndex = `
+const createUserCommentLikesTable = `
+    CREATE TABLE IF NOT EXISTS user_comment_likes (
+        user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        comment_id INTEGER NOT NULL REFERENCES comments(id) ON DELETE CASCADE,
+        created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+        PRIMARY KEY (user_id, comment_id)
+    );
+`;
+
+const createIndexes = `
     CREATE UNIQUE INDEX IF NOT EXISTS user_email_provider_idx
     ON users(email, provider);
+    CREATE INDEX IF NOT EXISTS idx_comments_article_id ON comments(article_id);
+    CREATE INDEX IF NOT EXISTS idx_comments_user_id ON comments(user_id);
+    CREATE INDEX IF NOT EXISTS idx_comments_parent_id ON comments(parent_id);
 `;
 
 const insertDefaultAbout = `
@@ -72,9 +84,10 @@ async function init() {
         console.log("Creating tables")
         await db.query(createAboutTable);
         await db.query(createUserTable);
-        await db.query(createUserIndex);
+        await db.query(createIndexes);
         await db.query(createArticleTable);
         await db.query(createCommentTable);
+        await db.query(createUserCommentLikesTable);
         console.log("Tables created successfully");
 
         console.log("Checking if about data already exists...");

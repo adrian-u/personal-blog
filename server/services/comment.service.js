@@ -1,6 +1,6 @@
 import {
     save, fetchParentComments, cancel, fetchCommentById,
-    fetchReplies, edit
+    fetchReplies, edit, commentAddLike, deleteLike
 } from "../data-access/comment.repository.js";
 import { AuthorizationError } from "../errors/custom-errors.js";
 import { isEmpty } from "../utils/general.js";
@@ -22,6 +22,7 @@ export async function saveComment(comment, traceId) {
             content: savedComment.content,
             createdAt: savedComment.created_at,
             replies: savedComment.child_count,
+            like: 0,
             author: {
                 name: savedComment.name,
                 avatar: savedComment.avatarurl,
@@ -53,6 +54,7 @@ export async function getParentComments(articleId, traceId, limit, offset) {
                 content: parentComment.content,
                 createdAt: parentComment.created_at,
                 replies: parentComment.child_count,
+                like: parentComment.total_likes,
                 author: {
                     name: parentComment.name,
                     avatar: parentComment.avatarurl,
@@ -113,6 +115,7 @@ export async function getRepliesByParentComment(parentId, limit, offset, traceId
                 content: comment.content,
                 createdAt: comment.created_at,
                 replies: comment.child_count,
+                like: comment.total_likes,
                 author: {
                     name: comment.name,
                     avatar: comment.avatarurl,
@@ -147,6 +150,38 @@ export async function modifyComment(id, user, content, traceId) {
 
     } catch (error) {
         logger("error", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Error edit comment with id: [${id}]. Error: [${error.message}]`);
+        throw error;
+    }
+}
+
+export async function addLikeToTheComment(commentId, user, traceId) {
+    const LOCAL_LOG_CONTEXT = "Add Like";
+
+    logger("info", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Adding like to comment with id: [${commentId}]`);
+
+    try {
+        const comment = await fetchCommentById(commentId, traceId);
+        if (!comment) throw new NotFoundError("Comment not found");
+
+        return await commentAddLike(commentId, user, traceId);
+    } catch (error) {
+        logger("error", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Error adding like to the comment with id: [${commentId}]. Error: [${error.message}]`);
+        throw error;
+    }
+}
+
+export async function removeLike(commentId, user, traceId) {
+    const LOCAL_LOG_CONTEXT = "Remove Like";
+
+    logger("info", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Deleting like to comment with id: [${commentId}]`);
+
+    try {
+        const comment = await fetchCommentById(commentId, traceId);
+        if (!comment) throw new NotFoundError("Comment not found");
+
+        return await deleteLike(commentId, user, traceId);
+    } catch (error) {
+        logger("error", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Error deleting like to the comment with id: [${commentId}]. Error: [${error.message}]`);
         throw error;
     }
 }

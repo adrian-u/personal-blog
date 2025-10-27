@@ -136,6 +136,11 @@
     color: var(--color-primary);
 }
 
+.liked {
+    background: var(--color-hover);
+    color: var(--color-primary);
+}
+
 .comment-badge {
     background: var(--color-primary-background);
     color: var(--color-primary);

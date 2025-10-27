@@ -1,5 +1,5 @@
 import anonymous from "../../../../assets/images/anonymous.png";
-import { fetchReplies, editComment } from "../../../apis/comment";
+import { fetchReplies, editComment, addLikeToComment, removeCommentLike } from "../../../apis/comment";
 import { isEmpty } from "../../../utils/general";
 import logger from "../../../utils/logger";
 import { closeModal, openConfirmationModal } from "../../../utils/modals";
@@ -253,8 +253,47 @@ function _buildCommentActions(comment, currentUser, articleId) {
     };
 
     const likeButton = document.createElement("button");
-    likeButton.classList.add("action-btn");
-    likeButton.textContent = "👍 12";
+    console.log(currentUser);
+    likeButton.classList.add(
+        "action-btn",
+        ...(currentUser.liked_comments.includes(comment.id) ? ["liked"] : [])
+    );
+    likeButton.textContent = `👍 ${comment.like}`;
+    likeButton.onclick = async () => {
+        likeButton.disabled = true;
+
+        const isLiked = currentUser.liked_comments.includes(comment.id);
+
+        try {
+            if (isLiked) {
+                const res = await removeCommentLike(comment.id);
+
+                currentUser.liked_comments = currentUser.liked_comments.filter(
+                    (id) => id !== comment.id
+                );
+
+                likeButton.classList.remove("liked");
+                likeButton.textContent = `👍 ${res.likes}`;
+            } else {
+                const res = await addLikeToComment(comment.id);
+
+                if (!currentUser.liked_comments.includes(comment.id)) {
+                    currentUser.liked_comments.push(comment.id);
+                }
+
+                likeButton.classList.add("liked");
+                likeButton.textContent = `👍 ${res.likes}`;
+            }
+        } catch (error) {
+            const action = isLiked ? "remove" : "add";
+            logger("error", "Comment Like", `Failed to ${action} like to comment with id: [${comment.id}]`);
+            showToast(`Failed to ${action} the like`, "error");
+        } finally {
+            likeButton.disabled = false;
+        }
+
+    }
+
 
     const showReplies = document.createElement("button");
     showReplies.classList.add("action-btn", "show-replies-btn");

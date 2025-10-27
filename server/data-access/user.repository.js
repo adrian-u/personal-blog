@@ -22,10 +22,12 @@ export async function saveUser(user) {
 }
 
 export async function getUserDetailsByEmail(email) {
-    const query = `
-        SELECT id, email, name, avatarUrl, role, created_at
-        FROM users
-        WHERE users.email = $1;`;
+    const query = ` SELECT u.id, u.email, u.name, u.avatarUrl, u.role, u.created_at,
+                    COALESCE(json_agg(l.comment_id) FILTER (WHERE l.comment_id IS NOT NULL), '[]') AS liked_comments FROM users AS u
+                    LEFT JOIN user_comment_likes AS l ON l.user_id = u.id
+                    WHERE u.email = $1
+                    GROUP BY u.id, u.email, u.name, u.avatarUrl, u.role, u.created_at;`
+
     try {
         const result = await db.query(query, [email]);
         const user = result.rows[0];

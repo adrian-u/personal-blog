@@ -1,7 +1,8 @@
 import logger from "../utils/logger.js";
 import {
     saveComment, getParentComments,
-    deleteCommentByOwnerOrAdmin, getRepliesByParentComment, modifyComment
+    deleteCommentByOwnerOrAdmin, getRepliesByParentComment, modifyComment,
+    addLikeToTheComment, removeLike
 } from "../services/comment.service.js";
 import { checkIfCommentBodyIsValid } from "../utils/comment-utils.js";
 import { BadInput } from "../errors/custom-errors.js";
@@ -110,6 +111,43 @@ export async function editComment(req, res, id, user) {
         res.end(JSON.stringify(edited));
     } catch (error) {
         logger("error", req.traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Error editing comment with id: [${id}]. Error [${error}]`)
+        const status = error.statusCode || 500;
+        res.writeHead(status, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({
+            name: error.name || "InternalServerError",
+            error: error.message
+        }));
+    }
+}
+
+export async function addLikeComment(req, res, commentId, user) {
+
+    const LOCAL_LOG_CONTEXT = "Add Like";
+
+    try {
+        const commentLikes = await addLikeToTheComment(commentId, user, req.traceId);
+        res.writeHead(200, { "Content-Type": "application/json" });
+        res.end(JSON.stringify(commentLikes))
+    } catch (error) {
+        logger("error", req.traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Error adding like to the comment with id: [${commentId}]. Error [${error}]`)
+        const status = error.statusCode || 500;
+        res.writeHead(status, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({
+            name: error.name || "InternalServerError",
+            error: error.message
+        }));
+    }
+}
+
+export async function removeLikeComment(req, res, commentId, user) {
+    const LOCAL_LOG_CONTEXT = "Remove Like";
+
+    try {
+        const commentLikes = await removeLike(commentId, user, req.traceId)
+        res.writeHead(200, { "Content-Type": "application/json" });
+        res.end(JSON.stringify(commentLikes))
+    } catch (error) {
+        logger("error", req.traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Error removing like to the comment with id: [${commentId}]. Error [${error}]`)
         const status = error.statusCode || 500;
         res.writeHead(status, { "Content-Type": "application/json" });
         res.end(JSON.stringify({

@@ -133,3 +133,61 @@ export async function editComment(id, content) {
         throw error;
     }
 }
+
+export async function addLikeToComment(id) {
+    const LOCAL_LOG_CONTEXT = "Add Like";
+
+    const url = `${import.meta.env.VITE_API_URL}/comment/like/${id}`;
+
+    try {
+        logger("debug", `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Calling backend url: [${url}]`);
+
+        const res = await fetch(`${url}`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${getJWT()}`
+            },
+        });
+
+        if (!res.ok) {
+            const errorData = await res.json();
+            throw new Error(errorData.error || `Request failed with ${res.status}`);
+        }
+
+        return await res.json();
+
+    } catch (error) {
+        logger("error", `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, error);
+        throw error;
+    }
+}
+
+export async function removeCommentLike(id) {
+    const LOCAL_LOG_CONTEXT = "Remove Like";
+
+    const url = `${import.meta.env.VITE_API_URL}/comment/like/${id}`;
+
+    try {
+        logger("debug", `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Calling backend url: [${url}]`);
+
+        const res = await fetch(`${url}`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${getJWT()}`
+            },
+        });
+
+        if (!res.ok) {
+            const errorData = await res.json();
+            throw new Error(errorData.error || `Request failed with ${res.status}`);
+        }
+
+        return await res.json();
+
+    } catch (error) {
+        logger("error", `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, error);
+        throw error;
+    }
+}

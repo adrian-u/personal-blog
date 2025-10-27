@@ -2,7 +2,7 @@ import { registerRoute } from "./router.manager.js";
 import { verifyJWT } from "../services/oauth.service.js";
 import {
     createComment, loadParentComments, deleteComment,
-    loadParentReplies, editComment
+    loadParentReplies, editComment, addLikeComment, removeLikeComment
 } from "../controllers/comment.controller.js";
 
 registerRoute("POST", "/api/v1/comment", async (req, res) => {
@@ -55,6 +55,29 @@ registerRoute("PATCH", "/api/v1/comment/:id", async (req, res, params) => {
     if (!user) return;
 
     await editComment(req, res, id, user);
+});
+
+registerRoute("POST", "/api/v1/comment/like/:id", async (req, res, params) => {
+
+    const { id } = params;
+
+    const user = _isLoggedUser(req, res);
+
+    if (!user) return;
+
+    await addLikeComment(req, res, id, user);
+});
+
+registerRoute("DELETE", "/api/v1/comment/like/:id", async (req, res, params) => {
+
+    const { id } = params;
+
+    const user = _isLoggedUser(req, res);
+
+    if (!user) return;
+
+    await removeLikeComment(req, res, id, user);
+
 });
 
 function _isLoggedUser(req, res) {
