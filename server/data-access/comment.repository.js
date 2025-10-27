@@ -163,6 +163,22 @@ export async function fetchReplies(parentId, limit, offset, traceId) {
         return { totalCount: result.rows[0].total_count, comments: result.rows };
     } catch (error) {
         logger("error", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `DB query failed to get parent replies for parent: [${parentId}]. Error: [${error}]`);
-        throw new DbError(`Failed to fetch replies for parent commetn with id: [${parentId}]`);
+        throw new DbError(`Failed to fetch replies for parent comment with id: [${parentId}]`);
+    }
+}
+
+export async function edit(id, content, traceId) {
+    const LOCAL_LOG_CONTEXT = "Edit Comment";
+
+    logger("info", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Editing comment with: [${id}]`);
+
+    const query = `UPDATE comments SET content = $1 WHERE id = $2 RETURNING content`;
+
+    try {
+        const res = await db.query(query, [content, id]);
+        return res.rows[0];
+    } catch (error) {
+        logger("error", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `DB query failed to edit comment with id: [${id}]. Error: [${error}]`);
+        throw new DbError(`Failed to edit comment with id: [${id}]`);
     }
 }

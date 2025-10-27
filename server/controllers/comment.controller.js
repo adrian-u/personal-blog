@@ -1,11 +1,11 @@
 import logger from "../utils/logger.js";
 import {
     saveComment, getParentComments,
-    deleteCommentByOwnerOrAdmin, getRepliesByParentComment
+    deleteCommentByOwnerOrAdmin, getRepliesByParentComment, modifyComment
 } from "../services/comment.service.js";
 import { checkIfCommentBodyIsValid } from "../utils/comment-utils.js";
 import { BadInput } from "../errors/custom-errors.js";
-import { isNumber } from "../utils/general.js";
+import { isEmpty, isNumber } from "../utils/general.js";
 
 const LOG_CONTEXT = "Comment Controller"
 
@@ -84,6 +84,32 @@ export async function loadParentReplies(req, res, parentId, limit, offset) {
         res.end(JSON.stringify(replies))
     } catch (error) {
         logger("error", req.traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Error fetching replies for parent comment with id: [${parentId}]. Error [${error}]`)
+        const status = error.statusCode || 500;
+        res.writeHead(status, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({
+            name: error.name || "InternalServerError",
+            error: error.message
+        }));
+    }
+}
+
+export async function editComment(req, res, id, user) {
+    const LOCAL_LOG_CONTEXT = "Edit Comment";
+
+    try {
+        if (!isNumber(id)) {
+            throw new BadInput(`The id: [${id}] is not valid`);
+        }
+
+        if (isEmpty(req.body)) {
+            throw new BadInput(`The comment can't be null`);
+        }
+
+        const edited = await modifyComment(id, user, req.body.content, req.traceId);
+        res.writeHead(200, { "Content-Type": "application/json" });
+        res.end(JSON.stringify(edited));
+    } catch (error) {
+        logger("error", req.traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Error editing comment with id: [${id}]. Error [${error}]`)
         const status = error.statusCode || 500;
         res.writeHead(status, { "Content-Type": "application/json" });
         res.end(JSON.stringify({

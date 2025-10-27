@@ -1,6 +1,6 @@
 import {
     save, fetchParentComments, cancel, fetchCommentById,
-    fetchReplies
+    fetchReplies, edit
 } from "../data-access/comment.repository.js";
 import { AuthorizationError } from "../errors/custom-errors.js";
 import { isEmpty } from "../utils/general.js";
@@ -125,6 +125,28 @@ export async function getRepliesByParentComment(parentId, limit, offset, traceId
 
     } catch (error) {
         logger("error", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Error fetching replies for parentId: [${parentId}]. Error: [${error.message}]`);
+        throw error;
+    }
+}
+
+export async function modifyComment(id, user, content, traceId) {
+    const LOCAL_LOG_CONTEXT = "Edit Comment";
+
+    logger("info", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Edit comment with id: [${id}]`);
+
+    try {
+        const comment = await fetchCommentById(id, traceId);
+        if (!comment) throw new NotFoundError("Comment not found");
+        const isOwner = comment.user_id === user.id;
+
+        if (!isOwner) {
+            throw new AuthorizationError("You are not allowed to edit this comment");
+        }
+
+        return await edit(id, content, traceId);
+
+    } catch (error) {
+        logger("error", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Error edit comment with id: [${id}]. Error: [${error.message}]`);
         throw error;
     }
 }

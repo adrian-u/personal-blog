@@ -1,5 +1,5 @@
 import anonymous from "../../../../assets/images/anonymous.png";
-import { fetchReplies } from "../../../apis/comment";
+import { fetchReplies, editComment } from "../../../apis/comment";
 import { isEmpty } from "../../../utils/general";
 import logger from "../../../utils/logger";
 import { closeModal, openConfirmationModal } from "../../../utils/modals";
@@ -108,9 +108,18 @@ function _buildCommentHeader(comment, currentUser) {
     userInfo.append(authorName, commentDate);
     commentAuthor.append(avatar, userInfo);
 
-    commentHeader.append(commentAuthor, _buildCommentDelete(comment, currentUser));
+    commentHeader.append(commentAuthor, _buildDelEditRow(comment, currentUser));
 
     return commentHeader;
+}
+
+function _buildDelEditRow(comment, currentUser) {
+    const row = document.createElement("div");
+    row.classList.add("comment-del-ed-row");
+
+    row.append(_buildCommentDelete(comment, currentUser), _buildCommentEdit(comment, currentUser));
+
+    return row;
 }
 
 function _buildCommentDelete(comment, currentUser) {
@@ -131,6 +140,92 @@ function _buildCommentDelete(comment, currentUser) {
     commentDelete.appendChild(deleteButton);
 
     return commentDelete;
+}
+
+function _buildCommentEdit(comment, currentUser) {
+    const commentEdit = document.createElement("div");
+    commentEdit.classList.add("comment-edit");
+
+    const editButton = document.createElement("button");
+    editButton.classList.add("edit-button", currentUser.id === comment.userId ? "show" : "remove-from-layout");
+    editButton.disabled = !(currentUser.id === comment.userId);
+    editButton.textContent = "✍️";
+
+    editButton.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const commentElement = document.getElementById(`comment-${comment.id}`);
+        const commentContent = commentElement.querySelector(".comment-content");
+
+        const existingEditForm = commentElement.querySelector(".edit-form");
+        if (existingEditForm) {
+            return;
+        }
+
+        const editForm = _buildEditForm(comment, commentContent, currentUser);
+
+        commentContent.style.display = "none";
+        commentContent.insertAdjacentElement("afterend", editForm);
+    });
+
+    commentEdit.appendChild(editButton);
+    return commentEdit;
+}
+
+function _buildEditForm(comment, commentContent) {
+    const editForm = document.createElement("div");
+    editForm.classList.add("edit-form");
+
+    const textarea = document.createElement("textarea");
+    textarea.value = comment.content;
+    textarea.style.minHeight = "80px";
+    textarea.style.width = "100%";
+
+    const editFooter = document.createElement("div");
+    editFooter.classList.add("add-comment-footer");
+
+    const cancelButton = document.createElement("button");
+    cancelButton.classList.add("btn", "btn-neutral");
+    cancelButton.textContent = "Cancel";
+    cancelButton.onclick = () => {
+        commentContent.style.display = "block";
+        editForm.remove();
+    };
+
+    const saveButton = document.createElement("button");
+    saveButton.classList.add("btn", "btn-green");
+    saveButton.textContent = "Save";
+    saveButton.disabled = false;
+
+    textarea.addEventListener("input", () => {
+        const value = textarea.value.trim();
+        saveButton.disabled = !value || value === comment.content;
+    });
+
+    saveButton.onclick = async () => {
+        const newContent = textarea.value.trim();
+
+        if (!newContent || newContent === comment.content) {
+            return;
+        }
+
+        try {
+            const saved = await editComment(comment.id, newContent);
+            comment.content = saved.content;
+            commentContent.textContent = saved.content;
+            commentContent.style.display = "block";
+            editForm.remove();
+
+            showToast("Comment updated successfully", "success");
+        } catch (error) {
+            logger("error", "Edit Comment", `Failed to edit comment with id: [${comment.id}]. Error: ${error}`);
+            showToast("Failed to update comment", "error");
+        }
+    };
+
+    editFooter.append(cancelButton, saveButton);
+    editForm.append(textarea, editFooter);
+
+    return editForm;
 }
 
 function _buildCommentActions(comment, currentUser, articleId) {

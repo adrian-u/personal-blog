@@ -105,3 +105,31 @@ export async function fetchReplies(parentId, limit = 10, offset = 0) {
         throw error;
     }
 }
+
+export async function editComment(id, content) {
+    const LOCAL_LOG_CONTEXT = "Edit Comment";
+
+    const url = `${import.meta.env.VITE_API_URL}/comment/${id}`;
+
+    try {
+        logger("debug", `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Calling backend url: [${url}]`);
+
+        const res = await fetch(`${url}`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${getJWT()}`
+            },
+            body: JSON.stringify({ content }),
+        });
+
+        if (!res.ok) {
+            const errorData = await res.json();
+            throw new Error(errorData.error || `Request failed with ${res.status}`);
+        }
+        return await res.json();
+    } catch (error) {
+        logger("error", `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, error);
+        throw error;
+    }
+}

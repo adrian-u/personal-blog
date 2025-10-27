@@ -92,7 +92,14 @@
     font-size: 0.85rem;
 }
 
-.comment-delete {
+.comment-del-ed-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.comment-delete,
+.comment-edit {
     display: flex;
     align-items: center;
     gap: 1rem;
@@ -199,7 +206,8 @@
     border-radius: 0 0.5rem 0.5rem 0;
 }
 
-.reply-form>textarea {
+.reply-form>textarea,
+.edit-form>textarea {
     width: 100%;
     min-height: 100px;
     background: var(--color-background);
@@ -211,7 +219,8 @@
     transition: border-color 0.2s;
 }
 
-.reply-form>textarea:focus {
+.reply-form>textarea:focus,
+.edit-form>textarea:focus {
     outline: none;
     border-color: var(--color-primary);
 }

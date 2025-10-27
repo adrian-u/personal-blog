@@ -1,6 +1,9 @@
 import { registerRoute } from "./router.manager.js";
 import { verifyJWT } from "../services/oauth.service.js";
-import { createComment, loadParentComments, deleteComment, loadParentReplies } from "../controllers/comment.controller.js";
+import {
+    createComment, loadParentComments, deleteComment,
+    loadParentReplies, editComment
+} from "../controllers/comment.controller.js";
 
 registerRoute("POST", "/api/v1/comment", async (req, res) => {
 
@@ -42,6 +45,16 @@ registerRoute("GET", "/api/v1/comment/parent/:parentId/replies", async (req, res
 
     await loadParentReplies(req, res, parentId, limit, offset);
 
+});
+
+registerRoute("PATCH", "/api/v1/comment/:id", async (req, res, params) => {
+    const { id } = params;
+
+    const user = _isLoggedUser(req, res);
+
+    if (!user) return;
+
+    await editComment(req, res, id, user);
 });
 
 function _isLoggedUser(req, res) {

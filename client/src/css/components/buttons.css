@@ -89,3 +89,18 @@
     color: var(--color-danger-hover);
     transform: scale(1.2);
 }
+
+.edit-button {
+    background: none;
+    border: none;
+    color: var(--color-danger);
+    font-size: 1.2rem;
+    cursor: pointer;
+    transform: scale(0.8);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.edit-button:hover {
+    color: var(--color-danger-hover);
+    transform: scale(1.2);
+}
