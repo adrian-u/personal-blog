@@ -10,15 +10,13 @@ export async function publishComment(comment, articleId) {
 
     const LOCAL_LOG_CONTEXT = "Publish";
 
-    console.log(comment);
-
     if (comment.isReply) {
-        if (!_isReplyValid(comment.content, comment.parentId)) {
+        if (!_isReplyValid(comment.content, comment.parentId, articleId)) {
             showToast(`The reply is not valid`, "error");
             return;
         }
     } else {
-        if (!_isCommentValid(comment.content)) {
+        if (!_isCommentValid(comment.content, articleId)) {
             showToast(`The comment is empty`, "error");
             return;
         }
@@ -72,27 +70,35 @@ export async function getParentReplies(parentId, limit, offset) {
 }
 
 
-function _isCommentValid(content) {
+function _isCommentValid(content, articleId) {
 
     if (isEmpty(content)) {
         logger("error", "Comment", `Empty comment`);
+        return false;
+    }
+
+    if (!articleId || articleId === 0) {
+        logger("error", "Comment", `Invalid article`);
         return false;
     }
 
     return true;
 }
 
-function _isReplyValid(content, parentId) {
+function _isReplyValid(content, parentId, articleId) {
 
     if (isEmpty(content)) {
         logger("error", "Comment", `Empty comment`);
         return false;
     }
 
-    console.log(parentId);
-
     if (!parentId || parentId === 0) {
         logger("error", "Comment", `Invalid parent`);
+        return false;
+    }
+
+    if (!articleId || articleId === 0) {
+        logger("error", "Comment", `Invalid article`);
         return false;
     }
 

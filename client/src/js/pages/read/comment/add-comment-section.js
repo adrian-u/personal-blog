@@ -62,7 +62,7 @@ function _addCommentFooter(articleId, currentUser, textComment) {
             const comments = document.querySelector(".comments-section");
 
             if (comments) {
-                const newCommentBox = buildComment(newComment, currentUser);
+                const newCommentBox = buildComment(newComment, currentUser, articleId);
                 newCommentBox.classList.add("new");
                 const divider = document.createElement("div");
                 divider.classList.add("divider");

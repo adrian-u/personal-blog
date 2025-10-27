@@ -74,7 +74,7 @@ export function buildComment(comment, currentUser, articleId, isReply = false) {
     commentDiv.append(
         _buildCommentHeader(comment, currentUser),
         commentContent,
-        _buildCommentActions(comment, currentUser, articleId, isReply)
+        _buildCommentActions(comment, currentUser, articleId)
     );
 
     return commentDiv;
@@ -136,7 +136,6 @@ function _buildCommentDelete(comment, currentUser) {
 function _buildCommentActions(comment, currentUser, articleId) {
     const commentActions = document.createElement("div");
     commentActions.classList.add("comment-actions");
-
     const replyButton = document.createElement("button");
     replyButton.classList.add("action-btn");
     replyButton.textContent = "↩ Reply";
@@ -164,8 +163,8 @@ function _buildCommentActions(comment, currentUser, articleId) {
 
     const showReplies = document.createElement("button");
     showReplies.classList.add("action-btn", "show-replies-btn");
-    showReplies.textContent = "💬 Show Replies";
-    showReplies.onclick = async (e) => {
+    showReplies.textContent = `💬 Show Replies (${comment.replies})`;
+    showReplies.onclick = async () => {
         const commentElement = document.getElementById(`comment-${comment.id}`);
 
         let repliesSection = null;
@@ -181,7 +180,7 @@ function _buildCommentActions(comment, currentUser, articleId) {
 
         if (repliesSection) {
             repliesSection.remove();
-            showReplies.textContent = "💬 Show Replies";
+            showReplies.textContent = `💬 Show Replies (${comment.replies})`;
             return;
         }
 
@@ -212,29 +211,50 @@ async function _repliesSection(id, currentUser, articleId) {
     const replies = document.createElement("div");
     replies.classList.add("replies");
 
+    const loadMore = document.createElement("button");
+    loadMore.classList.add("btn", "btn-green");
+    loadMore.id = "load-more-replies";
+    loadMore.textContent = "Load More";
+
     let offset = 0;
-    try {
-        const { totalCount, comments: retrievedReplies } = await fetchReplies(id, LIMIT, offset);
 
-        if (!retrievedReplies || retrievedReplies.length === 0) {
-            return null;
+    const loadReplies = async () => {
+        try {
+            const { totalCount, comments: retrievedReplies } = await fetchReplies(id, LIMIT, offset);
+
+            if (!retrievedReplies || retrievedReplies.length === 0) {
+                return null;
+            }
+
+            retrievedReplies.forEach(reply => {
+                replies.appendChild(buildComment(reply, currentUser, articleId, true));
+            });
+
+            offset += retrievedReplies.length;
+
+            if (offset + LIMIT > totalCount) {
+                loadMore.classList.add("remove-from-layout");
+            }
+
+        } catch (error) {
+            logger("error", "Fetch replies", `Failed to fetch replies for comment with id: [${id}]. Error: [${error}]`);
+            throw error;
         }
-
-        retrievedReplies.forEach(reply => {
-            replies.appendChild(buildComment(reply, currentUser, articleId, true));
-        });
-
-        return replies;
-    } catch (error) {
-        logger("error", "Fetch replies", `Failed to fetch replies for comment with id: [${id}]. Error: [${error}]`);
-        throw error;
     }
+
+    loadMore.onclick = async () => await loadReplies();
+    await loadReplies();
+
+    if (replies.children.length === 0) {
+        return null;
+    }
+    replies.appendChild(loadMore);
+    return replies;
 }
 
 function _replyForm(comment, currentUser, articleId) {
     const replyForm = document.createElement("div");
     replyForm.classList.add("reply-form");
-
     const commentHeader = document.createElement("div");
     commentHeader.classList.add("add-comment-header");
 

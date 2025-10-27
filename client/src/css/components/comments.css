@@ -156,7 +156,8 @@
     margin: 0.5rem 0;
 }
 
-#load-more-comments {
+#load-more-comments,
+#load-more-replies {
     display: block;
     margin: 1rem auto;
     text-align: center;
@@ -190,7 +191,7 @@
 }
 
 .reply-form {
-    margin-left: 3.5rem;
+    margin-left: 3rem;
     margin-top: 1rem;
     padding: 1rem;
     background: var(--color-background);

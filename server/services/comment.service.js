@@ -21,6 +21,7 @@ export async function saveComment(comment, traceId) {
             articleId: savedComment.article_id,
             content: savedComment.content,
             createdAt: savedComment.created_at,
+            replies: savedComment.child_count,
             author: {
                 name: savedComment.name,
                 avatar: savedComment.avatarurl,
@@ -51,6 +52,7 @@ export async function getParentComments(articleId, traceId, limit, offset) {
                 articleId: parentComment.article_id,
                 content: parentComment.content,
                 createdAt: parentComment.created_at,
+                replies: parentComment.child_count,
                 author: {
                     name: parentComment.name,
                     avatar: parentComment.avatarurl,
@@ -110,6 +112,7 @@ export async function getRepliesByParentComment(parentId, limit, offset, traceId
                 parentId: comment.parent_id,
                 content: comment.content,
                 createdAt: comment.created_at,
+                replies: comment.child_count,
                 author: {
                     name: comment.name,
                     avatar: comment.avatarurl,
