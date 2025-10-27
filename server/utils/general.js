@@ -4,6 +4,10 @@ export function isEmpty(value) {
     return value == null;
 }
 
+export function isNumber(value) {
+  return !isNaN(parseFloat(value)) && isFinite(value);
+}
+
 function _isString(value) {
     return typeof value === "string" || value instanceof String;
 }

@@ -1,0 +1,11 @@
+.hidden {
+    visibility: hidden;
+}
+
+.show {
+    visibility: initial;
+}
+
+.remove-from-layout {
+    display: none !important;
+}

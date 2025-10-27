@@ -7,30 +7,30 @@ import {
 
 registerRoute("POST", "/api/v1/article", async (req, res) => {
 
-    _creatorOperations(req, res);
+    if (!_creatorOperations(req, res)) return;
 
     await createArticle(req, res);
 });
 
 registerRoute("GET", "/api/v1/article/wip", async (req, res) => {
 
-    _creatorOperations(req, res);
+    if (!_creatorOperations(req, res)) return;
 
-    await getArticlesCreator(res);
+    await getArticlesCreator(req, res);
 });
 
 registerRoute("GET", "/api/v1/article/wip/:id", async (req, res, params) => {
     const { id } = params;
 
-    _creatorOperations(req, res);
+    if (!_creatorOperations(req, res)) return;
 
-    await getWipArticle(res, req, id);
+    await getWipArticle(req, res, id);
 });
 
 registerRoute("PATCH", "/api/v1/article/wip/:id", async (req, res, params) => {
     const { id } = params;
 
-    _creatorOperations(req, res);
+    if (!_creatorOperations(req, res)) return;
 
     await updateArticle(req, res, id);
 });
@@ -38,7 +38,7 @@ registerRoute("PATCH", "/api/v1/article/wip/:id", async (req, res, params) => {
 registerRoute("DELETE", "/api/v1/article/wip/:id", async (req, res, params) => {
     const { id } = params;
 
-    _creatorOperations(req, res);
+    if (!_creatorOperations(req, res)) return;
 
     await deleteArticle(req, res, id);
 })
@@ -46,7 +46,9 @@ registerRoute("DELETE", "/api/v1/article/wip/:id", async (req, res, params) => {
 registerRoute("GET", "/api/v1/article/category/:category", async (req, res, params) => {
     const { category } = params;
 
-    const url = new URL(req.url, `http://${req.headers.host}`);
+    const protocol = req.headers['x-forwarded-proto'] || 'http';
+
+    const url = new URL(req.url, `${protocol}://${req.headers.host}`);
     const limit = parseInt(url.searchParams.get("limit")) || 10;
     const offset = parseInt(url.searchParams.get("offset")) || 0;
 
@@ -60,8 +62,15 @@ registerRoute("GET", "/api/v1/article/:id", async (req, res, params) => {
 });
 
 function _creatorOperations(req, res) {
-    const user = verifyJWT(req, res);
-    if (!user) return;
-
-    if (!authorizeRole(req, res, "creator")) return;
+    try {
+        verifyJWT(req);
+        if (!authorizeRole(req, "creator")) {
+            throw new Error("Forbidden: insufficient permissions");
+        }
+        return true;
+    } catch (error) {
+        res.writeHead(401, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ name: "Authorization issues", error: error.message }));
+        return false;
+    }
 }

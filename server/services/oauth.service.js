@@ -1,5 +1,6 @@
 import { Buffer } from 'node:buffer';
 import crypto from 'node:crypto';
+import { AuthorizationError } from '../errors/custom-errors.js';
 
 export function createJWT(payload) {
     const header = {
@@ -12,8 +13,9 @@ export function createJWT(payload) {
     const fullPayload = {
         sub: payload.email,
         role: payload.role,
+        id: payload.id,
         iat: now,
-        exp: now + 60 * 60 * 24 * 30,
+        exp: now + 60 * 60 * 24 * 1,
     };
 
 
@@ -31,23 +33,19 @@ export function createJWT(payload) {
     return `${encodedHeader}.${encodedPayload}.${signature}`;
 }
 
-export function verifyJWT(req, res) {
+export function verifyJWT(req) {
 
     const authHeader = req.headers["authorization"];
 
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
-        res.writeHead(401, { "Content-Type": "application/json" });
-        res.end(JSON.stringify({ error: "Missing or invalid Authorization header" }));
-        return null;
+        throw new Error("Missing or invalid Authorization header");
     }
 
     const token = authHeader.split(" ")[1];
     const parts = token.split('.');
 
     if (parts.length !== 3) {
-        res.writeHead(400, { "Content-Type": "application/json" });
-        res.end(JSON.stringify({ error: "Malformed token" }));
-        return null;
+        throw new Error("Malformed token");
     }
 
     const [encodedHeader, encodedPayload, signature] = parts;
@@ -58,9 +56,7 @@ export function verifyJWT(req, res) {
         .digest('base64url');
 
     if (signature !== expectedSignature) {
-        res.writeHead(403, { "Content-Type": "application/json" });
-        res.end(JSON.stringify({ error: "Invalid token signature" }));
-        return null;
+        throw new AuthorizationError("Invalid token signature");
     }
 
     const payloadJSON = Buffer.from(encodedPayload, 'base64url').toString();
@@ -68,9 +64,7 @@ export function verifyJWT(req, res) {
 
     const now = Math.floor(Date.now() / 1000);
     if (payload.exp && payload.exp < now) {
-        res.writeHead(403, { "Content-Type": "application/json" });
-        res.end(JSON.stringify({ error: "Token expired" }));
-        return null;
+        throw new AuthorizationError("Token expired");
     }
 
     req.user = payload;
@@ -78,15 +72,11 @@ export function verifyJWT(req, res) {
     return payload;
 }
 
-export function authorizeRole(req, res, requiredRole) {
+export function authorizeRole(req, requiredRole) {
     if (!req.user) {
-        res.writeHead(401, { "Content-Type": "application/json" });
-        res.end(JSON.stringify({ error: "Unauthorized" }));
         return false;
     }
     if (req.user.role !== requiredRole) {
-        res.writeHead(403, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ error: 'Forbidden: insufficient permissions' }));
         return false;
     }
 

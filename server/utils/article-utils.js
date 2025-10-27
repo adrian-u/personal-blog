@@ -1,6 +1,6 @@
 import { isEmpty } from "./general.js";
 import logger from "./logger.js";
-import { ArticleValidationError } from "../errors/custom-errors.js";
+import { BodyRequestValidationError } from "../errors/custom-errors.js";
 
 const LOG_CONTEXT = "Article Utils";
 
@@ -13,6 +13,6 @@ export function checkIfArticleBodyIsValid(article, traceId) {
     logger("debug", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Invalid fields array: [${invalidFields.join(", ")}]`)
 
     if (invalidFields.length > 0) {
-        throw new ArticleValidationError(`The required fields: [${invalidFields.join(", ")}] are not present`);
+        throw new BodyRequestValidationError(`The required fields: [${invalidFields.join(", ")}] are not present`);
     }
 }

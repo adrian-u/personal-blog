@@ -50,6 +50,11 @@ export async function getArticlesWithoutMarkdown() {
             }
         });
 
+        if (!res.ok) {
+            const errorData = await res.json();
+            throw new Error(errorData.error || `Request failed with ${res.status}`);
+        }
+
         return await res.json();
     } catch (error) {
         logger("error", `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, error);
@@ -70,6 +75,11 @@ export async function getWipArticle(id) {
                 "Authorization": `Bearer ${getJWT()}`
             }
         });
+
+        if (!res.ok) {
+            const errorData = await res.json();
+            throw new Error(errorData.error || `Request failed with ${res.status}`);
+        }
 
         return await res.json();
     } catch (error) {
@@ -93,6 +103,11 @@ export async function updateArticle(id, article) {
             body: JSON.stringify(article),
         });
 
+        if (!res.ok) {
+            const errorData = await res.json();
+            throw new Error(errorData.error || `Request failed with ${res.status}`);
+        }
+
         return await res.json();
     } catch (error) {
         logger("error", `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, error);
@@ -112,6 +127,11 @@ export async function deleteWipArticle(id) {
                 "Authorization": `Bearer ${getJWT()}`
             }
         });
+
+        if (!res.ok) {
+            const errorData = await res.json();
+            throw new Error(errorData.error || `Request failed with ${res.status}`);
+        }
 
         return await res.json();
     } catch (error) {
@@ -135,6 +155,11 @@ export async function getArticlesByCategory(category, limit = 10, offset = 0) {
             }
         });
 
+        if (!res.ok) {
+            const errorData = await res.json();
+            throw new Error(errorData.error || `Request failed with ${res.status}`);
+        }
+
         return await res.json();
     } catch (error) {
         logger("error", `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, error);
@@ -156,6 +181,11 @@ export async function getArticleForReading(id) {
                 "Content-Type": "application/json"
             }
         });
+
+        if (!res.ok) {
+            const errorData = await res.json();
+            throw new Error(errorData.error || `Request failed with ${res.status}`);
+        }
 
         return await res.json();
     } catch (error) {

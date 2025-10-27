@@ -4,8 +4,13 @@ import { MDParser } from "@pardnchiu/nanomd";
 import logger from "../../utils/logger";
 import { showToast } from "../../utils/toast";
 import { getArticleForReading } from "../../apis/article";
+import { getCurrentUser } from "../../context/user-context";
+import { addCommentSection } from "./comment/add-comment-section";
+import { commentsSection } from "./comment/comments-section";
 
-const LOG_CONTEXT = "Read Article Creation";
+const LOG_CONTEXT = "Read Article";
+
+const LIMIT = 10;
 
 export async function readArticle(id) {
 
@@ -15,20 +20,20 @@ export async function readArticle(id) {
 }
 
 async function _importReadModal() {
-    await htmlImporter("body", "./src/components/read-article-modal.html");
+    if (!document.getElementById("read-article-modal")) {
+        await htmlImporter("body", "./src/components/read-article-modal.html");
+    }
 }
 
 async function _buildReadModal(id) {
 
     try {
+        const currentUser = await getCurrentUser();
         const article = await getArticleForReading(id);
         const modal = document.getElementById("read-article-modal");
 
         const modalContent = modal.querySelector("#article-read-content");
-
-        while (modalContent.hasChildNodes()) {
-            modalContent.firstChild.remove();
-        }
+        modalContent.innerHTML = "";
 
         const headerRow = document.createElement("div");
         headerRow.classList.add("read-header");
@@ -42,7 +47,7 @@ async function _buildReadModal(id) {
 
         const date = document.createElement("div");
         date.classList.add("card-date");
-        date.textContent = new Date(article.created_at).toISOString().split("T")[0];
+        date.textContent = new Date(article.created_at).toLocaleDateString();
         titleDate.appendChild(date);
 
         headerRow.appendChild(titleDate);
@@ -61,8 +66,10 @@ async function _buildReadModal(id) {
         articleContent.classList.add("article-body")
         articleContent.innerHTML = domParser.parse(article.markdown);
 
-        modalContent.appendChild(headerRow);
-        modalContent.appendChild(articleContent);
+        modalContent.append(headerRow,
+            articleContent,
+            addCommentSection(id, currentUser),
+            await commentsSection(id, currentUser));
 
         openReadModal();
     } catch (error) {

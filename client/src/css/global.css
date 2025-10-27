@@ -2,6 +2,7 @@
 @import url('./base/variables.css');
 @import url('./base/reset.css');
 @import url('./base/typography.css');
+@import url('./base/utils.css');
 
 /* Layout */
 @import url('./layout/navbar.css');
@@ -19,8 +20,7 @@
 @import url('./components/hero.css');
 @import url('./components/buttons.css');
 @import url('./components/cards.css');
-@import url('./components/timeline.css');
-@import url('./components/skills-grid.css');
 @import url('./components/toast.css');
 @import url('./components/modal.css');
 @import url('./components/reading-modal.css');
+@import url('./components/comments.css');

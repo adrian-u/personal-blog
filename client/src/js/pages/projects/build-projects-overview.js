@@ -1,7 +1,7 @@
 import { getArticlesByCategory } from "../../apis/article";
 import logger from "../../utils/logger";
 import { showToast } from "../../utils/toast";
-import { readArticle } from "../common/read";
+import { readArticle } from "../read/read-modal";
 
 
 const LIMIT = 6;
@@ -80,7 +80,7 @@ function _buildCardHeader(item) {
 
     const date = document.createElement("div");
     date.classList.add("card-date");
-    date.textContent = new Date(item.created_at).toISOString().split("T")[0];
+    date.textContent = new Date(item.created_at).toLocaleDateString();
     cardInfo.appendChild(date);
 
     return cardHeader;

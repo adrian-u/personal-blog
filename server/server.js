@@ -9,6 +9,7 @@ import './routes/about.route.js';
 import './routes/user.route.js';
 import './routes/oauth.route.js';
 import './routes/article.route.js';
+import './routes/comment.route.js';
 
 const host = "0.0.0.0";
 const port = 8080;
@@ -20,7 +21,7 @@ const server = createServer(async (req, res) => {
     if (handleCors(req, res)) return;
 
     if (["POST", "PATCH", "PUT"].includes(req.method)) {
-        await bodyParser(req);
+        await bodyParser(req, res);
     }
 
     const match = findRoute(req);
