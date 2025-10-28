@@ -16,3 +16,20 @@ export const Category = Object.freeze({
         return entry ? entry[0].toLowerCase() : null;
     }
 })
+
+export const UserRole = Object.freeze({
+    CREATOR: Symbol("creator"),
+    USER: Symbol("user"),
+
+    valueOf(value) {
+        const entry = Object.entries(UserRole).
+            find(([key, val]) => typeof val === "symbol" && val.description === value);
+        if (!entry) throw new BadInput(`Invalid user role: ${value}`);
+        return entry[1];
+    },
+
+    fromSymbol(symbol) {
+        const entry = Object.entries(UserRole).find(([key, val]) => val === symbol);
+        return entry ? entry[0].toLowerCase() : null;
+    }
+})

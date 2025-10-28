@@ -253,7 +253,6 @@ function _buildCommentActions(comment, currentUser, articleId) {
     };
 
     const likeButton = document.createElement("button");
-    console.log(currentUser);
     likeButton.classList.add(
         "action-btn",
         ...(currentUser.liked_comments.includes(comment.id) ? ["liked"] : [])
