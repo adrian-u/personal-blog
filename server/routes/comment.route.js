@@ -82,7 +82,7 @@ registerRoute("DELETE", "/api/v1/comment/like/:id", async (req, res, params) => 
 
 function _isLoggedUser(req, res) {
     try {
-        return verifyJWT(req, res);
+        return verifyJWT(req);
     } catch (error) {
         res.writeHead(401, { "Content-Type": "application/json" });
         res.end(JSON.stringify({

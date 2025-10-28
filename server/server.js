@@ -11,8 +11,8 @@ import './routes/oauth.route.js';
 import './routes/article.route.js';
 import './routes/comment.route.js';
 
-const host = "0.0.0.0";
-const port = 8080;
+const host = process.env.HOST;
+const port = process.env.PORT;
 
 const server = createServer(async (req, res) => {
 
