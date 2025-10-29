@@ -1,19 +1,13 @@
 import { getUserDetailsByEmail } from '../services/user.service.js';
+import logger from '../utils/logger.js';
 
-export async function getUserDetails(email, res) {
+export async function getUserDetails(req, res, params) {
 
-    try {
-        const userInfo = await getUserDetailsByEmail(email);
-        res.writeHead(200, { 'Content-Type': 'application/json', });
-        res.end(JSON.stringify(userInfo));
-    } catch (error) {
-        console.error(`Failed to get user details: [${error}]`);
-        const statusCode = error.statusCode || 500;
-        const errorMessage = error.errorMessage || 'Internal server error';
+    const { email } = params;
 
-        res.writeHead(statusCode, {
-            'Content-Type': 'application/json'
-        });
-        res.end(JSON.stringify(errorMessage));
-    }
+    logger("info", req.traceId, "Fetching user data", `Start fetching user data for email: ${email}`);
+
+    const userInfo = await getUserDetailsByEmail(email, req.traceId);
+    res.writeHead(200, { 'Content-Type': 'application/json', });
+    res.end(JSON.stringify(userInfo));
 } 

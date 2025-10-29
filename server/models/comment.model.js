@@ -1,5 +1,3 @@
-import { UserRole } from "./enums.js";
-
 export class Comment {
     constructor({ id, userId, articleId, content, parentId,
         createdAt, updatedAt, replies = [], like = 0, author, isReply }) {
@@ -22,6 +20,7 @@ export class Comment {
             articleId: this.articleId,
             userId: this.userId,
             content: this.content,
+            isReply: false
         }
     }
 
@@ -31,6 +30,7 @@ export class Comment {
             userId: this.userId,
             content: this.content,
             parentId: this.parentId,
+            isReply: true
         }
     }
 
@@ -44,7 +44,7 @@ export class Comment {
             updatedAt: this.updatedAt,
             replies: this.replies,
             like: this.like,
-            author: new CommentAuthor(this.author).toRead(),
+            author: this.author,
         }
     }
 
@@ -73,7 +73,7 @@ export class CommentAuthor {
         return {
             name: this.name,
             avatar: this.avatar,
-            role: this.role ? UserRole.fromSymbol(this.role) : undefined
+            role: this.role
         }
     }
 
@@ -81,7 +81,7 @@ export class CommentAuthor {
         return new CommentAuthor({
             name: row.name,
             avatar: row.avatarurl,
-            role: row.role ? UserRole.valueOf(row.role) : undefined,
+            role: row.role,
         });
     }
 }

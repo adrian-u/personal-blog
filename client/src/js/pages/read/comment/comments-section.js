@@ -255,19 +255,19 @@ function _buildCommentActions(comment, currentUser, articleId) {
     const likeButton = document.createElement("button");
     likeButton.classList.add(
         "action-btn",
-        ...(currentUser.liked_comments.includes(comment.id) ? ["liked"] : [])
+        ...(currentUser.likedComments.includes(comment.id) ? ["liked"] : [])
     );
     likeButton.textContent = `👍 ${comment.like}`;
     likeButton.onclick = async () => {
         likeButton.disabled = true;
 
-        const isLiked = currentUser.liked_comments.includes(comment.id);
+        const isLiked = currentUser.likedComments.includes(comment.id);
 
         try {
             if (isLiked) {
                 const res = await removeCommentLike(comment.id);
 
-                currentUser.liked_comments = currentUser.liked_comments.filter(
+                currentUser.likedComments = currentUser.likedComments.filter(
                     (id) => id !== comment.id
                 );
 
@@ -276,8 +276,8 @@ function _buildCommentActions(comment, currentUser, articleId) {
             } else {
                 const res = await addLikeToComment(comment.id);
 
-                if (!currentUser.liked_comments.includes(comment.id)) {
-                    currentUser.liked_comments.push(comment.id);
+                if (!currentUser.likedComments.includes(comment.id)) {
+                    currentUser.likedComments.push(comment.id);
                 }
 
                 likeButton.classList.add("liked");

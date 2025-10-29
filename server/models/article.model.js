@@ -1,5 +1,3 @@
-import { Category } from "./enums.js";
-
 export class Article {
     constructor({ id, title, icon, markdown, category, description, published = false, createdAt, updatedAt }) {
 
@@ -7,7 +5,7 @@ export class Article {
         this.title = title;
         this.icon = icon;
         this.markdown = markdown;
-        this.category = Category.valueOf(category.toLowerCase());
+        this.category = category;
         this.description = description;
         this.published = published;
         this.createdAt = createdAt || new Date();
@@ -19,7 +17,7 @@ export class Article {
             title: this.title,
             icon: this.icon,
             markdown: this.markdown,
-            category: Category.fromSymbol(this.category),
+            category: this.category,
             description: this.description,
             published: this.published,
         };
@@ -33,7 +31,7 @@ export class Article {
             markdown: this.markdown,
             description: this.description,
             published: this.published,
-            category: Category.fromSymbol(this.category),
+            category: this.category,
             createdAt: this.createdAt,
         };
     }
@@ -45,7 +43,7 @@ export class Article {
             icon: this.icon,
             description: this.description,
             published: this.published,
-            category: Category.fromSymbol(this.category),
+            category: this.category,
             createdAt: this.createdAt,
         }
     }

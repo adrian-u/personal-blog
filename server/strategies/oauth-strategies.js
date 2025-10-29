@@ -3,7 +3,7 @@ import { Buffer } from 'node:buffer';
 export const OAUTH_PROVIDERS = {
     google: {
         async exchangeCodeForToken(code, redirect_uri) {
-            const res = await fetch('https://oauth2.googleapis.com/token', {
+            const res = await fetch(process.env.GOOGLE_TOKEN_URL, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                 body: new URLSearchParams({
@@ -19,8 +19,8 @@ export const OAUTH_PROVIDERS = {
             return await res.json();
         },
 
-        async getUserInfo(tokens) {
-            const payload = tokens.id_token.split('.')[1];
+        async getUserInfo(token) {
+            const payload = token.id_token.split('.')[1];
             const decoded = JSON.parse(Buffer.from(payload, 'base64url').toString());
             return {
                 email: decoded.email,
@@ -32,7 +32,7 @@ export const OAUTH_PROVIDERS = {
 
     github: {
         async exchangeCodeForToken(code, redirect_uri) {
-            const res = await fetch('https://github.com/login/oauth/access_token', {
+            const res = await fetch(process.env.GITHUB_TOKEN_URL, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
                 body: JSON.stringify({
@@ -47,12 +47,12 @@ export const OAUTH_PROVIDERS = {
             return await res.json();
         },
 
-        async getUserInfo(tokens) {
-            const userRes = await fetch('https://api.github.com/user', {
-                headers: { Authorization: `Bearer ${tokens.access_token}` }
+        async getUserInfo(token) {
+            const userRes = await fetch(process.env.GITHUB_USER_DETAILS_URL, {
+                headers: { Authorization: `Bearer ${token.access_token}` }
             });
-            const emailRes = await fetch('https://api.github.com/user/emails', {
-                headers: { Authorization: `Bearer ${tokens.access_token}` }
+            const emailRes = await fetch(process.env.GITHUB_USER_EMAIL_URL, {
+                headers: { Authorization: `Bearer ${token.access_token}` }
             });
 
             const user = await userRes.json();
@@ -66,5 +66,4 @@ export const OAUTH_PROVIDERS = {
             };
         }
     },
-
 };

@@ -10,6 +10,8 @@ export async function save(comment, traceId) {
 
     logger("info", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, "Saving the comment on the database (transactional)");
 
+    console.log(comment);
+
     if (comment.isReply) {
         try {
             logger("info", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Saving the reply comment to parentId: [${comment.parentId}]
@@ -95,7 +97,7 @@ export async function fetchParentComments(articleId, traceId, limit, offset) {
                 LEFT JOIN user_comment_likes as likes ON likes.comment_id = c.id
                 WHERE c.article_id = $1 AND c.parent_id IS NULL
                 GROUP BY c.id, c.article_id, c.user_id, c.content, c.created_at, u.name, u.role, u.avatarurl
-                ORDER BY c.created_at DESC LIMIT $2 OFFSET $3`;
+                ORDER BY total_likes DESC, c.created_at DESC LIMIT $2 OFFSET $3`;
 
     try {
         const { rowCount, rows } = await db.query(query, [articleId, limit, offset]);

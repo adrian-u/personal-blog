@@ -53,3 +53,11 @@ export class BadInput extends Error {
         this.statusCode = 400;
     }
 }
+
+export class InvalidProvider extends Error {
+    constructor(message) {
+        super(message);
+        this.name = "Invalid Provider";
+        this.statusCode = 400;
+    }
+}

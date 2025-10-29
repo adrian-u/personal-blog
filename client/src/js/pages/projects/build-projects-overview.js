@@ -28,7 +28,7 @@ async function _loadArticles(grid, loadMoreButton) {
     try {
         loadMoreButton.disabled = true;
         loadMoreButton.classList.add("loading");
-        const { totalCount, articles } = await getArticlesByCategory("Projects", LIMIT, offset);
+        const { totalCount, articles } = await getArticlesByCategory("projects", LIMIT, offset);
 
         articles.forEach((item) => {
             const article = document.createElement("article");
