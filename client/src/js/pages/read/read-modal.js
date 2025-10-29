@@ -47,7 +47,7 @@ async function _buildReadModal(id) {
 
         const date = document.createElement("div");
         date.classList.add("card-date");
-        date.textContent = new Date(article.created_at).toLocaleDateString();
+        date.textContent = new Date(article.createdAt).toLocaleDateString();
         titleDate.appendChild(date);
 
         headerRow.appendChild(titleDate);

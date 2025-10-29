@@ -84,7 +84,7 @@ function _createInfoSection(article) {
 
     const date = document.createElement("span");
     date.className = "article-date";
-    date.textContent = new Date(article.created_at).toLocaleDateString();
+    date.textContent = new Date(article.createdAt).toLocaleDateString();
 
     meta.appendChild(category);
     meta.appendChild(date);

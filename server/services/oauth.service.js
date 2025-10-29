@@ -67,8 +67,6 @@ export function verifyJWT(req) {
         throw new AuthorizationError("Token expired");
     }
 
-    req.user = payload;
-
     return payload;
 }
 

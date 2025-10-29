@@ -5,6 +5,7 @@ import {
 import { AuthorizationError } from "../errors/custom-errors.js";
 import { isEmpty } from "../utils/general.js";
 import logger from "../utils/logger.js";
+import { Comment } from "../models/comment.model.js";
 
 const LOG_CONTEXT = "Comment Service";
 
@@ -14,21 +15,10 @@ export async function saveComment(comment, traceId) {
     logger("info", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, "Sending request to the repository layer");
 
     try {
-        const savedComment = await save(comment, traceId);
-        return {
-            id: savedComment.id,
-            userId: savedComment.user_id,
-            articleId: savedComment.article_id,
-            content: savedComment.content,
-            createdAt: savedComment.created_at,
-            replies: savedComment.child_count,
-            like: 0,
-            author: {
-                name: savedComment.name,
-                avatar: savedComment.avatarurl,
-                role: savedComment.role,
-            }
-        }
+        const result = await save(comment.isReply
+            ? new Comment(comment).toWriteReply()
+            : new Comment(comment).toWriteParent(), traceId);
+        return Comment.fromDBRow(result)
     } catch (error) {
         logger("error", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Error saving the comment: [${error.message}]`);
         throw error;
@@ -47,20 +37,7 @@ export async function getParentComments(articleId, traceId, limit, offset) {
         }
 
         const parentComments = res.comments.map(parentComment => {
-            return {
-                id: parentComment.id,
-                userId: parentComment.user_id,
-                articleId: parentComment.article_id,
-                content: parentComment.content,
-                createdAt: parentComment.created_at,
-                replies: parentComment.child_count,
-                like: parentComment.total_likes,
-                author: {
-                    name: parentComment.name,
-                    avatar: parentComment.avatarurl,
-                    role: parentComment.role,
-                }
-            }
+            return Comment.fromDBRow(parentComment).toRead();
         });
 
         return { totalCount: res.totalCount, comments: parentComments };
@@ -74,7 +51,7 @@ export async function deleteCommentByOwnerOrAdmin(commentId, user, traceId) {
     const LOCAL_LOG_CONTEXT = "Delete Comment by Owner od Admin";
 
     logger("info", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Sending delete request to the repository layer for commentId: [${commentId}]
-         requested by userId: ${user.id}`);
+        requested by userId: ${user.id}`);
 
     try {
 
@@ -106,22 +83,8 @@ export async function getRepliesByParentComment(parentId, limit, offset, traceId
             return { totalCount: 0, comments: [] };
         }
 
-        const replies = res.comments.map(comment => {
-            return {
-                id: comment.id,
-                userId: comment.user_id,
-                articleId: comment.article_id,
-                parentId: comment.parent_id,
-                content: comment.content,
-                createdAt: comment.created_at,
-                replies: comment.child_count,
-                like: comment.total_likes,
-                author: {
-                    name: comment.name,
-                    avatar: comment.avatarurl,
-                    role: comment.role,
-                }
-            }
+        const replies = res.comments.map(parentComment => {
+            return Comment.fromDBRow(parentComment).toRead();
         });
 
         return { totalCount: res.totalCount, comments: replies };

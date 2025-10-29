@@ -10,6 +10,8 @@ export async function save(comment, traceId) {
 
     logger("info", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, "Saving the comment on the database (transactional)");
 
+    console.log(comment);
+
     if (comment.isReply) {
         try {
             logger("info", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Saving the reply comment to parentId: [${comment.parentId}]
@@ -34,14 +36,14 @@ export async function save(comment, traceId) {
                 throw new DbError("Insert did not return a valid comment ID");
             }
 
-            const fullComment = await client.query(fetchQuery, [commentId]);
+            const { rows: [row] } = await client.query(fetchQuery, [commentId]);
 
             await client.query("COMMIT");
 
-            return fullComment.rows[0];
+            return row;
         } catch (error) {
             await client.query("ROLLBACK");
-            logger("error", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Transaction failed: [${error.message}]`);
+            logger("error", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Transaction failed: [${error.stack}]`);
             throw new DbError("Failed to save the comment");
         } finally {
             client.release();
@@ -69,11 +71,11 @@ export async function save(comment, traceId) {
                 throw new DbError("Insert did not return a valid comment ID");
             }
 
-            const fullComment = await client.query(fetchQuery, [commentId]);
+            const { rows: [row] } = await client.query(fetchQuery, [commentId]);
 
             await client.query("COMMIT");
 
-            return fullComment.rows[0];
+            return row;
         } catch (error) {
             await client.query("ROLLBACK");
             logger("error", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Transaction failed: [${error.message}]`);
@@ -95,14 +97,14 @@ export async function fetchParentComments(articleId, traceId, limit, offset) {
                 LEFT JOIN user_comment_likes as likes ON likes.comment_id = c.id
                 WHERE c.article_id = $1 AND c.parent_id IS NULL
                 GROUP BY c.id, c.article_id, c.user_id, c.content, c.created_at, u.name, u.role, u.avatarurl
-                ORDER BY c.created_at DESC LIMIT $2 OFFSET $3`;
+                ORDER BY total_likes DESC, c.created_at DESC LIMIT $2 OFFSET $3`;
 
     try {
-        const parentComments = await db.query(query, [articleId, limit, offset]);
-        if (parentComments.rowCount === 0) {
+        const { rowCount, rows } = await db.query(query, [articleId, limit, offset]);
+        if (rowCount === 0) {
             return { totalCount: 0, comments: [] };
         }
-        return { totalCount: parentComments.rows[0].total_count, comments: parentComments.rows };
+        return { totalCount: rows[0].total_count, comments: rows };
     } catch (error) {
         logger("error", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `DB query failed to get parent comments for articleId: [${id}]. Error: [${error}]`);
         throw new DbError(`Failed to fetch parent comments for articleId: [${articleId}]`);

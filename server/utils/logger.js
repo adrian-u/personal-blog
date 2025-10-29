@@ -12,9 +12,6 @@ export default function logger(type, traceId, context, message) {
             break;
         case "error":
             console.error(`[ERROR]-[TRACE-ID: ${traceId}]-[${new Date().toISOString()}]-[CONTEXT: ${context}]-[MESSAGE: ${message}]`);
-            if (process.env.NODE_ENV === "dev" && message instanceof Error) {
-                console.error(message.stack);
-            }
             break;
         default:
             console.log(`[LOG]-[TRACE-ID: ${traceId}]-[${new Date().toISOString()}]-[CONTEXT: ${context}]-[MESSAGE: ${message}]`);

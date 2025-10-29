@@ -1,5 +1,6 @@
 import { db } from "../config/db.js";
 import { DbError } from "../errors/custom-errors.js";
+import { Article } from "../models/article.model.js";
 import logger from "../utils/logger.js";
 
 const LOG_CONTEXT = "Article Repository";
@@ -16,47 +17,51 @@ export async function save(article, traceId) {
       RETURNING *;
     `;
 
-    logger("debug", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Insert Query: [${query}]`);
+    const values = [
+        article.title,
+        article.icon,
+        article.category,
+        article.description,
+        article.markdown,
+        article.published,
+    ]
+
+    logger("debug", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Insert Query: [${query}] with values: ${JSON.stringify(values)}`);
 
     try {
-        const createdArticle = await db.query(query, [
-            article.title,
-            article.icon,
-            article.category,
-            article.description,
-            article.markdown,
-            false
-        ]);
-        return createdArticle.rows[0];
+        const { rows: [row] } = await db.query(query, values);
+        return Article.fromDBRow(row);
     } catch (error) {
         logger("error", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `DB query failed to save the article: [${error}]`);
         throw new DbError("Failed to save the article");
     }
 }
 
-export async function getArticlesWithoutMarkdown() {
+export async function getArticlesWithoutMarkdown(traceId) {
+
+    const LOCAL_LOG_CONTEXT = "Fetch Articles Wip";
 
     const query = `SELECT id, title, icon, category, description, published, created_at FROM articles ORDER BY articles.created_at ASC`;
 
     try {
-        const articles = await db.query(query);
-        return articles.rows;
+        const { rows } = await db.query(query);
+        return rows.map(article => Article.fromDBRow(article));
     } catch (error) {
-        console.error(`DB query failed to fetch articles without markdown: [${error}]`);
+        logger("error", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `DB query failed to fetch articles without markdown: [${error}]`);
         throw new DbError("Failed to fetch article without markdown content");
     }
 }
 
 export async function getWipArticle(id, traceId) {
-    const LOCAL_LOG_CONTEXT = "Get Wip";
+    const LOCAL_LOG_CONTEXT = "Get Wip Article";
 
     logger("info", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Fetching wip article with id: [${id}] from the database`);
 
     const query = `SELECT id, title, icon, category, description, markdown FROM articles WHERE articles.id = $1;`;
 
     try {
-        const article = await db.query(query, [id]);
-        return article.rows[0];
+        const { rows: [row] } = await db.query(query, [id]);
+        return Article.fromDBRow(row);
     } catch (error) {
         logger("error", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `DB query failed to fetch the article with id: [${id}]. Error: [${error}]`);
         throw new DbError(`Failed to fetch the wip article with id: [${id}]`);
@@ -75,11 +80,11 @@ export async function updateArticle(article, id, traceId) {
 
     const query = `UPDATE articles SET ${setClauses.join(", ")} WHERE id = $${keys.length + 1} RETURNING *;`;
 
-    logger("debug", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Builded query: [${query}] for wip article with id: [${id}]`);
+    logger("debug", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Builded query: [${query}] for wip article with id: [${id}] with values: ${JSON.stringify(values)}`);
 
     try {
-        const article = await db.query(query, [...values, id]);
-        return article.rows[0];
+        const { rows: [row] } = await db.query(query, [...values, id]);
+        return Article.fromDBRow(row);
     } catch (error) {
         logger("error", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `DB query failed to update the article with id: [${id}]. Error: [${error}]`);
         throw new DbError(`Failed to update the wip article with id: [${id}]`);
@@ -109,14 +114,14 @@ export async function fetchArticlesByCategory(category, traceId, limit = 10, off
     logger("info", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`,
         `Fetching articles for category [${category}] with limit=${limit}, offset=${offset}`);
 
-    const query = ` SELECT id, title, icon, description, created_at, COUNT(*) OVER() AS total_count FROM articles WHERE category = $1 AND published = false
+    const query = ` SELECT id, title, icon, description, created_at, category, COUNT(*) OVER() AS total_count FROM articles WHERE category = $1 AND published = false
                     ORDER BY created_at DESC
                     LIMIT $2 OFFSET $3;`;
 
     try {
-        const res = await db.query(query, [category, limit, offset]);
-        const totalCount = res.rows.length > 0 ? parseInt(res.rows[0].total_count, 10) : 0;
-        return { totalCount, articles: res.rows };
+        const { rows } = await db.query(query, [category, limit, offset]);
+        const totalCount = rows.length > 0 ? parseInt(rows[0].total_count, 10) : 0;
+        return { totalCount, articles: rows.map(row => Article.fromDBRow(row)) };
     } catch (error) {
         logger("error", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `DB query failed to fetch articles for category: [${category}]. Error: [${error}]`);
         throw new DbError(`Failed to fetch articles with category: [${category}]`);
@@ -128,11 +133,11 @@ export async function getReadArticleById(id, traceId) {
 
     logger("info", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Fetching article with id: [${id}]`);
 
-    const query = `SELECT id, title, created_at, markdown FROM articles WHERE id = $1;`;
+    const query = `SELECT id, title, created_at, category, markdown FROM articles WHERE id = $1;`;
 
     try {
-        const res = await db.query(query, [id]);
-        return res.rows[0];
+        const { rows: [row] } = await db.query(query, [id]);
+        return Article.fromDBRow(row);
     } catch (error) {
         logger("error", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `DB query failed to fetch the article with id: [${id}]. Error: [${error}]`);
         throw new DbError(`Failed to fetch the article with id: [${id}]`);
