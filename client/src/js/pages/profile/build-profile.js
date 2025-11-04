@@ -12,7 +12,7 @@ export default async function buildProfile() {
     await _createInfoModal();
     buildUserDataSection(user);
     buildAccountActionsSection();
-    buildPreferredArticlesSection(user);
+    buildPreferredArticlesSection();
     extraSiteInfo();
 }
 

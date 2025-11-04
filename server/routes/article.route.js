@@ -1,7 +1,8 @@
 import { registerRoute } from "./router.manager.js";
 import {
     createArticle, getArticlesCreator, getWipArticle, updateArticle,
-    deleteArticle, getArticles, getArticleForReading
+    deleteArticle, getArticles, getArticleForReading,
+    addArticleToFavorites, removeArticleFromFavorites, getFavoriteArticles
 } from "../controllers/article.controller.js";
 import { withAuthentication, withAuthorization } from "../middlewares/oauth.js";
 import { withErrorHandling } from "../middlewares/error-handler.js";
@@ -42,4 +43,19 @@ registerRoute("GET", "/api/v1/article/category/:category",
 
 registerRoute("GET", "/api/v1/article/:id",
     withErrorHandling(getArticleForReading)
+);
+
+registerRoute("POST", "/api/v1/article/:id/favorite",
+    withErrorHandling(
+        withAuthentication(addArticleToFavorites))
+);
+
+registerRoute("DELETE", "/api/v1/article/:id/favorite",
+    withErrorHandling(
+        withAuthentication(removeArticleFromFavorites))
+);
+
+registerRoute("GET", "/api/v1/articles/favorites",
+    withErrorHandling(
+        withAuthentication(getFavoriteArticles))
 );

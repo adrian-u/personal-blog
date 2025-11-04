@@ -1,10 +1,12 @@
 import {
     save, getArticlesWithoutMarkdown, getWipArticle,
-    updateArticle, deleteWip, fetchArticlesByCategory, getReadArticleById
+    updateArticle, deleteWip, fetchArticlesByCategory, getReadArticleById,
+    createFavoriteArticle, checkIfArticleExists, deleteFavoriteArticle, fetchFavoriteArticles
 } from "../data-access/article.repository.js";
 import { isEmpty } from "../utils/general.js";
 import logger from "../utils/logger.js";
 import { ValidationError } from "../errors/custom-errors.js";
+import { Article } from "../models/article.model.js";
 
 const LOG_CONTEXT = "Article Service";
 
@@ -110,6 +112,52 @@ export async function getReadArticle(id, traceId) {
         return await getReadArticleById(id, traceId);
     } catch (error) {
         logger("error", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Error fetching article with id: [${id}]. Error: [${error}]`);
+        throw error;
+    }
+}
+
+export async function addFavoriteArticle(id, user, traceId) {
+    const LOCAL_LOG_CONTEXT = "Add Article to Favorites";
+
+    logger("info", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Sending request to the repository layer for article id: [${id}]`);
+
+    try {
+        const article = await checkIfArticleExists(id, traceId);
+        if (!article) throw new NotFoundError("Article not found");
+
+        await createFavoriteArticle(id, user, traceId);
+    } catch (error) {
+        logger("error", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Error adding article with id: [${id}] to favorites. Error: [${error}]`);
+        throw error;
+    }
+}
+
+export async function removeFavoriteArticle(id, user, traceId) {
+    const LOCAL_LOG_CONTEXT = "Remove Article from Favorites";
+
+    logger("info", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Sending request to the repository layer for article id: [${id}]`);
+
+    try {
+        const article = await checkIfArticleExists(id, traceId);
+        if (!article) throw new NotFoundError("Article not found");
+
+        await deleteFavoriteArticle(id, user, traceId);
+    } catch (error) {
+        logger("error", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Error removing article with id: [${id}] from favorites. Error: [${error}]`);
+        throw error;
+    }
+}
+
+export async function retrieveFavoriteArticles(user, traceId, limit, offset) {
+    const LOCAL_LOG_CONTEXT = "Retrieve Favorite Articles";
+
+    logger("info", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, "Sending request to the repository layer");
+
+    try {
+        const { totalCount, articles } = await fetchFavoriteArticles(user, traceId, limit, offset);
+        return { totalCount, articles: articles.map(article => Article.fromDBRow(article)) }
+    } catch (error) {
+        logger("error", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Error retrieve favorites. Error: [${error}]`);
         throw error;
     }
 }

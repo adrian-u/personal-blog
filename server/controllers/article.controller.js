@@ -1,6 +1,7 @@
 import {
     saveArticle, getArticlesWip, getWipArt, updateWipArticle,
-    deleteWipArticle, getArticlesByCategory, getReadArticle
+    deleteWipArticle, getArticlesByCategory, getReadArticle,
+    addFavoriteArticle, removeFavoriteArticle, retrieveFavoriteArticles
 } from "../services/article.service.js";
 import logger from "../utils/logger.js";
 import { checkIfArticleBodyIsValid } from "../utils/article-utils.js";
@@ -100,4 +101,41 @@ export async function getArticleForReading(req, res, params) {
     res.writeHead(200, { "Content-Type": "application/json" });
     res.end(JSON.stringify(article.toReadFull()));
 
+}
+
+export async function addArticleToFavorites(req, res, params) {
+    const LOCAL_LOG_CONTEXT = "Add Article to Favorites";
+    const { id } = params;
+
+    logger("info", req.traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Start adding article with id: [${id}] to favorites`);
+
+    await addFavoriteArticle(id, req.user, req.traceId);
+    res.writeHead(201);
+    res.end();
+}
+
+export async function removeArticleFromFavorites(req, res, params) {
+    const LOCAL_LOG_CONTEXT = "Remove Article from Favorites";
+    const { id } = params;
+
+    logger("info", req.traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Start removing article with id: [${id}] from favorites`);
+
+    await removeFavoriteArticle(id, req.user, req.traceId);
+    res.writeHead(204);
+    res.end();
+}
+
+export async function getFavoriteArticles(req, res) {
+    const LOCAL_LOG_CONTEXT = "Get Favorite Articles";
+
+    const protocol = req.headers['x-forwarded-proto'] || 'http';
+    const url = new URL(req.url, `${protocol}://${req.headers.host}`);
+    const limit = parseInt(url.searchParams.get("limit")) || 10;
+    const offset = parseInt(url.searchParams.get("offset")) || 0;
+
+    logger("info", req.traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, "Start get favorite articles");
+
+    const articles = await retrieveFavoriteArticles(req.user, req.traceId, limit, offset);
+    res.writeHead(200, { "Content-Type": "application/json" });
+    res.end(JSON.stringify(articles));
 }
