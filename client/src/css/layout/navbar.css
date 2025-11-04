@@ -1,11 +1,10 @@
 .navbar {
-    position: fixed;
-    top: 0;
-    left: 0;
     width: 275px;
+    flex-shrink: 0;
     height: 100%;
     background-color: var(--color-background);
     border-right: 2px solid var(--color-borders);
+    transition: width 0.3s ease;
     z-index: 1000;
 }
 
@@ -17,7 +16,7 @@
 }
 
 .logo {
-    padding: 32px 0 30px 32px;
+    padding: 1rem 0 1rem 1rem;
     width: 200px;
 }
 

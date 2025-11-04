@@ -1,6 +1,6 @@
 export class User {
     constructor({ id, email, name, avatarUrl, role, provider,
-        createdAt, updatedAt, likedComments = [] }) {
+        createdAt, updatedAt, likedComments = [], likedArticles = [] }) {
         this.id = id;
         this.email = email;
         this.name = name;
@@ -10,6 +10,7 @@ export class User {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.likedComments = likedComments;
+        this.likedArticles = likedArticles;
     }
 
     toWrite() {
@@ -31,6 +32,7 @@ export class User {
             role: this.role,
             createdAt: this.createdAt,
             likedComments: this.likedComments,
+            likedArticles: this.likedArticles,
         };
     }
 
@@ -39,10 +41,11 @@ export class User {
             id: row.id,
             email: row.email,
             name: row.name,
-            avatarUrl: row.avatarUrl,
+            avatarUrl: row.avatarurl,
             role: row.role,
             createdAt: row.created_at,
             likedComments: row.liked_comments,
+            likedArticles: row.liked_articles,
         });
     }
 }

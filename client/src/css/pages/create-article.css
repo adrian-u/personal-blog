@@ -43,7 +43,7 @@
     border: 1px solid var(--color-gray);
     border-radius: 1.5rem;
     margin: 0.5rem;
-    transition: transform 0.2s;
+    transition: transform 0.5s;
     min-width: 250px;
     display: flex;
     align-items: center;
@@ -52,12 +52,16 @@
 }
 
 .article-wip-icon {
-    background: linear-gradient(to right bottom, var(--color-primary), var(--color-primary-background));
-    width: 4rem;
-    height: 4rem;
-    margin: 1rem;
+    width: 50px;
+    height: 50px;
+    border-radius: 1rem;
+    background: linear-gradient(45deg, var(--color-primary), var(--color-primary-background));
+    display: flex;
     align-items: center;
-    font-size: 2.5rem;
+    justify-content: center;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+    margin: 1rem;
 }
 
 .wip-header-box {
@@ -167,6 +171,10 @@
     overflow: hidden;
     border-bottom: 1px solid var(--color-primary);
     z-index: 1;
+}
+
+.pd-md-editor[data-row="1"]::before {
+    position: relative !important;
 }
 
 .pd-md-editor>div[data-last="1"]:empty::after {

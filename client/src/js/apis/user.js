@@ -19,6 +19,7 @@ export async function getUserData() {
 
         if (!res.ok) {
             logger("error", "Fetching user data", "Failed to fetch the user data");
+            const errorData = await res.json();
             throw new Error(errorData.error || `Request failed with ${res.status}`);
         }
 

@@ -22,6 +22,12 @@ export function openReadModal() {
   modal.classList.remove("hidden");
 }
 
+export function openInfoModal() {
+  const modal = document.getElementById("info-modal");
+  modal.classList.add("show");
+  modal.classList.remove("hidden");
+}
+
 export function handleEscape(event) {
 
   if (event.key !== "Escape") return;

@@ -29,7 +29,7 @@ export default async function buildArticleWip() {
 export function renderArticle(article) {
     const workInProgressBox = document.createElement("div");
     workInProgressBox.className = "article-wip-box";
-    workInProgressBox.id = article.id;
+    workInProgressBox.id = article.id; 
     workInProgressBox.addEventListener('click', () => {
         _buildLoadWipArticleConfirmationModal(article.title, workInProgressBox.id);
         openConfirmationModal();
