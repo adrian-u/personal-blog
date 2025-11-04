@@ -34,7 +34,7 @@ async function _loadArticles(grid, loadMoreButton) {
             const article = document.createElement("article");
             article.classList.add("card");
             article.id = item.id;
-            article.addEventListener("click", () => readArticle(article.id));
+            article.addEventListener("click", async () => await readArticle(article.id));
 
             article.appendChild(_buildCardHeader(item));
             article.appendChild(_description(item));

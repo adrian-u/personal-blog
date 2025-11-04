@@ -26,6 +26,20 @@
     margin-bottom: 1rem;
 }
 
+.article-options {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+}
+
+.article-options > .png {
+    cursor: pointer;
+}
+
+.article-options > .png:hover {
+    transform: scale(1.2);
+}
+
 .btn.close {
     width: auto;
     min-width: 100px;

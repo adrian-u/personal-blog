@@ -143,3 +143,69 @@ export async function getReadArticleById(id, traceId) {
         throw new DbError(`Failed to fetch the article with id: [${id}]`);
     }
 }
+
+export async function checkIfArticleExists(id, traceId) {
+    const LOCAL_LOG_CONTEXT = "Check article exists";
+    logger("info", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Fetching the article with id: [${id}]`);
+
+    const query = `SELECT id FROM articles WHERE id = $1;`;
+
+    try {
+        const { rows: [row] } = await db.query(query, [id]);
+        return row;
+    } catch (error) {
+        logger("error", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, error.message);
+        throw new DbError(`Failed to fetch article by id: [${id}]`);
+    }
+}
+
+export async function createFavoriteArticle(id, user, traceId) {
+    const LOCAL_LOG_CONTEXT = "Add Article to Favorites";
+    logger("info", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Adding article with id: [${id}] to favorites`);
+
+    const query = `INSERT INTO user_article_likes (user_id, article_id) VALUES ($1, $2)`;
+
+    try {
+        await db.query(query, [user.id, id]);
+    } catch (error) {
+        logger("error", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, error.message);
+        throw new DbError(`Failed to add the article with id: [${id}] to favorites`);
+    }
+}
+
+export async function deleteFavoriteArticle(id, user, traceId) {
+    const LOCAL_LOG_CONTEXT = "Remove Article from Favorites";
+    logger("info", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Removing article with id: [${id}] from favorites`);
+
+    const query = `DELETE FROM user_article_likes WHERE user_id = $1 AND article_id = $2`;
+
+    try {
+        await db.query(query, [user.id, id]);
+    } catch (error) {
+        logger("error", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, error.message);
+        throw new DbError(`Failed to remove the article with id: [${id}] from favorites`);
+    }
+}
+
+export async function fetchFavoriteArticles(user, traceId, limit, offset) {
+    const LOCAL_LOG_CONTEXT = "Fetch Favorite Articles";
+    logger("info", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Start fetching favorite articles for user: [${user.id}]`);
+
+    const query = `SELECT a.id, a.title, a.icon, a.description, a.created_at, COUNT(*) OVER() AS total_count
+    FROM articles AS a JOIN user_article_likes AS al ON a.id = al.article_id
+    WHERE al.user_id = $1
+    ORDER BY a.created_at DESC LIMIT $2 OFFSET $3`;
+
+    try {
+        const { rowCount, rows } = await db.query(query, [user.id, limit, offset]);
+        if (rowCount === 0) {
+            return { totalCount: 0, articles: [] }
+        }
+        return { totalCount: rows[0].total_count, articles: rows };
+    } catch (error) {
+        logger("error", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, error.message);
+        throw new DbError(`Failed to fetch favorites articles for user: [${user.id}]`);
+
+    }
+
+}

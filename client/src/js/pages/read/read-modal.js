@@ -3,10 +3,12 @@ import { closeModal, openReadModal } from "../../utils/modals";
 import { MDParser } from "@pardnchiu/nanomd";
 import logger from "../../utils/logger";
 import { showToast } from "../../utils/toast";
-import { getArticleForReading } from "../../apis/article";
+import { addArticleToFavorites, getArticleForReading, removeArticleFromFavorites } from "../../apis/article";
 import { getCurrentUser } from "../../context/user-context";
 import { addCommentSection } from "./comment/add-comment-section";
 import { commentsSection } from "./comment/comments-section";
+import star from "../../../assets/images/star.png";
+import star_full from "../../../assets/images/star-full.png";
 
 const LOG_CONTEXT = "Read Article";
 
@@ -52,11 +54,39 @@ async function _buildReadModal(id) {
 
         headerRow.appendChild(titleDate);
 
+        const articleOptions = document.createElement("div");
+        articleOptions.classList.add("article-options");
+        headerRow.appendChild(articleOptions);
+
+        const favoriteIcon = document.createElement("img");
+        favoriteIcon.classList.add("png")
+        favoriteIcon.src = currentUser.likedArticles.includes(Number(id)) ? star_full : star;
+        favoriteIcon.addEventListener("click", async (e) => {
+            e.stopPropagation();
+
+            try {
+                const isLiked = currentUser.likedArticles.includes(Number(id));
+                if (isLiked) {
+                    await removeArticleFromFavorites(id);
+                    currentUser.likedArticles = currentUser.likedArticles.filter(aid => aid !== Number(id));
+                    favoriteIcon.src = star;
+                } else {
+                    await addArticleToFavorites(id);
+                    currentUser.likedArticles.push(Number(id));
+                    favoriteIcon.src = star_full;
+                }
+            } catch (error) {
+                showToast("Failed to update favorite status", "error");
+                logger("error", `${LOG_CONTEXT}`, error);
+            }
+        })
+        articleOptions.appendChild(favoriteIcon);
+
         const closeButton = document.createElement("button");
         closeButton.classList.add("btn", "btn-blue", "close");
         closeButton.textContent = "Close";
         closeButton.onclick = () => closeModal(modal);
-        headerRow.appendChild(closeButton)
+        articleOptions.appendChild(closeButton)
 
         const domParser = new MDParser({
             standard: 1

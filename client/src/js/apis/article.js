@@ -168,7 +168,7 @@ export async function getArticlesByCategory(category, limit = 10, offset = 0) {
 }
 
 export async function getArticleForReading(id) {
-    const LOCAL_LOG_CONTEXT = "Get Article for Readiing";
+    const LOCAL_LOG_CONTEXT = "Get Article for Reading";
 
     const url = `${import.meta.env.VITE_API_URL}/article/${id}`;
 
@@ -182,6 +182,83 @@ export async function getArticleForReading(id) {
             }
         });
 
+        if (!res.ok) {
+            const errorData = await res.json();
+            throw new Error(errorData.error || `Request failed with ${res.status}`);
+        }
+
+        return await res.json();
+    } catch (error) {
+        logger("error", `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, error);
+        throw error;
+    }
+}
+
+export async function addArticleToFavorites(id) {
+    const LOCAL_LOG_CONTEXT = "Add article to favorites";
+
+    const url = `${import.meta.env.VITE_API_URL}/article/${id}/favorite`;
+
+    try {
+        logger("debug", `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Calling backend url: [${url}]`);
+
+        const res = await fetch(`${url}`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${getJWT()}`
+            }
+        });
+
+        if (!res.ok) {
+            const errorData = await res.json();
+            throw new Error(errorData.error || `Request failed with ${res.status}`);
+        }
+    } catch (error) {
+        logger("error", `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, error);
+        throw error;
+    }
+}
+
+export async function removeArticleFromFavorites(id) {
+    const LOCAL_LOG_CONTEXT = "Remove article from favorites";
+
+    const url = `${import.meta.env.VITE_API_URL}/article/${id}/favorite`;
+
+    try {
+        logger("debug", `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Calling backend url: [${url}]`);
+
+        const res = await fetch(`${url}`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${getJWT()}`
+            }
+        });
+
+        if (!res.ok) {
+            const errorData = await res.json();
+            throw new Error(errorData.error || `Request failed with ${res.status}`);
+        }
+    } catch (error) {
+        logger("error", `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, error);
+        throw error;
+    }
+}
+
+export async function fetchFavoriteArticles(limit = 10, offset = 0) {
+    const LOCAL_LOG_CONTEXT = "Fetch favorite articles";
+
+    const url = `${import.meta.env.VITE_API_URL}/articles/favorites/?limit=${limit}&offset=${offset}`;
+
+    try {
+        const res = await fetch(`${url}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${getJWT()}`
+            }
+        });
         if (!res.ok) {
             const errorData = await res.json();
             throw new Error(errorData.error || `Request failed with ${res.status}`);
