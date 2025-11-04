@@ -1,4 +1,5 @@
-import { logout } from "../../auth/auth";
+import { getJWT, logout } from "../../auth/auth";
+import { closeModal, openConfirmationModal } from "../../utils/modals";
 
 export default function buildAccountActionsSection() {
 
@@ -7,22 +8,71 @@ export default function buildAccountActionsSection() {
     accountActions.innerHTML = `
         <div class="profile-buttons-box">
             <button id="logout" class="btn btn-flex btn-green">Logout</button>
-            <button id="delete-account" class="btn btn-flex btn-danger">Delete Account</button>
+            <button id="delete-account" class="btn btn-flex btn-danger">Delete</button>
         </div>
     `;
 
-    _addButtonEvents();
+    if (!accountActions.dataset.listenerAttached) {
+        accountActions.addEventListener("click", (e) => {
+            if (e.target.matches("#logout")) _buildLogoutModal();
+            if (e.target.matches("#delete-account")) _buildDeleteAccountModal();
+        });
+        accountActions.dataset.listenerAttached = true;
+    }
 }
 
-function _addButtonEvents() {
-    const logoutButton = document.getElementById('logout');
-    const deleteAccount = document.getElementById('delete-account');
+function _buildLogoutModal() {
 
-    logoutButton.addEventListener('click', () => {
+    const modalContainer = document.getElementById("confirmation-modal");
+    const contentModal = modalContainer.querySelector("#confirmation-content");
+    contentModal.classList.add("modal-confirmation");
+
+    const modalHeader = contentModal.querySelector("#conf-header");
+    const modalText = contentModal.querySelector("#conf-text");
+    const confirmButton = contentModal.querySelector("#confirm");
+    const cancelButton = contentModal.querySelector("#cancel");
+
+    modalHeader.textContent = "Logout";
+    modalText.innerHTML = `
+    <span>Are you sure you want to logout?</span>`
+
+    confirmButton.onclick = () => {
         logout();
-    })
+        closeModal(modalContainer);
+    };
 
-    deleteAccount.addEventListener('click', () => {
-        alert("Delete Account");
-    });
+    cancelButton.onclick = () => {
+        closeModal(modalContainer);
+    };
+
+    openConfirmationModal();
+}
+
+function _buildDeleteAccountModal() {
+    const modalContainer = document.getElementById("confirmation-modal");
+    const contentModal = modalContainer.querySelector("#confirmation-content");
+    contentModal.classList.add("modal-confirmation");
+
+    const modalHeader = contentModal.querySelector("#conf-header");
+    const modalText = contentModal.querySelector("#conf-text");
+    const confirmButton = contentModal.querySelector("#confirm");
+    const cancelButton = contentModal.querySelector("#cancel");
+
+    modalHeader.textContent = "Delete Account";
+    modalText.innerHTML = `
+    <span>Are you sure you want to delete your accoun?</span>
+    <br> 
+    <span>This action cannot be undone.</span>`;
+
+
+    confirmButton.onclick = () => {
+        alert(getJWT());
+        closeModal(modalContainer);
+    };
+
+    cancelButton.onclick = () => {
+        closeModal(modalContainer);
+    };
+
+    openConfirmationModal();
 }

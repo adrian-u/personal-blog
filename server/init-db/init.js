@@ -65,6 +65,15 @@ const createUserCommentLikesTable = `
     );
 `;
 
+const createUserArticleLikesTable = `
+    CREATE TABLE IF NOT EXISTS user_article_likes (
+        user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        article_id INTEGER NOT NULL REFERENCES articles(id) ON DELETE CASCADE,
+        created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+        PRIMARY KEY (user_id, article_id)
+    );
+`;
+
 const createIndexes = `
     CREATE UNIQUE INDEX IF NOT EXISTS user_email_provider_idx
     ON users(email, provider);
@@ -88,6 +97,7 @@ async function init() {
         await db.query(createArticleTable);
         await db.query(createCommentTable);
         await db.query(createUserCommentLikesTable);
+        await db.query(createUserArticleLikesTable);
         console.log("Tables created successfully");
 
         console.log("Checking if about data already exists...");

@@ -28,11 +28,17 @@ export async function saveUser(user, traceId) {
 }
 
 export async function getUserDetailsByEmail(email, traceId) {
-    const query = ` SELECT u.id, u.email, u.name, u.avatarUrl, u.role, u.created_at,
-                    COALESCE(json_agg(l.comment_id) FILTER (WHERE l.comment_id IS NOT NULL), '[]') AS liked_comments FROM users AS u
-                    LEFT JOIN user_comment_likes AS l ON l.user_id = u.id
-                    WHERE u.email = $1
-                    GROUP BY u.id, u.email, u.name, u.avatarUrl, u.role, u.created_at;`
+    const query = `SELECT u.id, u.email, u.name, u.avatarUrl, u.role, u.created_at,
+                COALESCE(liked_comments.liked_comments, '[]') AS liked_comments,
+                COALESCE(liked_articles.liked_articles, '[]') AS liked_articles
+                FROM users AS u
+                LEFT JOIN (
+                    SELECT user_id, json_agg(comment_id) AS liked_comments FROM user_comment_likes GROUP BY user_id)
+                    AS liked_comments ON liked_comments.user_id = u.id
+                LEFT JOIN (
+                    SELECT user_id, json_agg(article_id) AS liked_articles FROM user_article_likes GROUP BY user_id)
+                    AS liked_articles ON liked_articles.user_id = u.id
+                WHERE u.email = $1;`;
 
     try {
         const result = await db.query(query, [email]);
