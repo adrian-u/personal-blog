@@ -108,7 +108,7 @@ function _buildCommentHeader(comment, currentUser) {
     userInfo.append(authorName, commentDate);
     commentAuthor.append(avatar, userInfo);
 
-    commentHeader.append(commentAuthor, _buildDelEditRow(comment, currentUser));
+    commentHeader.append(commentAuthor, currentUser ? _buildDelEditRow(comment, currentUser) : "");
 
     return commentHeader;
 }
@@ -231,82 +231,87 @@ function _buildEditForm(comment, commentContent) {
 function _buildCommentActions(comment, currentUser, articleId) {
     const commentActions = document.createElement("div");
     commentActions.classList.add("comment-actions");
+
+    const isLogged = !!currentUser;
+
     const replyButton = document.createElement("button");
     replyButton.classList.add("action-btn");
     replyButton.textContent = "↩ Reply";
-    replyButton.onclick = () => {
-        const commentElement = document.getElementById(`comment-${comment.id}`);
 
-        const existingReplyForm = commentElement.nextElementSibling?.classList.contains("reply-form")
-            ? commentElement.nextElementSibling
-            : null;
+    if (isLogged) {
+        replyButton.onclick = () => {
+            const commentElement = document.getElementById(`comment-${comment.id}`);
 
-        if (existingReplyForm) {
-            existingReplyForm.remove();
-            return;
-        }
+            const existingReplyForm = commentElement.nextElementSibling?.classList.contains("reply-form")
+                ? commentElement.nextElementSibling
+                : null;
 
-        document.querySelectorAll(".reply-form").forEach(form => form.remove());
-
-        const replyForm = _replyForm(comment, currentUser, articleId);
-        commentElement.insertAdjacentElement("afterend", replyForm);
-    };
-
-    const likeButton = document.createElement("button");
-    likeButton.classList.add(
-        "action-btn",
-        ...(currentUser.likedComments.includes(comment.id) ? ["liked"] : [])
-    );
-    likeButton.textContent = `👍 ${comment.like}`;
-    likeButton.onclick = async () => {
-        likeButton.disabled = true;
-
-        const isLiked = currentUser.likedComments.includes(comment.id);
-
-        try {
-            if (isLiked) {
-                const res = await removeCommentLike(comment.id);
-
-                currentUser.likedComments = currentUser.likedComments.filter(
-                    (id) => id !== comment.id
-                );
-
-                likeButton.classList.remove("liked");
-                likeButton.textContent = `👍 ${res.likes}`;
-            } else {
-                const res = await addLikeToComment(comment.id);
-
-                if (!currentUser.likedComments.includes(comment.id)) {
-                    currentUser.likedComments.push(comment.id);
-                }
-
-                likeButton.classList.add("liked");
-                likeButton.textContent = `👍 ${res.likes}`;
+            if (existingReplyForm) {
+                existingReplyForm.remove();
+                return;
             }
-        } catch (error) {
-            const action = isLiked ? "remove" : "add";
-            logger("error", "Comment Like", `Failed to ${action} like to comment with id: [${comment.id}]`);
-            showToast(`Failed to ${action} the like`, "error");
-        } finally {
-            likeButton.disabled = false;
-        }
 
+            document.querySelectorAll(".reply-form").forEach(form => form.remove());
+
+            const replyForm = _replyForm(comment, currentUser, articleId);
+            commentElement.insertAdjacentElement("afterend", replyForm);
+        };
+    } else {
+        replyButton.disabled = true;
+        replyButton.title = "You must be logged in to reply";
     }
 
+    const likeButton = document.createElement("button");
+    likeButton.classList.add("action-btn");
+    if (isLogged && currentUser.likedComments.includes(comment.id)) {
+        likeButton.classList.add("liked");
+    }
+    likeButton.textContent = `👍 ${comment.like}`;
+
+    if (isLogged) {
+        likeButton.onclick = async () => {
+            likeButton.disabled = true;
+            const isLiked = currentUser.likedComments.includes(comment.id);
+
+            try {
+                if (isLiked) {
+                    const res = await removeCommentLike(comment.id);
+                    currentUser.likedComments = currentUser.likedComments.filter(id => id !== comment.id);
+                    likeButton.classList.remove("liked");
+                    likeButton.textContent = `👍 ${res.likes}`;
+                } else {
+                    const res = await addLikeToComment(comment.id);
+                    if (!currentUser.likedComments.includes(comment.id)) {
+                        currentUser.likedComments.push(comment.id);
+                    }
+                    likeButton.classList.add("liked");
+                    likeButton.textContent = `👍 ${res.likes}`;
+                }
+            } catch (error) {
+                const action = isLiked ? "remove" : "add";
+                logger("error", "Comment Like", `Failed to ${action} like to comment with id: [${comment.id}]`);
+                showToast(`Failed to ${action} the like`, "error");
+            } finally {
+                likeButton.disabled = false;
+            }
+        };
+    } else {
+        likeButton.disabled = true;
+        likeButton.title = "You must be logged in to like a comment";
+    }
 
     const showReplies = document.createElement("button");
     showReplies.classList.add("action-btn", "show-replies-btn");
     showReplies.textContent = `💬 Show Replies (${comment.replies})`;
+
     showReplies.onclick = async () => {
         const commentElement = document.getElementById(`comment-${comment.id}`);
-
         let repliesSection = null;
         let currentElement = commentElement.nextElementSibling;
 
         if (currentElement?.classList.contains("reply-form")) {
             currentElement = currentElement.nextElementSibling;
         }
-
         if (currentElement?.classList.contains("replies")) {
             repliesSection = currentElement;
         }
@@ -323,7 +328,6 @@ function _buildCommentActions(comment, currentUser, articleId) {
                 const insertAfter = commentElement.nextElementSibling?.classList.contains("reply-form")
                     ? commentElement.nextElementSibling
                     : commentElement;
-
                 insertAfter.insertAdjacentElement("afterend", replies);
                 showReplies.textContent = "💬 Hide Replies";
             } else {
@@ -336,9 +340,9 @@ function _buildCommentActions(comment, currentUser, articleId) {
     };
 
     commentActions.append(replyButton, likeButton, showReplies);
-
     return commentActions;
 }
+
 
 async function _repliesSection(id, currentUser, articleId) {
     const replies = document.createElement("div");

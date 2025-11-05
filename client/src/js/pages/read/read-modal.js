@@ -31,6 +31,7 @@ async function _buildReadModal(id) {
 
     try {
         const currentUser = await getCurrentUser();
+        console.log(currentUser)
         const article = await getArticleForReading(id);
         const modal = document.getElementById("read-article-modal");
 
@@ -60,26 +61,31 @@ async function _buildReadModal(id) {
 
         const favoriteIcon = document.createElement("img");
         favoriteIcon.classList.add("png")
-        favoriteIcon.src = currentUser.likedArticles.includes(Number(id)) ? star_full : star;
-        favoriteIcon.addEventListener("click", async (e) => {
-            e.stopPropagation();
+        if (currentUser) {
+            favoriteIcon.src = currentUser.likedArticles.includes(Number(id)) ? star_full : star;
+            favoriteIcon.addEventListener("click", async (e) => {
+                e.stopPropagation();
 
-            try {
-                const isLiked = currentUser.likedArticles.includes(Number(id));
-                if (isLiked) {
-                    await removeArticleFromFavorites(id);
-                    currentUser.likedArticles = currentUser.likedArticles.filter(aid => aid !== Number(id));
-                    favoriteIcon.src = star;
-                } else {
-                    await addArticleToFavorites(id);
-                    currentUser.likedArticles.push(Number(id));
-                    favoriteIcon.src = star_full;
+                try {
+                    const isLiked = currentUser.likedArticles.includes(Number(id));
+                    if (isLiked) {
+                        await removeArticleFromFavorites(id);
+                        currentUser.likedArticles = currentUser.likedArticles.filter(aid => aid !== Number(id));
+                        favoriteIcon.src = star;
+                    } else {
+                        await addArticleToFavorites(id);
+                        currentUser.likedArticles.push(Number(id));
+                        favoriteIcon.src = star_full;
+                    }
+                } catch (error) {
+                    showToast("Failed to update favorite status", "error");
+                    logger("error", `${LOG_CONTEXT}`, error);
                 }
-            } catch (error) {
-                showToast("Failed to update favorite status", "error");
-                logger("error", `${LOG_CONTEXT}`, error);
-            }
-        })
+            })
+        } else {
+            favoriteIcon.src = star;
+        }
+
         articleOptions.appendChild(favoriteIcon);
 
         const closeButton = document.createElement("button");
@@ -98,7 +104,7 @@ async function _buildReadModal(id) {
 
         modalContent.append(headerRow,
             articleContent,
-            addCommentSection(id, currentUser),
+            currentUser ? addCommentSection(id, currentUser) : "",
             await commentsSection(id, currentUser));
 
         openReadModal();
