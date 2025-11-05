@@ -4,6 +4,7 @@
     text-decoration: none;
     cursor: pointer;
     border-width: 0 0 4px 0;
+    border-style: solid; 
     font-size: var(--font-size);
     letter-spacing: var(--letter-spacing);
     text-transform: uppercase;
