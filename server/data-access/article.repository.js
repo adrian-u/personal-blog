@@ -20,7 +20,7 @@ export async function save(article, traceId) {
     const values = [
         article.title,
         article.icon,
-        article.category,
+        article.category.toLowerCase(),
         article.description,
         article.markdown,
         article.published,

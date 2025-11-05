@@ -10,6 +10,7 @@ const routes = {
     '/oauth2/auth': null,
     '/about': './src/views/about.html',
     '/projects': './src/views/projects.html',
+    '/finance': './src/views/finance.html',
     '/create': './src/views/create.html',
     '/profile': './src/views/profile.html',
 };
@@ -87,12 +88,17 @@ export async function renderRoute(path = location.pathname) {
 
     if (path === '/projects') {
         const { default: buildProjectsPage } = await import('../pages/projects/build-projects-page.js');
-        buildProjectsPage();
+        await buildProjectsPage();
+    }
+
+    if (path === '/finance') {
+        const { default: buildFinancePage } = await import('../pages/finance/build-finance-page.js');
+        await buildFinancePage();
     }
 
     if (path === '/create') {
         const { default: buildCreatePage } = await import('../pages/create/build-create-page.js');
-        buildCreatePage();
+        await buildCreatePage();
     }
 
     if (path === '/profile') {

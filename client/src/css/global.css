@@ -15,6 +15,7 @@
 @import url('./pages/projects.css');
 @import url('./pages/create-article.css');
 @import url('./pages/profile.css');
+@import url('./pages//finance.css');
 
 /* Components */
 @import url('./components/hero.css');
