@@ -1,7 +1,9 @@
 import { navigateTo } from '../router/router.js';
+import logger from '../utils/logger.js';
+import { showToast } from '../utils/toast.js';
 import { OAUTH_PROVIDERS } from './providers.js';
 
-export function authWithProvider(providerKey) {
+export async function authWithProvider(providerKey) {
     const provider = OAUTH_PROVIDERS[providerKey];
     if (!provider) throw new Error(`Unknown provider: ${providerKey}`);
 
@@ -21,20 +23,20 @@ export async function handleOAuthCallback() {
     const providerKey = params.get('state');
 
     if (!providerKey) {
-        console.error('No provider state found');
+        logger("error", "OAuth Callback", "No provider state found");
         await _handleLoginError();
         return;
     }
 
     const provider = OAUTH_PROVIDERS[providerKey];
     if (!provider) {
-        console.error(`Invalid provider: ${providerKey}`);
+        logger("error", "OAuth Callback", `Invalid provider: ${providerKey}`);
         await _handleLoginError();
         return;
     }
 
     if (!code) {
-        console.error('No authorization code found');
+        logger("error", "OAuth Callback", "No authorization code found");
         await _handleLoginError();
         return;
     }
@@ -57,8 +59,8 @@ export async function handleOAuthCallback() {
         const { token } = await response.json();
         localStorage.setItem('jwt', token);
         await _initOnRedirects();
-    } catch (err) {
-        console.error('OAuth callback failed:', err);
+    } catch (error) {
+        logger("error", "OAuth Callback", `OAuth callback failed: [${error}]`);
         await _handleLoginError();
     }
 }
@@ -73,9 +75,18 @@ export function getUserFromJWT() {
 
     try {
         const payload = JSON.parse(atob(jwt.split('.')[1]));
+        const now = Math.floor(Date.now() / 1000);
+
+        if (payload.exp && payload.exp < now) {
+            logger("warn", "OAuth Callback", "JWT expired");
+            showToast("Authentication expired. Please login back", "error");
+            logout();
+            return null;
+        }
+
         return payload;
     } catch {
-        console.error('Invalid JWT');
+        logger("error", "Get User From JWT", "Invalid JWT");
         return null;
     }
 }

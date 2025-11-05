@@ -37,10 +37,12 @@ export async function initNavbar() {
 export async function initLoginModal() {
   await htmlImporter('body', './src/components/login-modal.html', () => {
     const modal = document.getElementById('login-modal');
+    if (!modal) return;
 
     modal.addEventListener('click', (e) => {
       if (e.target.closest('#btn-close-modal')) {
         closeModal(modal);
+        return;
       }
       if (e.target.closest('[data-provider]')) {
         const provider = e.target.closest('[data-provider]').dataset.provider;

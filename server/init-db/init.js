@@ -24,7 +24,7 @@ const createUserTable = `
         name  TEXT NOT NULL,
         avatarUrl TEXT,
         role TEXT NOT NULL CHECK (role in ('creator', 'user')),
-        provider TEXT NOT NULL CHECK (provider in ('google', 'github', 'apple')),
+        provider TEXT NOT NULL CHECK (provider in ('google', 'github')),
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );

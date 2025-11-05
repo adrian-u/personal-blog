@@ -10,8 +10,6 @@ export async function save(comment, traceId) {
 
     logger("info", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, "Saving the comment on the database (transactional)");
 
-    console.log(comment);
-
     if (comment.isReply) {
         try {
             logger("info", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Saving the reply comment to parentId: [${comment.parentId}]

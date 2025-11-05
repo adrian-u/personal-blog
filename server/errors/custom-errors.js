@@ -42,7 +42,7 @@ export class AuthorizationError extends Error {
     constructor(message) {
         super(message);
         this.name = "Authorization Error";
-        this.statusCode = 403;
+        this.statusCode = 401;
     }
 }
 

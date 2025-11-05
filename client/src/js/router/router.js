@@ -1,5 +1,7 @@
+import { getCurrentUser, isCreator } from '../context/user-context.js';
 import { initNavbar, initLoginModal, setActiveNav, initConfirmationModal } from '../layout/init-layout.js';
-import { handleErrorToastFromSession } from '../utils/toast.js';
+import logger from '../utils/logger.js';
+import { handleErrorToastFromSession, showToast } from '../utils/toast.js';
 
 const HTMLFilesCache = {};
 
@@ -10,6 +12,11 @@ const routes = {
     '/projects': './src/views/projects.html',
     '/create': './src/views/create.html',
     '/profile': './src/views/profile.html',
+};
+
+const protectedRoutes = {
+    '/create': 'creator',
+    '/profile': 'authenticated'
 };
 
 export async function setupRouting() {
@@ -26,21 +33,50 @@ export async function setupRouting() {
             renderRoute(location.pathname);
         }
     });
-
     await renderRoute(location.pathname);
 
 }
 
 export async function renderRoute(path = location.pathname) {
     const container = document.getElementById('view-container');
-    const file = routes[path] || routes['/'];
 
+    const requiredAccess = protectedRoutes[path];
+    if (requiredAccess) {
+        const user = await getCurrentUser();
+        const isLoggedIn = !!user;
+
+        if (requiredAccess === 'authenticated' && !isLoggedIn) {
+            showToast('Please log in to view your profile.', 'warning');
+            history.replaceState({}, '', '/');
+            return renderRoute('/');
+        }
+
+        if (requiredAccess === 'creator' && (!isLoggedIn || !isCreator())) {
+            showToast('Only creators can access this page.', 'error');
+            history.replaceState({}, '', '/');
+            return renderRoute('/');
+        }
+    }
+
+    const file = routes[path] || routes['/'];
     container.innerHTML = await _fetchHTML(file);
     setActiveNav(path)
 
     if (path === '/oauth2/auth') {
-        const { default: buildLoadingPage } = await import('../pages/loading/loading-spinner.js');
-        await buildLoadingPage();
+        const spinner = document.getElementById('spinner-overlay');
+        if (spinner) spinner.classList.remove('hidden');
+
+        try {
+            const { handleOAuthCallback } = await import('../auth/auth.js');
+            await handleOAuthCallback();
+        } catch (error) {
+            logger("error", "Render route oauth", `OAuth callback error. [${error}]`)
+            showToast("Failed to login", "error");
+        } finally {
+            if (spinner) spinner.classList.add('hidden');
+            window.location.replace('/');
+        }
+
         return;
     }
 
@@ -71,7 +107,7 @@ export async function renderRoute(path = location.pathname) {
 
 export function navigateTo(path) {
     history.pushState({}, '', path);
-    window.dispatchEvent(new PopStateEvent('popstate'));
+    renderRoute(path);
 }
 
 async function _fetchHTML(file) {
