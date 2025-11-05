@@ -9,10 +9,6 @@ export async function getCurrentUser() {
     return currentUser;
 }
 
-export function isLoggedIn() {
-    return !!currentUser;
-}
-
 export function isCreator() {
     return currentUser?.role === 'creator';
 }

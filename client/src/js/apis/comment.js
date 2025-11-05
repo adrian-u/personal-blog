@@ -1,5 +1,6 @@
 import { getJWT } from "../auth/auth.js";
 import logger from "../utils/logger.js";
+import { showToast } from "../utils/toast.js";
 
 const LOG_CONTEXT = "Comment APIs";
 
@@ -68,12 +69,13 @@ export async function deleteComment(commentId) {
     try {
         logger("debug", `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Calling backend url: [${url}]`);
 
-        await fetch(`${url}`, {
+        const res = await fetch(`${url}`, {
             method: "DELETE",
             headers: {
                 "Authorization": `Bearer ${getJWT()}`
             }
         });
+
     } catch (error) {
         logger("error", `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, error);
         throw error;

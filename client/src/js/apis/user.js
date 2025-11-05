@@ -1,5 +1,6 @@
-import { getJWT, getUserFromJWT } from '../auth/auth.js';
+import { getJWT, getUserFromJWT, logout } from '../auth/auth.js';
 import logger from '../utils/logger.js';
+import { showToast } from '../utils/toast.js';
 
 export async function getUserData() {
 
@@ -16,6 +17,13 @@ export async function getUserData() {
                 "Authorization": `Bearer ${getJWT()}`
             },
         });
+
+        if (res.status === 401) {
+            logger("warn", "Get User From JWT", "Session expired. Logging out.");
+            showToast("Authentication expired. Please login back", "error");
+            logout();
+            return null;
+        }
 
         if (!res.ok) {
             logger("error", "Fetching user data", "Failed to fetch the user data");
