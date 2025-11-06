@@ -51,7 +51,7 @@ export const OAUTH_PROVIDERS = {
             const userRes = await fetch(process.env.GITHUB_USER_DETAILS_URL, {
                 headers: { Authorization: `Bearer ${token.access_token}` }
             });
-            const emailRes = await fetch(process.env.GITHUB_USER_EMAIL_URL, {
+            const emailRes = await fetch(process.env.c, {
                 headers: { Authorization: `Bearer ${token.access_token}` }
             });
 

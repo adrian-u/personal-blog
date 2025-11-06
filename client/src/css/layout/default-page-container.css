@@ -10,6 +10,10 @@
     margin-top: 2rem;
 }
 
+#view-container {
+    flex-grow: 1;
+}
+
 @media (max-width: 768px) {
     .main-page-container {
         margin-left: 0;

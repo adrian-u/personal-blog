@@ -209,3 +209,21 @@ export async function fetchFavoriteArticles(user, traceId, limit, offset) {
     }
 
 }
+
+export async function fetchLatestArticles(traceId) {
+    const LOCAL_LOG_CONTEXT = "Fetch Latest Articles";
+    logger("info", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, "Start fetching latest articles");
+
+    const query = `SELECT id, title, icon, description, created_at, category FROM articles WHERE published = false
+                ORDER BY created_at DESC
+                LIMIT 3;`;
+
+    try {
+        const { rows } = await db.query(query);
+        return { articles: rows };
+    } catch (error) {
+        logger("error", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, error.message);
+        throw new DbError("Failed to fetch latest articles");
+    }
+
+}

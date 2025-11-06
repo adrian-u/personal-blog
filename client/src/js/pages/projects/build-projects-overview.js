@@ -13,7 +13,7 @@ export default async function buildProjectsOverview() {
     offset = 0;
 
     const grid = document.createElement("div");
-    grid.classList.add("projects-grid");
+    grid.classList.add("card-grid");
 
     const loadMoreButton = document.getElementById("load-more");
     loadMoreButton.addEventListener("click", () => _loadArticles(grid, loadMoreButton));

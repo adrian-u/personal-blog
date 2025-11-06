@@ -1,7 +1,7 @@
 import {
     save, getArticlesWithoutMarkdown, getWipArticle,
     updateArticle, deleteWip, fetchArticlesByCategory, getReadArticleById,
-    createFavoriteArticle, checkIfArticleExists, deleteFavoriteArticle, fetchFavoriteArticles
+    createFavoriteArticle, checkIfArticleExists, deleteFavoriteArticle, fetchFavoriteArticles, fetchLatestArticles
 } from "../data-access/article.repository.js";
 import { isEmpty } from "../utils/general.js";
 import logger from "../utils/logger.js";
@@ -158,6 +158,20 @@ export async function retrieveFavoriteArticles(user, traceId, limit, offset) {
         return { totalCount, articles: articles.map(article => Article.fromDBRow(article)) }
     } catch (error) {
         logger("error", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Error retrieve favorites. Error: [${error}]`);
+        throw error;
+    }
+}
+
+export async function retrieveLatestArticles(traceId) {
+    const LOCAL_LOG_CONTEXT = "Retrieve Latest Articles";
+
+    logger("info", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, "Sending request to the repository layer");
+
+    try {
+        const { articles } = await fetchLatestArticles(traceId);
+        return articles.map(article => Article.fromDBRow(article))
+    } catch (error) {
+        logger("error", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Error retrieve latest articles. Error: [${error}]`);
         throw error;
     }
 }

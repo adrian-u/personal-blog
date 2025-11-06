@@ -15,13 +15,6 @@
     justify-content: center;
 }
 
-.btn-flex {
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-}
-
 .btn:active {
     border-bottom-width: 0;
 }

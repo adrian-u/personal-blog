@@ -11,6 +11,13 @@
     transition: opacity 1s ease, transform 0.5s ease;
 }
 
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-bottom: 1rem;
+}
+
 .card.visible {
     opacity: 1;
     transform: translateY(0);
@@ -61,4 +68,10 @@
     margin-bottom: 1.5rem;
     line-height: 1.6;
     letter-spacing: var(--letter-spacing);
+}
+
+@media (max-width: 768px) {
+    .card-grid {
+        grid-template-columns: 1fr;
+    }
 }
