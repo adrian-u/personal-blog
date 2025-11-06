@@ -1,7 +1,8 @@
 import {
     saveArticle, getArticlesWip, getWipArt, updateWipArticle,
     deleteWipArticle, getArticlesByCategory, getReadArticle,
-    addFavoriteArticle, removeFavoriteArticle, retrieveFavoriteArticles
+    addFavoriteArticle, removeFavoriteArticle, retrieveFavoriteArticles,
+    retrieveLatestArticles
 } from "../services/article.service.js";
 import logger from "../utils/logger.js";
 import { checkIfArticleBodyIsValid } from "../utils/article-utils.js";
@@ -136,6 +137,15 @@ export async function getFavoriteArticles(req, res) {
     logger("info", req.traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, "Start get favorite articles");
 
     const articles = await retrieveFavoriteArticles(req.user, req.traceId, limit, offset);
+    res.writeHead(200, { "Content-Type": "application/json" });
+    res.end(JSON.stringify(articles));
+}
+
+export async function getLatestArticles(req, res) {
+    const LOCAL_LOG_CONTEXT = "Get Latest Articles";
+
+    logger("info", req.traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, "Start get latest articles");
+    const articles = await retrieveLatestArticles(req.traceId);
     res.writeHead(200, { "Content-Type": "application/json" });
     res.end(JSON.stringify(articles));
 }

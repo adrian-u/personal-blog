@@ -1,38 +1,24 @@
-import { getArticlesByCategory } from "../../apis/article";
+import { fetchLatestArticles } from "../../apis/article";
 import logger from "../../utils/logger";
 import { showToast } from "../../utils/toast";
 import { readArticle } from "../read/read-modal";
 
-
-const LIMIT = 6;
-let offset = 0;
-const LOG_CONTEXT = "Finance Articles Overview"
-
-export default async function buildFinanceOverview() {
-
-    offset = 0;
-
-    const grid = document.createElement("div");
-    grid.classList.add("card-grid");
-
-    const loadMoreButton = document.getElementById("load-more");
-    loadMoreButton.addEventListener("click", () => _loadArticles(grid, loadMoreButton));
-
-    _loadArticles(grid, loadMoreButton);
-
-    return grid;
-}
-
-async function _loadArticles(grid, loadMoreButton) {
-
+export default async function latestArticles() {
     try {
-        loadMoreButton.disabled = true;
-        loadMoreButton.classList.add("loading");
-        const { totalCount, articles } = await getArticlesByCategory("finance", LIMIT, offset);
+        const articles = await fetchLatestArticles();
+        const latestArticlesContainer = document.getElementById("latest-articles");
 
+        const latestTitle = document.createElement("h1");
+        latestTitle.textContent = "Latest Articles 📰";
+        latestTitle.classList.add("home-section-title", "fade-in");
+
+        const grid = document.createElement("div");
+        grid.classList.add("card-grid");
         articles.forEach((item) => {
+
             const article = document.createElement("article");
             article.classList.add("card");
+
             article.id = item.id;
             article.addEventListener("click", async () => await readArticle(article.id));
 
@@ -46,18 +32,10 @@ async function _loadArticles(grid, loadMoreButton) {
             });
         });
 
-        offset += LIMIT;
-        loadMoreButton.disabled = false;
-        loadMoreButton.classList.remove("loading");
-        loadMoreButton.textContent = "Load More";
-
-        if (offset >= totalCount) {
-            loadMoreButton.style = "display: none";
-        }
-
+        latestArticlesContainer.append(latestTitle, grid);
     } catch (error) {
-        logger("error", `${LOG_CONTEXT} - "Loading Articles"`, error);
-        showToast("Failed to load articles", "error");
+        logger("error", "Load latest articles", `Failed to load latest articles: [${error}]`);
+        showToast("Failed to load latest articles", "error");
     }
 }
 

@@ -18,7 +18,6 @@
 @import url('./pages//finance.css');
 
 /* Components */
-@import url('./components/hero.css');
 @import url('./components/buttons.css');
 @import url('./components/cards.css');
 @import url('./components/toast.css');

@@ -93,11 +93,11 @@ async function init() {
         console.log("Creating tables")
         await db.query(createAboutTable);
         await db.query(createUserTable);
-        await db.query(createIndexes);
-        await db.query(createArticleTable);
         await db.query(createCommentTable);
+        await db.query(createArticleTable);
         await db.query(createUserCommentLikesTable);
         await db.query(createUserArticleLikesTable);
+        await db.query(createIndexes);
         console.log("Tables created successfully");
 
         console.log("Checking if about data already exists...");

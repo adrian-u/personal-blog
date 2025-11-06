@@ -270,3 +270,27 @@ export async function fetchFavoriteArticles(limit = 10, offset = 0) {
         throw error;
     }
 }
+
+export async function fetchLatestArticles() {
+    const LOCAL_LOG_CONTEXT = "Fetch latest articles";
+
+    const url = `${import.meta.env.VITE_API_URL}/articles/latest`;
+
+    try {
+        const res = await fetch(`${url}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        });
+        if (!res.ok) {
+            const errorData = await res.json();
+            throw new Error(errorData.error || `Request failed with ${res.status}`);
+        }
+
+        return await res.json();
+    } catch (error) {
+        logger("error", `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, error);
+        throw error;
+    }
+}

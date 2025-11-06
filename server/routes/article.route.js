@@ -2,7 +2,7 @@ import { registerRoute } from "./router.manager.js";
 import {
     createArticle, getArticlesCreator, getWipArticle, updateArticle,
     deleteArticle, getArticles, getArticleForReading,
-    addArticleToFavorites, removeArticleFromFavorites, getFavoriteArticles
+    addArticleToFavorites, removeArticleFromFavorites, getFavoriteArticles, getLatestArticles
 } from "../controllers/article.controller.js";
 import { withAuthentication, withAuthorization } from "../middlewares/oauth.js";
 import { withErrorHandling } from "../middlewares/error-handler.js";
@@ -58,4 +58,8 @@ registerRoute("DELETE", "/api/v1/article/:id/favorite",
 registerRoute("GET", "/api/v1/articles/favorites",
     withErrorHandling(
         withAuthentication(getFavoriteArticles))
+);
+
+registerRoute("GET", "/api/v1/articles/latest",
+    withErrorHandling(getLatestArticles)
 );
