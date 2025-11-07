@@ -1,6 +1,7 @@
 import { getArticlesByCategory } from "../../apis/article";
 import logger from "../../utils/logger";
 import { showToast } from "../../utils/toast";
+import buildCards from "../common/card-grid";
 import { readArticle } from "../read/read-modal";
 
 
@@ -30,21 +31,7 @@ async function _loadArticles(grid, loadMoreButton) {
         loadMoreButton.classList.add("loading");
         const { totalCount, articles } = await getArticlesByCategory("finance", LIMIT, offset);
 
-        articles.forEach((item) => {
-            const article = document.createElement("article");
-            article.classList.add("card");
-            article.id = item.id;
-            article.addEventListener("click", async () => await readArticle(article.id));
-
-            article.appendChild(_buildCardHeader(item));
-            article.appendChild(_description(item));
-
-            grid.appendChild(article);
-
-            requestAnimationFrame(() => {
-                setTimeout(() => article.classList.add("visible"), 50);
-            });
-        });
+        buildCards(grid, articles);
 
         offset += LIMIT;
         loadMoreButton.disabled = false;

@@ -12,20 +12,21 @@
     gap: 2rem;
     margin-top: 2rem;
     padding: 2rem;
-    text-align: center;
 }
 
 .home-title {
     font-size: 3rem;
     font-weight: var(700);
     color: var(--color-primary);
+    text-align: center;
 }
 
 .home-container p {
     color: var(--color-snow);
     font-size: 1.10rem;
     margin: 1rem auto 2rem auto;
-    max-width: 1800px;
+    max-width: 1200px;
+    text-align: center;
 }
 
 .home-buttons {
@@ -46,9 +47,19 @@
     margin: 1rem;
 }
 
+.latest-articles > h1 {
+    text-align: center;
+}
+
 .home-section-title {
     margin-bottom: 1rem;
     color: var(--color-secondary);
+}
+
+.more-me {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 @media (max-width: 768px) {
@@ -63,24 +74,5 @@
 
     .subtitle {
         font-size: 0.9rem;
-    }
-}
-
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-
-@media (max-width: 768px) {
-    .hero h1 {
-        font-size: 2.5rem;
     }
 }
