@@ -1,7 +1,7 @@
 export default function buildFinanceHeader() {
 
     const financeHeader = document.createElement("div");
-    financeHeader.classList.add("finance-header");
+    financeHeader.classList.add("finance-header", "fade-in");
 
     const financeTitle = document.createElement("h1");
     financeTitle.classList.add("finance-title");
