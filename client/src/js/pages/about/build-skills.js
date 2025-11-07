@@ -1,37 +1,25 @@
-export default function buildSkills(data) {
-    return `
-	   <h2 class="section-title">Technologies, Investments, and Interests</h2>
-	   <div class="skills-grid"> 
-	 		<div class="skill-category"> 
-				<h4>Frontend Development</h4>
-				<div class="skill-tags"> 
-					${data.skills.fe.map(skill => `<span class="skill-tag">${skill}</span>`).join('')}
-				</div>
-			</div>
-			<div class="skill-category"> 
-				<h4>Backend Development</h4>
-				<div class="skill-tags"> 
-					${data.skills.be.map(skill => `<span class="skill-tag">${skill}</span>`).join('')}
-				</div>
-			</div>
-			<div class="skill-category"> 
-				<h4>DevOps</h4>
-				<div class="skill-tags"> 
-					${data.skills.devops.map(skill => `<span class="skill-tag">${skill}</span>`).join('')}
-				</div>
-			</div>
-			<div class="skill-category"> 
-				<h4>Investment Knowledge</h4>
-				<div class="skill-tags"> 
-					${data.investments.map(skill => `<span class="skill-tag">${skill}</span>`).join('')}
-				</div>
-			</div>
-			<div class="skill-category"> 
-				<h4>Interests</h4>
-				<div class="skill-tags"> 
-					${data.interests.map(skill => `<span class="skill-tag">${skill}</span>`).join('')}
-				</div>
-			</div>
-	   </div>
-	 `;
+export default function buildSkills(techStack) {
+	const tech = document.getElementById("about-skills");
+	tech.classList.add("tech-section");
+
+	const techTitle = document.createElement("h3");
+	techTitle.classList.add("tech-title");
+	techTitle.textContent = "Teck Stack";
+
+	const techGrid = document.createElement("div");
+	techGrid.classList.add("tech-grid");
+
+	techStack.forEach(tech => _buildTechItem(techGrid, tech));
+
+	tech.append(techTitle, techGrid);
+}
+
+function _buildTechItem(grid, tech) {
+	const item = document.createElement("div");
+	item.classList.add("tech-item");
+	item.innerHTML = `
+                <div class="tech-icon">${tech.icon}</div>
+                <div class="tech-name">${tech.name}</div>
+            `;
+	grid.appendChild(item);
 }

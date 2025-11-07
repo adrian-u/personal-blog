@@ -51,6 +51,11 @@
     opacity: 0.9;
 }
 
+.png {
+    width: 32px;
+    height: 32px;
+}
+
 .fade-in {
     animation: fadeInUp 1s ease forwards;
 }
