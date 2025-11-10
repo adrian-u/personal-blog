@@ -18,6 +18,7 @@
     --color-borders-blue: rgb(63, 133, 167);
     --color-borders-blue-cosmo: rgb(63, 34, 236);
     --color-hover: rgb(32, 47, 54);
+    --color-black-shadow: rgba(0, 0, 0, 0.3);
 
     --font-size: 15px;
     --letter-spacing: 1px;

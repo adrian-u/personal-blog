@@ -5,7 +5,6 @@ import { findRoute } from "./routes/router.manager.js";
 import bodyParser from "./middlewares/body-parser.js";
 
 // Importing routes to enable registration through the router.manager
-import './routes/about.route.js';
 import './routes/user.route.js';
 import './routes/oauth.route.js';
 import './routes/article.route.js';

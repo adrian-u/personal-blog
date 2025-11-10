@@ -16,7 +16,7 @@
 
 .home-title {
     font-size: 3rem;
-    font-weight: var(700);
+    font-weight: 700;
     color: var(--color-primary);
     text-align: center;
 }
