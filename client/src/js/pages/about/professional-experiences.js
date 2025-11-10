@@ -3,6 +3,7 @@ export default function buildProfessionalExperiences(experiences) {
     const section = document.getElementById("prof-exp");
 
     const title = document.createElement("h3");
+    title.classList.add("section-title");
     title.textContent = "Professional Experiences";
 
     const experienceList = document.createElement("div");
@@ -79,7 +80,7 @@ function _buildSubExperencies(experience) {
         experience.subExperiences.forEach(subExp => {
             const technologies = subExp.technologies.map(tech => {
                 if (typeof tech === 'object' && tech.icon) {
-                    return `<span class="tech-tag">${tech.name} <img src="${tech.icon}" alt="${tech.name}" class="tech-icon"></span>`;
+                    return `<span class="tech-tag">${tech.name} <img src="${tech.icon}" alt="${tech.name}" class="tech-icon-exp"></span>`;
                 }
                 return `<span class="tech-tag">${tech.name}</span>`;
             }).join('');

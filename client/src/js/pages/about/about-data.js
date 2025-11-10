@@ -1,81 +1,125 @@
 import clan from "../../../assets/images/clan-id.png";
 import almaviva from "../../../assets/images/almaviva.png";
+import aifa from "../../../assets/images/aifa.png";
 import java from "../../../assets/images/java.png";
+import spring from "../../../assets/images/spring.svg";
+import html from "../../../assets/images/html.png";
+import css from "../../../assets/images/css.png";
+import js from "../../../assets/images/js.png";
+import react from "../../../assets/images/react.png";
+import node_js from "../../../assets/images/node-js.png";
+import postgre from "../../../assets/images/postgre.png";
+import docker from "../../../assets/images/docker.png";
+import mongo_db from "../../../assets/images/MongoDB.png";
+import kafka from "../../../assets/images/kafka.svg";
+import maven from "../../../assets/images/maven.svg";
+import gradle from "../../../assets/images/gradle.svg";
+import git from "../../../assets/images/git.svg";
+import db from "../../../assets/images/db.svg";
+import angularJS from "../../../assets/images/AngularJS.svg";
+import tomcat from "../../../assets/images/tomcat.svg";
+import atlasReply from "../../../assets/images/atlas-reply.svg";
+import logstash from "../../../assets/images/Logstash.svg";
 
 export const aboutData = {
     descriptions: {
-        developer: "I'm a passionate full-stack developer with over 5 years of experience building scalable web applications and mobile solutions. My journey started with a curiosity about how websites work, which quickly evolved into a deep love for creating digital experiences that solve real-world problems. I specialize in modern JavaScript frameworks, cloud architecture, and DevOps practices. Whether it's building a complex SaaS platform or optimizing database performance, I approach every project with attention to detail and a focus on user experience. My development philosophy centers around writing clean, maintainable code and staying current with emerging technologies while maintaining a strong foundation in computer science fundamentals.",
-        investor: "Three years ago, I discovered the world of investing and was immediately drawn to the analytical and strategic aspects of building wealth. What started as curiosity about the stock market has evolved into a comprehensive investment strategy spanning multiple asset classes. I focus on long-term value investing, combining fundamental analysis with technical indicators. My portfolio includes dividend growth stocks, real estate investment trusts (REITs), and a small allocation to cryptocurrency and DeFi protocols. I believe in the power of compound interest and dollar-cost averaging, while constantly educating myself about market trends, economic indicators, and emerging investment opportunities."
+        developer: "My journey as a developer started back in 2014, though not as a conscious choice, more like a happy mistake. " +
+            "At the time, I was 13 and spent most of my days playing football or video games. " +
+            "In Italy, that’s the age when you finish what is called 'scuole medie' and have to choose a 'scuola superiore' for the next five years. " +
+            "I didn’t really know what I wanted to do in life, and no one pushed or guided me toward any specific path. " +
+            "So, since I was always on my computer, I decided to pick a school that “had something to do with computers 😂.” Little did I know what I was getting into. " +
+            "At first, it was tough, I even thought about quitting because programming felt impossible to learn. " +
+            "But I didn’t give up. Deep down, I knew there had to be a way, and I started to actually enjoy what I was learning. " +
+            "It was the first time I could see myself doing something like this as a future career. Looking back, I’m really glad my younger self didn’t quit. " +
+            "Since 2020, I’ve been working as a web developer, and I genuinely love building and learning new things in this ever-changing world. " +
+            "There are still tough moments where I question what I’m doing, but I’ve learned those doubts are temporary and I’m definitely not alone in feeling that way. ",
+
+        investor: "At the start of 2020, when I was 20, I signed my first job contract and started earning my own money. " +
+            "By the end of that year, I had around €15,000 in my bank account, more than I’d ever had or seen before. " +
+            "I was proud, but then a “philosophical” thought hit me: What is money really? What’s it for? How can I use it wisely? What goals can it help me reach? " +
+            "Those questions pushed me to start researching and learning about personal finance, markets, and investing... and wow, what a world I discovered 😄. " +
+            "What began as curiosity quickly became a genuine passion. My only regret is not starting earlier, because for years I thought finance was just about charts and numbers (probably too many movies to blame for that!). " +
+            "Now I know it’s much more than that, it’s a world full of opportunities, strategies, and lessons that anyone can learn from. " +
+            "After months of reading and studying, in early 2021 I decided to take my first real step into investing. " +
+            "I opened a DEGIRO account and bought my first ETF with €50. Since then, I’ve kept investing regularly (a bit more than €50 now 😂) and have developed my own investing strategy, one that fits me best among the endless possibilities the market offers."
+
     },
     experience: [
         {
             id: 1,
-            title: "Software Engineer @ Clan Ingegno Digitale",
+            title: "Software Developer @ Clan Ingegno Digitale",
             company: "Clan Ingegno Digitale",
-            period: "Apr 2024 - Present",
+            period: "May 2022 - Present",
             icon: clan,
-            description: "Design and implementation of distributed, secure, and efficient backend systems across industrial IoT and AI-driven environments. Focused on mTLS communication, data synchronization, and integration between Rust-based microservices.",
-            subExperiences: []
+            description: "Design and implementation of distributed, secure, and efficient backend systems.",
+            subExperiences: [
+                {
+                    title: "Consultant Software Developer @ Atlas Reply",
+                    icon: atlasReply,
+                    period: "May 2022 - Dec 2024",
+                    description: "Development for a merchant creditworthiness platform within the Nexi payments ecosystem, mainly back-end development with some fixes or development on the front-end side.",
+                    technologies: [
+                        { name: "Java", icon: java },
+                        { name: "Spring", icon: spring },
+                        { name: "Maven", icon: maven },
+                        { name: "Gradle", icon: gradle },
+                        { name: "HTML", icon: html },
+                        { name: "CSS", icon: css },
+                        { name: "JS", icon: js },
+                        { name: "React", icon: react },
+                        { name: "Postgre", icon: postgre },
+                        { name: "MongoDB", icon: mongo_db },
+                        { name: "Git", icon: git },
+                        { name: "Kafka", icon: kafka },
+                        { name: "Logstash", icon: logstash }
+                    ]
+                },
+            ]
         },
         {
             id: 2,
-            title: "Software Engineer @ ELIS Innovation Hub",
-            company: "ELIS Innovation Hub",
-            period: "Sep 2021 - Oct 2024",
+            title: "Junior Developer @ Almaviva",
+            company: "Almaviva",
+            period: "Feb 2020 - Apr 2022",
             icon: almaviva,
-            description: "Software engineering for data-driven and enterprise-grade applications within the ELIS Innovation Hub ecosystem. Multiple consultancy projects across industrial, corporate, and IoT domains.",
-            subExperiences: []
-        },
-        {
-            id: 3,
-            title: "Data Analyst @ ENI",
-            company: "ENI",
-            period: "May 2020 - Jul 2021",
-            icon: clan,
-            description: "Data analysis and predictive modeling for industrial and market datasets within the energy sector. Focused on optimizing performance, forecasting trends, and applying ML techniques for sustainability insights.",
+            description: "Junior developer focused mainly on the backend side on the project for AIFA.",
             subExperiences: [
                 {
-                    title: "Data Analyst @ ENI",
-                    icon: clan,
-                    period: "Mar 2021 - Jul 2021",
-                    description: "Analysis of parameters from turbine sensor networks to enhance the predictive efficiency of existing energy models. Designed and validated machine learning algorithms for anomaly detection and performance forecasting across multiple plants.",
+                    title: "Junior Developer",
+                    icon: aifa,
+                    period: "Feb 2020 - Apr 2022",
+                    description: "Bugfixing of existing application, development of new features for old applications, cordination of deployments between teams.",
                     technologies: [
-                        { name: "Python", icon: null },
                         { name: "Java", icon: java },
-                        { name: "Pandas 🐼", icon: null },
-                        { name: "TensorFlow 🔶", icon: null },
-                        { name: "Scikit-Learn 🔬", icon: null },
-                        { name: "LSTM 🔴", icon: null }
+                        { name: "Spring", icon: spring },
+                        { name: "Maven", icon: maven },
+                        { name: "HTML", icon: html },
+                        { name: "CSS", icon: css },
+                        { name: "JS", icon: js },
+                        { name: "OracleDB", icon: db },
+                        { name: "MongoDB", icon: mongo_db },
+                        { name: "Git", icon: git },
+                        { name: "AngularJS", icon: angularJS },
+                        { name: "Tomcat", icon: tomcat }
                     ]
                 },
-                {
-                    title: "Data Analyst @ ENI — Eurostat Market Study",
-                    icon: almaviva,
-                    period: "May 2020 - Aug 2020",
-                    description: "Processed and analyzed Eurostat datasets to examine the correlation between sustainable development indicators and Brent crude oil pricing across EU28 markets. Implemented multiple regression models to evaluate long-term sustainability factors influencing market trends.",
-                    technologies: [
-                        { name: "Python", icon: null },
-                        { name: "Java", icon: java },
-                        { name: "Pandas 🐼", icon: null },
-                        { name: "TensorFlow 🔶", icon: null },
-                        { name: "Scikit-Learn 🔬", icon: null },
-                        { name: "LSTM 🔴", icon: null }
-                    ]
-                }
             ]
         }
     ],
     techStack: [
-        { name: "Java SE / EE", icon: "☕", category: "backend" },
-        { name: "Spring Boot", icon: "🍃", category: "backend" },
-        { name: "Python", icon: "🐍", category: "backend" },
-        { name: "C", icon: "©️", category: "systems" },
-        { name: "C++", icon: "➕", category: "systems" },
-        { name: "C#", icon: "♯", category: "backend" },
-        { name: "Rust", icon: "🦀", category: "systems" },
-        { name: "Docker", icon: "🐳", category: "devops" },
-        { name: "Angular", icon: "🅰️", category: "frontend" },
-        { name: "JavaScript", icon: "💛", category: "frontend" },
-        { name: "MySQL / SQLite / MongoDB", icon: "🗄️", category: "database" }
+        { name: "Java SE / EE", icon: java },
+        { name: "Spring", icon: spring },
+        { name: "Maven", icon: maven },
+        { name: "Gradle", icon: gradle },
+        { name: "HTML", icon: html },
+        { name: "CSS", icon: css },
+        { name: "JS", icon: js },
+        { name: "React", icon: react },
+        { name: "NodeJS", icon: node_js },
+        { name: "PostgreSQL", icon: postgre },
+        { name: "MongoDB", icon: mongo_db },
+        { name: "Kafka", icon: kafka },
+        { name: "Docker", icon: docker },
+        { name: "Git", icon: git },
     ]
 };

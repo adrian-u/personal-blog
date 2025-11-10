@@ -13,8 +13,7 @@ export default function buildTitle() {
 	picture.classList.add("profile-img");
 
 	const title = document.createElement("h1");
-	title.classList.add("hero-title");
-	title.textContent = "Software Developer & Aspiring Investor";
+	title.textContent = "Software Developer & Investor";
 
 	aboutTitleDiv.append(picture, title);
 

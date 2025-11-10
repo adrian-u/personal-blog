@@ -50,7 +50,7 @@
     transition: all 0.3s ease;
     backdrop-filter: blur(10px);
     overflow: hidden;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 20px 40px var(--color-black-shadow);
 }
 
 .content-card:hover {
@@ -72,13 +72,6 @@
     opacity: 0.7;
     line-height: 1.8;
     margin-bottom: 1.5rem;
-}
-
-#prof-exp h3 {
-    text-align: center;
-    font-size: 2rem;
-    color: var(--color-primary);
-    margin-bottom: 1rem;
 }
 
 #experience-list {
@@ -151,7 +144,7 @@
 }
 
 .expand-icon {
-    color: var(--color-secondary);
+    color: var(--color-primary);
     transition: transform 0.3s ease;
     font-size: 1.2em;
 }
@@ -167,7 +160,7 @@
 }
 
 .experience-item.expanded .experience-content {
-    max-height: 1000px;
+    max-height: 2000px;
     padding: 0 30px 25px 30px;
 }
 
@@ -257,16 +250,24 @@
     background-color: var(--color-hover);
 }
 
-.tech-icon {
+.tech-icon-exp {
     width: 20px;
     height: 20px;
 }
 
-.tech-title {
+.section-title {
     text-align: center;
     font-size: 2rem;
     color: var(--color-primary);
     margin-bottom: 1rem;
+}
+
+#about-skills p {
+    color: var(--color-snow);
+    font-size: 1.10rem;
+    margin: 1rem auto 2rem auto;
+    max-width: 1200px;
+    text-align: center;
 }
 
 .tech-grid {
@@ -288,7 +289,6 @@
     border: 1px solid var(--color-borders);
     border-radius: 1rem;
     transition: all 0.3s ease;
-    cursor: pointer;
 }
 
 .tech-item:hover {
@@ -313,6 +313,25 @@
     font-weight: 500;
 }
 
+.contact-options {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin: 1rem 0;
+}
+
+.contact-link {
+    display: inline-flex;
+    align-items: center;
+}
+
+.contact-icon {
+    width: 2rem;
+    height: 2rem;
+    margin-right: 8px;
+    color: var(--color-primary);
+}
 
 @keyframes fadeInUp {
     from {
@@ -334,12 +353,52 @@
 }
 
 @media (max-width: 768px) {
+
+    .about-title {
+        font-size: 0.8rem;
+    }
+
+    .content-card h3 {
+        font-size: 1.5rem;
+    }
+
+    #about-overview .png {
+        width: 30px;
+        height: 30px;
+    }
+
+    .content-card p {
+        font-size: 0.9rem;
+    }
+
     .section-title {
-        font-size: 2rem;
+        font-size: 1.25rem;
+    }
+
+    .experience-item {
+        max-width: 500px;
     }
 
     .about-title {
         flex-direction: column;
         text-align: center;
+    }
+
+    #about-skills p {
+        font-size: 0.9rem;
+    }
+
+    .tech-grid {
+        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    }
+
+    .tech-icon {
+        font-size: 1.5rem;
+        width: 35px;
+        height: 35px;
+    }
+
+    .tech-name {
+        font-size: 0.5rem;
     }
 }
