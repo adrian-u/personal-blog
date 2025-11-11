@@ -1,7 +1,8 @@
 import {
     save, getArticlesWithoutMarkdown, getWipArticle,
     updateArticle, deleteWip, fetchArticlesByCategory, getReadArticleById,
-    createFavoriteArticle, checkIfArticleExists, deleteFavoriteArticle, fetchFavoriteArticles, fetchLatestArticles
+    createFavoriteArticle, checkIfArticleExists, deleteFavoriteArticle,
+    fetchFavoriteArticles, fetchLatestArticles, updatePublishStatus
 } from "../data-access/article.repository.js";
 import { isEmpty } from "../utils/general.js";
 import logger from "../utils/logger.js";
@@ -174,4 +175,18 @@ export async function retrieveLatestArticles(traceId) {
         logger("error", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Error retrieve latest articles. Error: [${error}]`);
         throw error;
     }
+}
+
+export async function publish(id, traceId) {
+    const LOCAL_LOG_CONTEXT = "Publish article";
+
+    logger("info", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Sending request to the repository layer to publish article with id: [${id}]`);
+
+    try {
+        await updatePublishStatus(id, traceId);
+    } catch (error) {
+        logger("error", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Error publishing article with id: [${id}]. Error: [${error}]`);
+        throw error;
+    }
+
 }

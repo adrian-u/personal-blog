@@ -294,3 +294,28 @@ export async function fetchLatestArticles() {
         throw error;
     }
 }
+
+export async function publishArticle(id) {
+    const LOCAL_LOG_CONTEXT = "Publish Article";
+
+    const url = `${import.meta.env.VITE_API_URL}/article/publish/${id}`;
+
+    try {
+        const res = await fetch(`${url}`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${getJWT()}`
+            }
+        });
+
+        if (!res.ok) {
+            const errorData = await res.json();
+            throw new Error(errorData.error || `Request failed with ${res.status}`);
+        }
+
+    } catch (error) {
+        logger("error", `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, error);
+        throw error;
+    }
+}

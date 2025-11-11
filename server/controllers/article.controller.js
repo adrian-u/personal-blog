@@ -2,7 +2,7 @@ import {
     saveArticle, getArticlesWip, getWipArt, updateWipArticle,
     deleteWipArticle, getArticlesByCategory, getReadArticle,
     addFavoriteArticle, removeFavoriteArticle, retrieveFavoriteArticles,
-    retrieveLatestArticles
+    retrieveLatestArticles, publish
 } from "../services/article.service.js";
 import logger from "../utils/logger.js";
 import { checkIfArticleBodyIsValid } from "../utils/article-utils.js";
@@ -148,4 +148,14 @@ export async function getLatestArticles(req, res) {
     const articles = await retrieveLatestArticles(req.traceId);
     res.writeHead(200, { "Content-Type": "application/json" });
     res.end(JSON.stringify(articles));
+}
+
+export async function publishArticle(req, res, params) {
+    const LOCAL_LOG_CONTEXT = "Publish article";
+    const { id } = params;
+
+    logger("info", req.traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Start publishing article with id: [${id}]`);
+    await publish(id, req.traceId);
+    res.writeHead(200, { "Content-Type": "application/json" });
+    res.end();
 }

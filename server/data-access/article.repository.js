@@ -41,10 +41,10 @@ export async function getArticlesWithoutMarkdown(traceId) {
 
     const LOCAL_LOG_CONTEXT = "Fetch Articles Wip";
 
-    const query = `SELECT id, title, icon, category, description, published, created_at FROM articles ORDER BY articles.created_at ASC`;
+    const query = `SELECT id, title, icon, category, description, published, created_at FROM articles WHERE published = $1 ORDER BY created_at ASC`;
 
     try {
-        const { rows } = await db.query(query);
+        const { rows } = await db.query(query, [false]);
         return rows.map(article => Article.fromDBRow(article));
     } catch (error) {
         logger("error", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `DB query failed to fetch articles without markdown: [${error}]`);
@@ -114,12 +114,12 @@ export async function fetchArticlesByCategory(category, traceId, limit = 10, off
     logger("info", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`,
         `Fetching articles for category [${category}] with limit=${limit}, offset=${offset}`);
 
-    const query = ` SELECT id, title, icon, description, created_at, category, COUNT(*) OVER() AS total_count FROM articles WHERE category = $1 AND published = false
+    const query = ` SELECT id, title, icon, description, created_at, category, COUNT(*) OVER() AS total_count FROM articles WHERE category = $1 AND published = $2
                     ORDER BY created_at DESC
-                    LIMIT $2 OFFSET $3;`;
+                    LIMIT $3 OFFSET $4;`;
 
     try {
-        const { rows } = await db.query(query, [category, limit, offset]);
+        const { rows } = await db.query(query, [category, true, limit, offset]);
         const totalCount = rows.length > 0 ? parseInt(rows[0].total_count, 10) : 0;
         return { totalCount, articles: rows.map(row => Article.fromDBRow(row)) };
     } catch (error) {
@@ -214,16 +214,30 @@ export async function fetchLatestArticles(traceId) {
     const LOCAL_LOG_CONTEXT = "Fetch Latest Articles";
     logger("info", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, "Start fetching latest articles");
 
-    const query = `SELECT id, title, icon, description, created_at, category FROM articles WHERE published = false
+    const query = `SELECT id, title, icon, description, created_at, category FROM articles WHERE published = $1
                 ORDER BY created_at DESC
                 LIMIT 3;`;
 
     try {
-        const { rows } = await db.query(query);
+        const { rows } = await db.query(query, [true]);
         return { articles: rows };
     } catch (error) {
         logger("error", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, error.message);
         throw new DbError("Failed to fetch latest articles");
     }
 
+}
+
+export async function updatePublishStatus(id, traceId) {
+    const LOCAL_LOG_CONTEXT = "Publish Article";
+    logger("info", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Update status to published fro article with id: [${id}]`);
+
+    const query = `UPDATE articles SET published = $1 WHERE id = $2`;
+
+    try {
+        await db.query(query, [true, id]);
+    } catch (error) {
+        logger("error", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, error.message);
+        throw new DbError(`Failed to publish article with id: [${id}]`);
+    }
 }

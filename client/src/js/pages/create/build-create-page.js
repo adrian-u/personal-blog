@@ -2,7 +2,7 @@ import buildArticleMetadata from "./article-metadata";
 import buildArticleEditor from "./article-editor";
 import buildArticleWip, { renderArticle, setActiveWipArticle } from "./wip-article";
 import htmlImporter from "../../utils/html-importer";
-import { createArticle, getWipArticle, updateArticle } from "../../apis/article";
+import { createArticle, getWipArticle, publishArticle, updateArticle } from "../../apis/article";
 import { openArticlePreviewModal } from "../../utils/modals";
 import { MDViewer } from "@pardnchiu/nanomd";
 import { showToast } from "../../utils/toast";
@@ -13,10 +13,11 @@ import { isEmpty } from "../../utils/general";
 const LOG_CONTEXT = "Build Create Page";
 
 let mdEditor = null;
+let mdViewer = null;
 
 
 export default async function buildCreatePage() {
-    
+
     await _createPreviewModal();
     buildArticleMetadata();
     mdEditor = buildArticleEditor();
@@ -26,14 +27,14 @@ export default async function buildCreatePage() {
     const previewButton = document.getElementById("preview");
     _saveEvent(document.getElementById("save"), articleForm);
 
-    previewButton.addEventListener('click', (event) => {
+    previewButton.addEventListener("click", (event) => {
         event.preventDefault();
         _preview(mdEditor);
     });
 }
 
 function _saveEvent(button, articleForm) {
-    button.addEventListener('click', async (event) => {
+    button.addEventListener("click", async (event) => {
         event.preventDefault();
         const formData = new FormData(articleForm);
         const title = formData.get("article-title");
@@ -94,14 +95,16 @@ export async function loadWipArticle(id) {
 
         const saveButton = document.getElementById("save");
         const oldButton = document.getElementById("update");
+        const publishButton = document.getElementById("publish");
         const newButton = oldButton.cloneNode(true);
         oldButton.replaceWith(newButton);
 
         saveButton.style = "display: none";
         newButton.style = "display: block";
-        newButton.addEventListener('click', async (event) => {
+        publishButton.style = "display: block";
+        newButton.addEventListener("click", async (event) => {
             event.preventDefault();
-            _updateArticle(id, {
+            await _updateArticle(id, {
                 title: article.title,
                 icon: article.icon,
                 category: article.category,
@@ -110,12 +113,25 @@ export async function loadWipArticle(id) {
             });
         });
 
+        publishButton.addEventListener("click", async () => {
+            await _publishArticle(id);
+        });
+
         showToast(`Loaded ${article.title}`, "success", 3000);
     } catch (error) {
         logger("error", `${LOG_CONTEXT} - "Loading WIP Data"`, error);
         showToast("Failed to load article", "error");
     }
 
+}
+
+async function _publishArticle(id) {
+    try {
+        await publishArticle(id);
+    } catch (error) {
+        logger("error", `${LOG_CONTEXT} - "Publish Article"`, error);
+        showToast("Failed to publish the article", "error");
+    }
 }
 
 async function _updateArticle(id, oldValues) {
@@ -188,24 +204,27 @@ function _formToJson(title, icon, category, description, text) {
 
 function _preview(mdEditor) {
 
-    const domViewer = new MDViewer({
-        id: "article-preview-content",
-        emptyContent: "",
-        style: {
-            mode: "",
-            fill: "",
-            fontFamily: "Inter",
-        },
-        sync: {
-            editor: mdEditor,
-            delay: 200,
-            scrollSync: 1,
-        },
-        hashtag: {
-            path: "?keyword=",
-            target: "_blank"
-        }
-    })
+    if (!mdViewer) {
+        mdViewer = new MDViewer({
+            id: "article-preview-content",
+            emptyContent: "",
+            style: {
+                mode: "",
+                fill: "",
+                fontFamily: "Inter",
+            },
+            sync: {
+                editor: mdEditor,
+                delay: 100,
+                scrollSync: 1,
+            },
+            hashtag: {
+                path: "?keyword=",
+                target: "_blank"
+            }
+        })
+    }
+
 
     openArticlePreviewModal();
 }

@@ -40,7 +40,7 @@
 }
 
 .article-wip-box {
-    border: 1px solid var(--color-gray);
+    box-shadow: 0 20px 40px var(--color-black-shadow);
     border-radius: 1.5rem;
     margin: 0.5rem;
     transition: transform 0.5s;
@@ -143,7 +143,7 @@
 }
 
 .nanomd-wrapper {
-    border: 1px solid var(--color-gray);
+    box-shadow: 0 20px 40px var(--color-black-shadow);
     border-radius: 1.5rem;
     overflow: hidden;
     margin-top: 1rem;
@@ -191,11 +191,12 @@
     resize: none;
     width: 100%;
     height: 100px;
+    box-shadow: 0 20px 40px var(--color-black-shadow);
     border-radius: 1.5rem;
+    border: none;
     background-color: var(--color-background);
     color: var(--color-snow);
     line-height: 1.5rem;
-    border: 1px solid var(--color-gray);
     font-size: 1.2rem;
     font-weight: 500;
     padding: 10px;
@@ -204,7 +205,6 @@
 }
 
 .article-description>textarea:focus {
-    border-color: var(--color-primary);
     outline: none;
 }
 
@@ -296,9 +296,10 @@
 .title {
     min-height: 55px;
     min-width: 420px;
-    border-radius: 1rem;
     outline: none;
-    border: 1px solid var(--color-gray);
+    border: none;
+    box-shadow: 0 20px 40px var(--color-black-shadow);
+    border-radius: 1rem;
     background-color: var(--color-background);
     padding: 0.5rem;
     font-size: 1rem;
@@ -314,7 +315,7 @@
 
 .categories {
     background: var(--color-background);
-    border: 1px solid var(--color-gray);
+    border: 1px solid var(--color-primary);
     width: 200px;
     letter-spacing: var(--letter-spacing);
     font-weight: 700;
