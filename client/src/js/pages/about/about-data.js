@@ -107,7 +107,7 @@ export const aboutData = {
         }
     ],
     techStack: [
-        { name: "Java SE / EE", icon: java },
+        { name: "Java", icon: java },
         { name: "Spring", icon: spring },
         { name: "Maven", icon: maven },
         { name: "Gradle", icon: gradle },

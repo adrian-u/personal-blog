@@ -2,7 +2,7 @@ import { registerRoute } from "./router.manager.js";
 import {
     createArticle, getArticlesCreator, getWipArticle, updateArticle,
     deleteArticle, getArticles, getArticleForReading,
-    addArticleToFavorites, removeArticleFromFavorites, getFavoriteArticles, getLatestArticles
+    addArticleToFavorites, removeArticleFromFavorites, getFavoriteArticles, getLatestArticles, publishArticle
 } from "../controllers/article.controller.js";
 import { withAuthentication, withAuthorization } from "../middlewares/oauth.js";
 import { withErrorHandling } from "../middlewares/error-handler.js";
@@ -62,4 +62,10 @@ registerRoute("GET", "/api/v1/articles/favorites",
 
 registerRoute("GET", "/api/v1/articles/latest",
     withErrorHandling(getLatestArticles)
+);
+
+registerRoute("PATCH", "/api/v1/article/publish/:id",
+    withErrorHandling(
+        withAuthentication(
+            withAuthorization(publishArticle)))
 );

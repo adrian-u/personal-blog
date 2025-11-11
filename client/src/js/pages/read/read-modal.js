@@ -31,7 +31,6 @@ async function _buildReadModal(id) {
 
     try {
         const currentUser = await getCurrentUser();
-        console.log(currentUser)
         const article = await getArticleForReading(id);
         const modal = document.getElementById("read-article-modal");
 
