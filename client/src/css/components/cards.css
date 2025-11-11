@@ -2,7 +2,7 @@
     background: var(--color-background-details);
     border-radius: 2rem;
     padding: 2rem;
-    border: 1px solid var(--color-primary);
+    box-shadow: 0 20px 40px var(--color-black-shadow);
     transition: all 0.3s ease;
     backdrop-filter: blur(10px);
     cursor: pointer;

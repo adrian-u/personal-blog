@@ -47,7 +47,7 @@
     margin: 1rem;
 }
 
-.latest-articles > h1 {
+.latest-articles>h1 {
     text-align: center;
 }
 
@@ -60,6 +60,36 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+.site-information {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    margin-top: 2rem;
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1rem;
+    color: var(--color-gray);
+    border-top: 2px solid var(--color-secondary);
+    padding: 0.3rem;
+}
+
+.site-information>h4:hover {
+    color: var(--color-secondary);
+    cursor: pointer;
+}
+
+.icons-from {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.star-icon {
+    transition: 0.3s;
 }
 
 @media (max-width: 768px) {

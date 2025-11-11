@@ -60,23 +60,6 @@
     animation: fadeInUp 1s ease forwards;
 }
 
-.site-information {
-    display: flex;
-    gap: 2rem;
-    margin-top: 2rem;
-    font-size: 0.8rem;
-    font-weight: 700;
-    line-height: 1rem;
-    color: var(--color-gray);
-    border-top: 2px solid var(--color-primary);
-    padding: 0.3rem;
-}
-
-.site-information>h4:hover {
-    color: var(--color-secondary);
-    cursor: pointer;
-}
-
 @keyframes spin {
     to {
         transform: rotate(360deg);

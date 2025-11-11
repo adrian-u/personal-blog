@@ -59,9 +59,13 @@ export async function updateWipArticle(article, id, traceId) {
     const articleUpdatesMap = new Map();
     article.forEach(item => {
         if (item.op === "update") {
+            if (item.field === "category") {
+                item.value = item.value.toLowerCase();
+            }
             articleUpdatesMap.set(item.field, item.value);
         }
     });
+
     logger("info", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Sending request to the repository layer for article id: [${id}]`);
 
     try {
