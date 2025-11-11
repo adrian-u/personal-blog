@@ -3,9 +3,11 @@ import { closeModal, openLoginModal, handleEscape } from '../utils/modals.js';
 import { authWithProvider } from '../auth/auth.js';
 import { userAvatar } from '../utils/user-details.js';
 import { isCreator, getCurrentUser } from '../context/user-context.js';
+import { extraSiteInfo } from '../utils/extra-site-info.js';
 
 export async function initNavbar() {
   await htmlImporter('navbar-container', './src/components/navbar.html', async () => {
+    await _createInfoModal();
     const loginBtn = document.getElementById('login-btn');
     const createPage = document.getElementById('create-page');
     const profileNavbar = document.getElementById('profile');
@@ -31,6 +33,8 @@ export async function initNavbar() {
     }
 
     loginBtn.addEventListener('click', openLoginModal);
+
+    extraSiteInfo();
   });
 }
 
@@ -79,4 +83,8 @@ export function setActiveNav(path) {
 
 export async function initConfirmationModal() {
   await htmlImporter("body", "./src/components/confirmation-modal.html");
+}
+
+async function _createInfoModal() {
+  await htmlImporter("body", "./src/components/info-modal.html");
 }

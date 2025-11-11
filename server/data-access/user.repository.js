@@ -27,7 +27,7 @@ export async function saveUser(user, traceId) {
     }
 }
 
-export async function getUserDetailsByEmail(email, traceId) {
+export async function getUserDetailsByEmail(id, traceId) {
     const query = `SELECT u.id, u.email, u.name, u.avatarUrl, u.role, u.created_at,
                 COALESCE(liked_comments.liked_comments, '[]') AS liked_comments,
                 COALESCE(liked_articles.liked_articles, '[]') AS liked_articles
@@ -38,23 +38,38 @@ export async function getUserDetailsByEmail(email, traceId) {
                 LEFT JOIN (
                     SELECT user_id, json_agg(article_id) AS liked_articles FROM user_article_likes GROUP BY user_id)
                     AS liked_articles ON liked_articles.user_id = u.id
-                WHERE u.email = $1;`;
+                WHERE u.id = $1;`;
 
     try {
-        const result = await db.query(query, [email]);
+        const result = await db.query(query, [id]);
         const user = result.rows[0];
 
         if (!user) {
-            throw new NotFoundError(`User not found with email: ${email}`);
+            throw new NotFoundError(`User not found with id: ${id}`);
         }
 
         return user;
 
     } catch (error) {
         if (!(error instanceof NotFoundError)) {
-            logger("info", traceId, "Fetching user data", `DB query failed to get user details for email: [${email}]. Error: [${error}]`);
+            logger("info", traceId, "Fetching user data", `DB query failed to get user details for id: [${id}]. Error: [${error}]`);
             throw new DbError("Failed to get user details");
         }
         throw error;
+    }
+}
+
+export async function deleteUserFromDb(id, traceId) {
+    const LOCAL_LOG_CONTEXT = "Delete User";
+
+    logger("info", traceId, `${LOCAL_LOG_CONTEXT}-${LOG_CONTEXT}`, `Deleting user with id: [${id}]`);
+
+    const query = `DELETE FROM users WHERE id = $1`;
+
+    try {
+        await db.query(query, [id]);
+    } catch (error) {
+        logger("error", traceId, `${LOCAL_LOG_CONTEXT}-${LOG_CONTEXT}`, `Failed to delete user with id: [${id}]. Error: [${error}]`);
+        throw new DbError("Failed to delete user");
     }
 }

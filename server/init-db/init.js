@@ -31,7 +31,7 @@ const createCommentTable = `
     CREATE TABLE IF NOT EXISTS comments (
         id SERIAL PRIMARY KEY,
         article_id INTEGER REFERENCES articles(id) ON DELETE CASCADE,
-        user_id INTEGER REFERENCES users(id),
+        user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
         parent_id INTEGER REFERENCES comments(id) ON DELETE CASCADE,
         content TEXT NOT NULL,
         created_at TIMESTAMP DEFAULT now(),
@@ -63,12 +63,6 @@ const createIndexes = `
     CREATE INDEX IF NOT EXISTS idx_comments_article_id ON comments(article_id);
     CREATE INDEX IF NOT EXISTS idx_comments_user_id ON comments(user_id);
     CREATE INDEX IF NOT EXISTS idx_comments_parent_id ON comments(parent_id);
-`;
-
-const insertDefaultAbout = `
-    INSERT INTO about (title, location, developer, investor, timeline, skills, investments, interests)
-    VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-    RETURNING id;
 `;
 
 async function init() {
