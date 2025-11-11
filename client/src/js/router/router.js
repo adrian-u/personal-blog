@@ -82,8 +82,9 @@ export async function renderRoute(path = location.pathname) {
     }
 
     if (path === '/') {
-        const { default: latestArticles } = await import('../pages/home/home-latest-articles.js');
-        await latestArticles();
+        const { default: homeInit } = await import('../pages/home/home-init.js');
+        await homeInit();
+
     }
 
     if (path === '/about') {

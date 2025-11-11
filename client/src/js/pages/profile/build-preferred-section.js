@@ -14,7 +14,7 @@ export default async function buildPreferredArticlesSection() {
     preferredArticles.innerHTML = "";
 
     const titleFlex = document.createElement("div");
-    titleFlex.classList.add("liked-title");
+    titleFlex.classList.add("liked-title", "fade-in");
 
     const title = document.createElement("h1");
     title.textContent = "Liked Articles ";

@@ -153,7 +153,7 @@
 }
 
 #nanomd-editor.pd-md-editor {
-    background-color: var(--color-background);
+    background-color: var(--color-background-details);
     overflow: hidden;
 }
 
@@ -167,7 +167,7 @@
     display: flex;
     justify-content: space-evenly;
     padding: 0.5rem;
-    background: var(--color-background);
+    background: var(--color-background-details);
     overflow: hidden;
     border-bottom: 1px solid var(--color-primary);
     z-index: 1;
@@ -194,7 +194,7 @@
     box-shadow: 0 20px 40px var(--color-black-shadow);
     border-radius: 1.5rem;
     border: none;
-    background-color: var(--color-background);
+    background-color: var(--color-background-details);
     color: var(--color-snow);
     line-height: 1.5rem;
     font-size: 1.2rem;
@@ -300,7 +300,7 @@
     border: none;
     box-shadow: 0 20px 40px var(--color-black-shadow);
     border-radius: 1rem;
-    background-color: var(--color-background);
+    background-color: var(--color-background-details);
     padding: 0.5rem;
     font-size: 1rem;
     font-weight: 700;
@@ -314,8 +314,8 @@
 }
 
 .categories {
-    background: var(--color-background);
-    border: 1px solid var(--color-primary);
+    background: var(--color-background-details);
+    box-shadow: 0 20px 40px var(--color-black-shadow);
     width: 200px;
     letter-spacing: var(--letter-spacing);
     font-weight: 700;

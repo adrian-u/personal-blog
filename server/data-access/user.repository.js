@@ -12,7 +12,7 @@ export async function saveUser(user, traceId) {
     const query = `
         INSERT INTO users (email, name, avatarUrl, role, provider)
         VALUES ($1, $2, $3, $4, $5)
-        ON CONFLICT (email)
+        ON CONFLICT (email, provider)
         DO UPDATE SET
             name = EXCLUDED.name,
             avatarUrl = EXCLUDED.avatarUrl,
