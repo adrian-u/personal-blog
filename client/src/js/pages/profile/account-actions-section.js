@@ -1,3 +1,4 @@
+import { deleteUser } from "../../apis/user";
 import { getJWT, logout } from "../../auth/auth";
 import { closeModal, openConfirmationModal } from "../../utils/modals";
 
@@ -60,13 +61,14 @@ function _buildDeleteAccountModal() {
 
     modalHeader.textContent = "Delete Account";
     modalText.innerHTML = `
-    <span>Are you sure you want to delete your accoun?</span>
+    <span>Are you sure you want to delete your account?</span>
     <br> 
     <span>This action cannot be undone.</span>`;
 
 
-    confirmButton.onclick = () => {
-        alert(getJWT());
+    confirmButton.onclick = async () => {
+        await deleteUser();
+        logout();
         closeModal(modalContainer);
     };
 

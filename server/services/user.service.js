@@ -1,4 +1,4 @@
-import { saveUser as saveUserToDb, getUserDetailsByEmail as getUserFromDb } from "../data-access/user.repository.js";
+import { saveUser as saveUserToDb, getUserDetailsByEmail as getUserFromDb, deleteUserFromDb } from "../data-access/user.repository.js";
 import { SavingError } from "../errors/custom-errors.js";
 import { User } from "../models/user.model.js";
 import logger from "../utils/logger.js";
@@ -25,12 +25,24 @@ export async function saveUser(userData, provider, traceId) {
     }
 }
 
-export async function getUserDetailsByEmail(email, traceId) {
+export async function getUserDetailsById(id, traceId) {
     try {
-        const user = await getUserFromDb(email, traceId);
+        const user = await getUserFromDb(id, traceId);
         return User.fromDBRow(user);
     } catch (error) {
-        logger("info", traceId, "Fetching user data", `Error get user details by email: [${error}]`);
+        logger("info", traceId, "Fetching user data", `Error get user details by id: [${id}]. Error: [${error}]`);
+        throw error;
+    }
+}
+
+export async function deleteUserById(id, traceId) {
+    const LOCAL_LOG_CONTEXT = "Delete User";
+    logger("info", traceId, `${LOCAL_LOG_CONTEXT}-${LOG_CONTEXT}`, `Deleting user with id: [${id}]`);
+
+    try {
+        await deleteUserFromDb(id, traceId);
+    } catch (error) {
+        logger("info", traceId, `${LOCAL_LOG_CONTEXT}-${LOG_CONTEXT}`, `Error deleting user with id: [${id}]. Error: [${error}]`);
         throw error;
     }
 }

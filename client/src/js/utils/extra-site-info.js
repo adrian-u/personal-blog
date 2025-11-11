@@ -1,4 +1,4 @@
-import { closeModal, openInfoModal } from "../../utils/modals";
+import { closeModal, openInfoModal } from "./modals";
 
 export function extraSiteInfo() {
     const shipu = document.getElementById("shipu");
