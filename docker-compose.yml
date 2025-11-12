@@ -16,6 +16,8 @@ services:
       NODE_ENV: ${NODE_ENV}
       HOST: ${HOST}
       PORT: ${PORT}
+      PUBLIC_HOST: ${PUBLIC_HOST}
+      PUBLIC_PORT: ${PUBLIC_PORT}
       DB_HOST: ${DB_HOST}
       DB_PORT: ${DB_PORT}
       DB_USER: ${DB_USER}
@@ -32,6 +34,12 @@ services:
       GITHUB_USER_DETAILS_URL: ${GITHUB_USER_DETAILS_URL}
       GITHUB_USER_EMAIL_URL: ${GITHUB_USER_EMAIL_URL}
       JWT_SECRET: ${JWT_SECRET}
+      MINIO_END_POINT: minio
+      MINIO_PORT: ${MINIO_PORT}
+      MINIO_SSL: ${MINIO_SSL}
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+      MINIO_AVATARS_BUCKET: ${MINIO_AVATARS_BUCKET}
     ports:
       - "8080:8080"
     depends_on:
@@ -63,6 +71,20 @@ services:
     depends_on:
       - db
 
+  minio:
+    image: quay.io/minio/minio:latest
+    container_name: minio
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+    command: server /data --console-address ":9001"
+    volumes:
+      - minio_data:/data
+
 volumes:
   pgdata:
   pgadmin_data:
+  minio_data:

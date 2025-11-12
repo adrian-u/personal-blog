@@ -61,3 +61,11 @@ export class InvalidProvider extends Error {
         this.statusCode = 400;
     }
 }
+
+export class MinIOSaveError extends Error {
+    constructor(message) {
+        super(message);
+        this.name = "MiniIO Save Error";
+        this.statusCode = 500;
+    }
+}

@@ -23,7 +23,7 @@ function _addCommentHeader(currentUser) {
 
     const avatar = document.createElement("img");
     avatar.classList.add("comment-avatar");
-    avatar.src = anonymous;
+    avatar.src = currentUser.avatarUrl ?? anonymous;
 
     const addCommentLabel = document.createElement("div");
     addCommentLabel.classList.add("add-comment-label");

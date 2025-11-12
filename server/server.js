@@ -34,5 +34,5 @@ const server = createServer(async (req, res) => {
 });
 
 server.listen(port, host, () => {
-    console.log(`Server is running on http://${host}:${port}`);
+    console.log(`Server running on ${process.env.SERVER_HOST}:${process.env.PORT}`);
 });
