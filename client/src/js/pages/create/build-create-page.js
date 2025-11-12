@@ -230,5 +230,5 @@ function _preview(mdEditor) {
 }
 
 async function _createPreviewModal() {
-    await htmlImporter("body", "./src/components/article-preview-modal.html");
+    await htmlImporter("body", "/components/article-preview-modal.html");
 }

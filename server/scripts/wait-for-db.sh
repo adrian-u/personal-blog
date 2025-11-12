@@ -9,4 +9,4 @@ done
 
 echo "✅ PostgreSQL is up. Running init-db and server..."
 npm run init-db
-node server.mjs
+node server.js

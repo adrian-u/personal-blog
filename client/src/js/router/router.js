@@ -6,13 +6,13 @@ import { handleErrorToastFromSession, showToast } from '../utils/toast.js';
 const HTMLFilesCache = {};
 
 const routes = {
-    '/': './src/views/home.html',
+    '/': '/views/home.html',
     '/oauth2/auth': null,
-    '/about': './src/views/about.html',
-    '/projects': './src/views/projects.html',
-    '/finance': './src/views/finance.html',
-    '/create': './src/views/create.html',
-    '/profile': './src/views/profile.html',
+    '/about': '/views/about.html',
+    '/projects': '/views/projects.html',
+    '/finance': '/views/finance.html',
+    '/create': '/views/create.html',
+    '/profile': '/views/profile.html',
 };
 
 const protectedRoutes = {

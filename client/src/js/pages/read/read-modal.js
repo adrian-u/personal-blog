@@ -23,7 +23,7 @@ export async function readArticle(id) {
 
 async function _importReadModal() {
     if (!document.getElementById("read-article-modal")) {
-        await htmlImporter("body", "./src/components/read-article-modal.html");
+        await htmlImporter("body", "/components/read-article-modal.html");
     }
 }
 
