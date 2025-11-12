@@ -3,10 +3,9 @@ import { closeModal, openLoginModal, handleEscape } from '../utils/modals.js';
 import { authWithProvider } from '../auth/auth.js';
 import { userAvatar } from '../utils/user-details.js';
 import { isCreator, getCurrentUser } from '../context/user-context.js';
-import { extraSiteInfo } from '../utils/extra-site-info.js';
 
 export async function initNavbar() {
-  await htmlImporter('navbar-container', './src/components/navbar.html', async () => {
+  await htmlImporter('navbar-container', '/components/navbar.html', async () => {
     const loginBtn = document.getElementById('login-btn');
     const createPage = document.getElementById('create-page');
     const profileNavbar = document.getElementById('profile');
@@ -36,7 +35,7 @@ export async function initNavbar() {
 }
 
 export async function initLoginModal() {
-  await htmlImporter('body', './src/components/login-modal.html', () => {
+  await htmlImporter('body', '/components/login-modal.html', () => {
     const modal = document.getElementById('login-modal');
     if (!modal) return;
 
@@ -79,5 +78,5 @@ export function setActiveNav(path) {
 }
 
 export async function initConfirmationModal() {
-  await htmlImporter("body", "./src/components/confirmation-modal.html");
+  await htmlImporter("body", "/components/confirmation-modal.html");
 }
