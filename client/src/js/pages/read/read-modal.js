@@ -12,8 +12,6 @@ import star_full from "../../../assets/images/star-full.png";
 
 const LOG_CONTEXT = "Read Article";
 
-const LIMIT = 10;
-
 export async function readArticle(id) {
 
     await _importReadModal();

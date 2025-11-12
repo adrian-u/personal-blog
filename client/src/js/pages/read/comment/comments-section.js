@@ -81,8 +81,8 @@ export function buildComment(comment, currentUser, articleId, isReply = false) {
 }
 
 function _buildCommentHeader(comment, currentUser) {
-    const author = comment.author ?? { name: "Anonymous", avatar: anonymous, role: "Creator" };
-    author.avatar = anonymous;
+    const author = comment.author ?? { name: "Anonymous", avatar: anonymous, role: "User" };
+    author.avatar = author.avatar ?? anonymous;
 
     const commentHeader = document.createElement("div");
     commentHeader.classList.add("comment-header");
@@ -397,7 +397,7 @@ function _replyForm(comment, currentUser, articleId) {
 
     const avatar = document.createElement("img");
     avatar.classList.add("comment-avatar");
-    avatar.src = anonymous;
+    avatar.src = currentUser.avatarUrl ?? anonymous;
 
     const commentLabel = document.createElement("div");
     commentLabel.classList.add("add-comment-label");

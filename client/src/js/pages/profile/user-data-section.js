@@ -12,8 +12,8 @@ function _buildAvatarBox(avatarUrl) {
     avatarBox.classList.add("avatar-box");
 
     const img = document.createElement("img");
-    img.src = /*avatarUrl ??*/ anonymous;
-    img.alt = "user avatr";
+    img.src = avatarUrl ?? anonymous;
+    img.alt = "user avatar";
     img.classList.add("cover");
     avatarBox.appendChild(img);
 

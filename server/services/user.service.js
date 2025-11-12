@@ -2,6 +2,7 @@ import { saveUser as saveUserToDb, getUserDetailsByEmail as getUserFromDb, delet
 import { SavingError } from "../errors/custom-errors.js";
 import { User } from "../models/user.model.js";
 import logger from "../utils/logger.js";
+import insertAvatar from "./minio.service.js";
 
 const LOG_CONTEXT = "User Service";
 
@@ -11,11 +12,12 @@ export async function saveUser(userData, provider, traceId) {
 
     try {
         logger("info", traceId, `${LOCAL_LOG_CONTEXT}-${LOG_CONTEXT}`, "Start saving user");
+        const savedAvatar = await insertAvatar(userData, provider, traceId);
         const user = new User(userData).toWrite();
         const createdUser = await saveUserToDb({
             ...user,
             role: user.email === process.env.CREATOR_EMAIL ? 'creator' : 'user',
-            avatarUrl: userData.picture,
+            avatarUrl: savedAvatar,
             provider: provider,
         }, traceId);
         return User.fromDBRow(createdUser);
