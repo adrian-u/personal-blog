@@ -1,4 +1,7 @@
 import { MDEditor } from "@pardnchiu/nanomd";
+import { uploadMarkdownImage } from "../../apis/images";
+import logger from "../../utils/logger";
+import { showToast } from "../../utils/toast";
 
 export default function buildArticleEditor(content = "") {
 
@@ -22,6 +25,36 @@ export default function buildArticleEditor(content = "") {
         tabPin: 1,
         wrap: 1,
         autosave: 1,
+        event: {
+            upload: async () => {
+                const input = document.createElement("input");
+                input.type = "file";
+                input.accept = "image/*";
+
+                const file = await new Promise((resolve) => {
+                    input.onchange = () => resolve(input.files[0]);
+                    input.click();
+                });
+
+                if (!file) return null;
+
+                const formData = new FormData();
+                formData.append("file", file);
+
+                try {
+                    const data = await uploadMarkdownImage(formData);
+                    showToast("Image uploaded successfully!", "success");
+                    return {
+                        href: data.href,
+                        alt: data.alt
+                    };
+                } catch (error) {
+                    logger("error", "Markdown Editor Upload Image", `Failed to upload: ${error}`);
+                    showToast("Failed to upload the image", "error");
+                    return null;
+                }
+            }
+        },
         style: {
             mode: "dark",
             fill: 0,

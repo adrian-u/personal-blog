@@ -18,6 +18,7 @@
     "dev:start": "npm run minio:start && npm run start"
   },
   "dependencies": {
+    "busboy": "^1.6.0",
     "minio": "^8.0.6",
     "pg": "^8.16.2"
   }

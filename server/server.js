@@ -9,6 +9,7 @@ import './routes/user.route.js';
 import './routes/oauth.route.js';
 import './routes/article.route.js';
 import './routes/comment.route.js';
+import './routes/images.route.js';
 
 const host = process.env.HOST;
 const port = process.env.PORT;
@@ -34,5 +35,5 @@ const server = createServer(async (req, res) => {
 });
 
 server.listen(port, host, () => {
-    console.log(`Server running on ${process.env.SERVER_HOST}:${process.env.PORT}`);
+    console.log(`Server running on ${process.env.HOST}:${process.env.PORT}`);
 });

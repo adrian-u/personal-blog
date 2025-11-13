@@ -72,7 +72,6 @@
     font-weight: 700;
     line-height: 1rem;
     color: var(--color-gray);
-    border-top: 2px solid var(--color-secondary);
     padding: 0.3rem;
 }
 
