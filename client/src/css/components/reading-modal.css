@@ -32,11 +32,11 @@
     align-items: center;
 }
 
-.article-options > .png {
+.article-options>.png {
     cursor: pointer;
 }
 
-.article-options > .png:hover {
+.article-options>.png:hover {
     transform: scale(1.2);
 }
 
@@ -79,6 +79,14 @@
 .article-body em {
     font-style: italic;
     opacity: 0.9;
+}
+
+.article-body img {
+    display: block;
+    margin: 1.5rem auto;
+    max-width: 100%;
+    height: auto;
+    border-radius: 0.5rem;
 }
 
 @keyframes fadeInScale {

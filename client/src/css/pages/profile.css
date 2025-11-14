@@ -99,6 +99,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    width: 100%;
 }
 
 .liked-title {
@@ -111,8 +112,9 @@
 
 .liked-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(max(300px, 100%/4), 1fr));
     gap: 2rem;
+    width: 100%;
 }
 
 .modal-content.info {

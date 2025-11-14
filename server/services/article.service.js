@@ -8,6 +8,7 @@ import { isEmpty } from "../utils/general.js";
 import logger from "../utils/logger.js";
 import { ValidationError } from "../errors/custom-errors.js";
 import { Article } from "../models/article.model.js";
+import deleteUnusedImages from "./clean-minio.service.js";
 
 const LOG_CONTEXT = "Article Service";
 
@@ -188,6 +189,7 @@ export async function publish(id, traceId) {
 
     try {
         await updatePublishStatus(id, traceId);
+        await deleteUnusedImages(traceId);
     } catch (error) {
         logger("error", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Error publishing article with id: [${id}]. Error: [${error}]`);
         throw error;
