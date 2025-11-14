@@ -91,7 +91,11 @@ export function getUserFromJWT() {
     }
 }
 
-export function logout() {
+export async function logout() {
+    await fetch(`${import.meta.env.VITE_API_URL}/oauth/logout`, {
+        method: "DELETE",
+        credentials: "include"
+    });
     localStorage.removeItem('jwt');
     window.location.href = '/';
 }

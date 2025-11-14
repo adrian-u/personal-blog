@@ -10,6 +10,7 @@ import './routes/oauth.route.js';
 import './routes/article.route.js';
 import './routes/comment.route.js';
 import './routes/images.route.js';
+import { parseCookies } from "./middlewares/parse-cookies.js";
 
 const host = process.env.HOST;
 const port = process.env.PORT;
@@ -19,6 +20,8 @@ const server = createServer(async (req, res) => {
     req.traceId = crypto.randomUUID();
 
     if (handleCors(req, res)) return;
+
+    parseCookies(req);
 
     if (["POST", "PATCH", "PUT"].includes(req.method)) {
         await bodyParser(req, res);

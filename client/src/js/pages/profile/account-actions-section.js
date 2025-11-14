@@ -37,8 +37,8 @@ function _buildLogoutModal() {
     modalText.innerHTML = `
     <span>Are you sure you want to logout?</span>`
 
-    confirmButton.onclick = () => {
-        logout();
+    confirmButton.onclick = async () => {
+        await logout();
         closeModal(modalContainer);
     };
 
@@ -68,7 +68,7 @@ function _buildDeleteAccountModal() {
 
     confirmButton.onclick = async () => {
         await deleteUser();
-        logout();
+        await logout();
         closeModal(modalContainer);
     };
 

@@ -2,6 +2,10 @@ import { Buffer } from 'node:buffer';
 import crypto from 'node:crypto';
 import { AuthorizationError } from '../errors/custom-errors.js';
 
+export function generateRefreshToken() {
+    return crypto.randomBytes(40).toString("hex");
+}
+
 export function createJWT(payload) {
     const header = {
         alg: 'HS256',

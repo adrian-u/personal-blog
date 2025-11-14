@@ -58,6 +58,16 @@ const createUserArticleLikesTable = `
     );
 `;
 
+const createRefreshTokensTable = `
+    CREATE TABLE IF NOT EXISTS refresh_tokens (
+        id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+        user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        token_hash VARCHAR(250) NOT NULL,
+        expires_at TIMESTAMPTZ NOT NULL,
+        created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+    );
+`;
+
 const createIndexes = `
     CREATE UNIQUE INDEX IF NOT EXISTS user_email_provider_idx ON users(email, provider);
     CREATE INDEX IF NOT EXISTS idx_comments_article_id ON comments(article_id);
@@ -75,6 +85,7 @@ async function init() {
         await db.query(createCommentTable);
         await db.query(createUserArticleLikesTable);
         await db.query(createUserCommentLikesTable);
+        await db.query(createRefreshTokensTable);
         await db.query(createIndexes);
         console.log("Tables created successfully");
     } catch (error) {

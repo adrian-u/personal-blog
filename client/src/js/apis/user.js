@@ -21,7 +21,7 @@ export async function getUserData() {
         if (res.status === 401) {
             logger("warn", "Get User From JWT", "Session expired. Logging out.");
             showToast("Authentication expired. Please login back", "error");
-            logout();
+            await logout();
             return null;
         }
 
@@ -56,7 +56,7 @@ export async function deleteUser() {
         if (res.status === 401) {
             logger("warn", "Get User From JWT", "Session expired. Logging out.");
             showToast("Authentication expired. Please login back", "error");
-            logout();
+            await logout();
             return null;
         }
 
