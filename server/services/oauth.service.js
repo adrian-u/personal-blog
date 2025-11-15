@@ -1,6 +1,7 @@
 import { Buffer } from 'node:buffer';
 import crypto from 'node:crypto';
 import { AuthorizationError } from '../errors/custom-errors.js';
+import { JWT_EXPIRATION_SECONDS } from '../config/tokens.js';
 
 export function generateRefreshToken() {
     return crypto.randomBytes(40).toString("hex");
@@ -19,7 +20,7 @@ export function createJWT(payload) {
         role: payload.role,
         id: payload.id,
         iat: now,
-        exp: now + 60 * 60 * 24 * 1,
+        exp: now + JWT_EXPIRATION_SECONDS,
     };
 
 

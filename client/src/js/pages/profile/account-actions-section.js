@@ -8,7 +8,7 @@ export default function buildAccountActionsSection() {
 
     accountActions.innerHTML = `
         <div class="profile-buttons-box">
-            <button id="logout" class="btn btn-green">Logout</button>
+            <button id="logout" class="btn btn-neutral">Logout</button>
             <button id="delete-account" class="btn btn-danger">Delete</button>
         </div>
     `;

@@ -1,8 +1,8 @@
-import { getUserFromJWT } from "../../../auth/auth";
 import { isEmpty } from "../../../utils/general";
 import logger from "../../../utils/logger";
 import { showToast } from "../../../utils/toast";
 import { createComment, fetchParentComments, deleteComment, fetchReplies } from "../../../apis/comment";
+import { getCurrentUser } from "../../../context/user-context";
 
 const LOG_CONTEXT = "Common Comment Service";
 
@@ -22,7 +22,7 @@ export async function publishComment(comment, articleId) {
         }
     }
 
-    const user = getUserFromJWT();
+    const user = await getCurrentUser();
 
     try {
         return await createComment(comment, user.id, articleId);

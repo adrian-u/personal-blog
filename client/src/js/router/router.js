@@ -42,17 +42,16 @@ export async function renderRoute(path = location.pathname) {
     const container = document.getElementById('view-container');
 
     const requiredAccess = protectedRoutes[path];
+    const user = await getCurrentUser();
+    const isLoggedIn = !!user;
     if (requiredAccess) {
-        const user = await getCurrentUser();
-        const isLoggedIn = !!user;
-
         if (requiredAccess === 'authenticated' && !isLoggedIn) {
             showToast('Please log in to view your profile.', 'warning');
             history.replaceState({}, '', '/');
             return renderRoute('/');
         }
 
-        if (requiredAccess === 'creator' && (!isLoggedIn || !isCreator())) {
+        if (requiredAccess === 'creator' && (!isLoggedIn || user.role !== 'creator')) {
             showToast('Only creators can access this page.', 'error');
             history.replaceState({}, '', '/');
             return renderRoute('/');

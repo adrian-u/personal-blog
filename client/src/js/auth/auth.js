@@ -1,6 +1,5 @@
 import { navigateTo } from '../router/router.js';
 import logger from '../utils/logger.js';
-import { showToast } from '../utils/toast.js';
 import { OAUTH_PROVIDERS } from './providers.js';
 
 export async function authWithProvider(providerKey) {
@@ -77,10 +76,7 @@ export function getUserFromJWT() {
         const payload = JSON.parse(atob(jwt.split('.')[1]));
         const now = Math.floor(Date.now() / 1000);
 
-        if (payload.exp && payload.exp < now) {
-            logger("warn", "OAuth Callback", "JWT expired");
-            showToast("Authentication expired. Please login back", "error");
-            logout();
+        if (payload.exp < now) {
             return null;
         }
 
@@ -89,6 +85,19 @@ export function getUserFromJWT() {
         logger("error", "Get User From JWT", "Invalid JWT");
         return null;
     }
+}
+
+export async function refreshAccessToken() {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/oauth/refresh`, {
+        method: "POST",
+        credentials: "include"
+    });
+
+    if (!res.ok) return null;
+
+    const { token } = await res.json();
+    localStorage.setItem("jwt", token);
+    return token;
 }
 
 export async function logout() {

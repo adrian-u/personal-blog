@@ -3,10 +3,10 @@ import { saveUser } from '../services/user.service.js';
 import { createJWT, generateRefreshToken } from '../services/oauth.service.js';
 import { InvalidProvider } from '../errors/custom-errors.js';
 import logger from '../utils/logger.js';
-import { storeRefreshToken, deleteRefreshToken } from '../data-access/tokens.repository.js';
+import { storeRefreshToken, deleteRefreshToken, refreshTokens } from '../data-access/tokens.repository.js';
+import { REFRESH_TOKEN_EXPIRATION_MS } from '../config/tokens.js';
 
 const LOG_CONTEXT = "Handle OAuth Token";
-const isProd = process.env.NODE_ENV === "prod";
 
 export async function handleOAuthToken(req, res) {
 
@@ -25,21 +25,13 @@ export async function handleOAuthToken(req, res) {
 
     const createdUser = await saveUser(userData, provider, req.traceId);
     const refreshToken = generateRefreshToken();
-    await storeRefreshToken(createdUser.id, refreshToken, new Date(Date.now() + 7 * 24 * 60 * 60 * 1000));
+    await storeRefreshToken(createdUser.id, refreshToken, new Date(Date.now() + REFRESH_TOKEN_EXPIRATION_MS));
     const jwt = createJWT(createdUser);
 
-    const cookie = [
-        `refreshToken=${refreshToken}`,
-        "HttpOnly",
-        "Path=/",
-        "SameSite=Lax",
-        "Secure",
-        `Max-Age=${7 * 24 * 60 * 60}`,
-    ];
     res.writeHead(200,
         {
             "Content-Type": "application/json",
-            "Set-Cookie": cookie.join("; "),
+            "Set-Cookie": `refreshToken=${refreshToken}; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=${Math.floor(REFRESH_TOKEN_EXPIRATION_MS / 1000)}`
         });
     res.end(JSON.stringify({ token: jwt }));
 
@@ -50,20 +42,36 @@ export async function handleLogout(req, res) {
 
     logger("info", req.traceId, `${LOCAL_LOG_CONTEXT}-${LOG_CONTEXT}`, "Start Logout flow");
 
-    const deleteCookie = [
-        `refreshToken=`,
-        "HttpOnly",
-        "Path=/",
-        "SameSite=Lax",
-        "Secure",
-        "Max-Age=0",
-    ];
-
     const token = req.cookies.refreshToken;
     if (token) await deleteRefreshToken(token);
 
     res.writeHead(200, {
-        "Set-Cookie": deleteCookie.join("; ")
+        "Set-Cookie": `refreshToken=; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=0}`
     });
     res.end();
+}
+
+export async function refreshAccessToken(req, res) {
+    const LOCAL_LOG_CONTEXT = "Refresh Token";
+    logger("info", req.traceId, `${LOCAL_LOG_CONTEXT}-${LOG_CONTEXT}`, "Start refresh token flow");
+
+    const token = req.cookies.refreshToken;
+    if (!token) {
+        logger("error", req.traceId, `${LOCAL_LOG_CONTEXT}-${LOG_CONTEXT}`, "Refresh token missing");
+        res.writeHead(401, { "Content-Type": "application/json" });
+        return res.end(JSON.stringify({ name: "Auth Error", message: "Unauthorized" }));
+    }
+
+    try {
+        const { newRefresh, newAccessToken } = await refreshTokens(token, req.traceId);
+        res.writeHead(200,
+            {
+                "Content-Type": "application/json",
+                "Set-Cookie": `refreshToken=${newRefresh}; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=${REFRESH_TOKEN_EXPIRATION_MS / 1000}`
+            });
+        res.end(JSON.stringify({ token: newAccessToken }));
+    } catch (error) {
+        logger("error", req.traceId, `${LOCAL_LOG_CONTEXT}-${LOG_CONTEXT}`, `Failed to refresh tokens. Error: [${error}]`);
+        throw error;
+    }
 }
