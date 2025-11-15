@@ -109,6 +109,13 @@ export async function logout() {
     window.location.href = '/';
 }
 
+export async function tryInitialRefresh() {
+    try {
+        await refreshAccessToken();
+    } catch (e) {
+    }
+}
+
 async function _handleLoginError() {
     sessionStorage.setItem('toastMessage', 'Login failed. Please try again.');
     await _initOnRedirects();
