@@ -85,6 +85,22 @@ function _disclaimerInfo() {
 }
 
 function _iconsInfo() {
+
+    const icons = [
+        { desc: "The non-tech icons are taken from", href: "https://www.flaticon.com/", src: flaticon, alt: "Flaticon Icon", title: "flaticon" },
+        { desc: "Home icons created by Vectors Market - Flaticon", href: "https://www.flaticon.com/free-icons/home", src: "/assets/images/home.png", alt: "Home Icon", title: "home icons" },
+        { desc: "Young icons created by Freepik - Flaticon", href: "https://www.flaticon.com/free-icons/young", src: "/assets/images/about.png", alt: "About Icon", title: "young icons" },
+        { desc: "Execution icons created by kliwir art - Flaticon", href: "https://www.flaticon.com/free-icons/execution", src: "/assets/images/projects.png", alt: "Execution Icon", title: "execution icons" },
+        { desc: "Budget icons created by Freepik - Flaticon", href: "https://www.flaticon.com/free-icons/budget", src: "/assets/images/finance.png", alt: "Finance Icon", title: "budget icons" },
+        { desc: "Draw icons created by Freepik - Flaticon", href: "https://www.flaticon.com/free-icons/draw", src: "/assets/images/create.png", alt: "Create Icon", title: "draw icons" },
+        { desc: "Development icons created by Design Circle - Flaticon", href: "https://www.flaticon.com/free-icons/development", src: development, alt: "Development Icon", title: "development icons" },
+        { desc: "Stock icons created by ultimatearm - Flaticon", href: "https://www.flaticon.com/free-icons/stock", src: stock, alt: "Stock Icon", title: "stock icons" },
+        { desc: "Email icons created by Fathema Khanom - Flaticon", href: "https://www.flaticon.com/free-icons/email", src: email, alt: "Email Icon", title: "email icons" },
+        { desc: "Linkedin icons created by Freepik - Flaticon", href: "https://www.flaticon.com/free-icons/linkedin", src: linkedin, alt: "LinkedIn Icon", title: "linkedin icons" },
+        { desc: "Rating icons created by pocike - Flaticon", href: "https://www.flaticon.com/free-icons/rating", src: starEmpty, alt: "Rating Icon", title: "rating icons", isStar: true, full: starFull },
+        { desc: "Heart icons created by Kiranshastry - Flaticon", href: "https://www.flaticon.com/free-icons/heart", src: heart, alt: "Heart Icon", title: "heart icons" }
+    ];
+
     const modalContainer = document.getElementById("info-modal");
     const contentModal = modalContainer.querySelector("#info-content");
 
@@ -93,77 +109,46 @@ function _iconsInfo() {
     const closeButton = contentModal.querySelector("#close");
 
     modalHeader.textContent = "Icons";
+    modalText.innerHTML = "";
+    const iconsDiv = document.createElement("div");
 
-    modalText.innerHTML = `
-    <span class="icons-from">
-        The non-tech icons are taken from <a href="https://www.flaticon.com/" target="blank"> <img src="${flaticon}" class="png" alt="Flaticon Icon" /> </a>
-    </span>
-    <span class="icons-from">
-        Home icons created by Vectors Market - Flaticon <a href="https://www.flaticon.com/free-icons/home" target="blank" title="home icons">
-            <img src="/assets/images/home.png" class="png" alt="Home Icon" />
-        </a>
-    </span>
-    <span class="icons-from">
-       Young icons created by Freepik - Flaticon <a href="https://www.flaticon.com/free-icons/young" target="blank" title="young icons">
-            <img src="/assets/images/about.png" class="png" alt="About Icon" />
-        </a>
-    </span>
-     <span class="icons-from">
-       Execution icons created by kliwir art - Flaticon <a href="https://www.flaticon.com/free-icons/execution" target="blank" title="execution icons">
-            <img src="/assets/images/projects.png" class="png" alt="Projects Icon" />
-        </a>
-    </span>
-    <span class="icons-from">
-       Budget icons created by Freepik - Flaticon <a href="https://www.flaticon.com/free-icons/budget" target="blank" title="budget icons">
-            <img src="/assets/images/finance.png" class="png" alt="Finance Icon" />
-        </a>
-    </span>
-    <span class="icons-from">
-       Draw icons created by Freepik - Flaticon <a href="https://www.flaticon.com/free-icons/draw" target="blank" title="draw icons">
-            <img src="/assets/images/create.png" class="png" alt="Create Icon" />
-        </a>
-    </span>
-    <span class="icons-from">
-       Development icons created by Design Circle - Flaticon <a href="https://www.flaticon.com/free-icons/development" target="blank" title="development icons">
-            <img src=${development} class="png" alt="Development Icon" />
-        </a>
-    </span>
-    <span class="icons-from">
-       Stock icons created by ultimatearm - Flaticon <a href="https://www.flaticon.com/free-icons/stock" target="blank" title="stock icons">
-            <img src=${stock} class="png" alt="Stock Icon" />
-        </a>
-    </span> 
-    <span class="icons-from">
-       Email icons created by Fathema Khanom - Flaticon <a href="https://www.flaticon.com/free-icons/email" target="blank" title="email icons">
-            <img src=${email} class="png" alt="Email Icon" />
-        </a>
-    </span>
-    <span class="icons-from">
-       Linkedin icons created by Freepik - Flaticon <a href="https://www.flaticon.com/free-icons/linkedin" target="blank"  title="linkedin icons">
-            <img src=${linkedin} class="png" alt="Linkedin Icon" />
-        </a>
-    </span>
-    <span class="icons-from">
-       Rating icons created by pocike - Flaticon <a href="https://www.flaticon.com/free-icons/rating" target="blank"  title="rating icons">
-            <img src="${starEmpty}" class="png star-icon" data-original="${starEmpty}" data-full="${starFull}" alt="Rating Icon" />
-        </a>
-    </span> 
-    <span class="icons-from">
-       Heart icons created by Kiranshastry - Flaticon <a href="https://www.flaticon.com/free-icons/heart" target="blank"  title="heart icons">
-            <img src=${heart} class="png" alt="Heart Icon" />
-        </a>
-    </span> 
-    `
+    icons.forEach(icon => {
+        const span = document.createElement("span");
+        span.classList.add("icons-from");
 
-    const star = document.querySelector('.star-icon');
+        const link = document.createElement("a");
+        link.href = icon.href;
+        link.title = icon.title;
+        link.target = "blank";
 
-    star.addEventListener('mouseenter', () => {
-        star.src = star.dataset.full;
+        const img = document.createElement("img");
+        img.src = icon.src;
+        img.classList.add("png");
+        img.alt = icon.alt;
+
+        if (icon.isStar) {
+            img.classList.add("star-icon");
+            img.dataset.original = icon.src;
+            img.dataset.full = icon.full;
+        }
+
+        link.appendChild(img);
+
+        span.append(icon.desc + " ", link);
+        iconsDiv.appendChild(span);
     });
 
-    star.addEventListener('mouseleave', () => {
-        star.src = star.dataset.original;
-    });
+    modalText.appendChild(iconsDiv);
+
+    const starIcon = modalText.querySelector(".star-icon");
+    if (starIcon) {
+        starIcon.addEventListener("mouseenter", () => {
+            starIcon.src = starIcon.dataset.full;
+        });
+        starIcon.addEventListener("mouseleave", () => {
+            starIcon.src = starIcon.dataset.original;
+        });
+    }
 
     closeButton.addEventListener("click", () => {
         closeModal(modalContainer);
