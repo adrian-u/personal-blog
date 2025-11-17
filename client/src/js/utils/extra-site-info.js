@@ -41,7 +41,7 @@ function _shipuInfo() {
     modalHeader.textContent = "Shipu?";
     modalText.innerHTML = `
     <span>
-        Hi! If you’ve ever wondered what Shipu means — 
+        Hi! If you’ve ever wondered what Shipu means, 
         it’s simply the username I’ve been using online for years.
         I came up with it when I was 13, and it’s stuck with me ever since.
         I use it for games and most online platforms that
@@ -68,11 +68,11 @@ function _disclaimerInfo() {
         A quick reminder for anyone reading my finance-related articles:
         I’m not a market guru, a visionary, or anything of that sort.
         I don’t hold any financial certifications, degrees, or formal education in finance.
-        In my professional life, I’m a web developer — not someone who spends most of their time in the markets or financial industry.
+        In my professional life, I’m a web developer, not someone who spends most of their time in the markets or financial industry.
         <br>
         <br>
         The financial articles I share here are meant to document my personal journey and opinions.
-        My goal is to offer insights you might learn from, reflect on, or even disagree with — not to provide absolute truths or investment advice.
+        My goal is to offer insights you might learn from, reflect on, or even disagree with, not to provide absolute truths or investment advice.
         <br>
         <br>
         When I mention specific stocks or trades, please don’t take that as a recommendation to buy or sell.
@@ -98,7 +98,8 @@ function _iconsInfo() {
         { desc: "Email icons created by Fathema Khanom - Flaticon", href: "https://www.flaticon.com/free-icons/email", src: email, alt: "Email Icon", title: "email icons" },
         { desc: "Linkedin icons created by Freepik - Flaticon", href: "https://www.flaticon.com/free-icons/linkedin", src: linkedin, alt: "LinkedIn Icon", title: "linkedin icons" },
         { desc: "Rating icons created by pocike - Flaticon", href: "https://www.flaticon.com/free-icons/rating", src: starEmpty, alt: "Rating Icon", title: "rating icons", isStar: true, full: starFull },
-        { desc: "Heart icons created by Kiranshastry - Flaticon", href: "https://www.flaticon.com/free-icons/heart", src: heart, alt: "Heart Icon", title: "heart icons" }
+        { desc: "Heart icons created by Kiranshastry - Flaticon", href: "https://www.flaticon.com/free-icons/heart", src: heart, alt: "Heart Icon", title: "heart icons" },
+        { desc: "Collapse icons created by Freepik - Flaticon", href: "https://www.flaticon.com/free-icons/collapse", src: "/assets/images/grid.png", alt: "sidebar icon", title: "collapse icons" }
     ];
 
     const modalContainer = document.getElementById("info-modal");

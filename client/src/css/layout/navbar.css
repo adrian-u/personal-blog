@@ -8,6 +8,17 @@
     z-index: 1000;
 }
 
+.navbar.collapsed {
+    width: 80px;
+}
+
+.navbar.collapsed .navbar-text {
+    opacity: 0;
+    width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
 .flex-navbar {
     display: flex;
     flex-direction: column;
@@ -15,9 +26,24 @@
     padding-top: 20px;
 }
 
+.nav-head {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.navbar-toggle.png {
+    width: 20px;
+    height: 20px;
+}
+
 .logo {
     padding: 1rem 0 1rem 1rem;
     width: 200px;
+}
+
+.navbar.collapsed .logo {
+    display: none;
 }
 
 .nav-links {
@@ -42,6 +68,14 @@
     padding: 10px;
 }
 
+#nav-menu > li {
+    width: 100%;
+}
+
+#nav-menu > li > a {
+    text-decoration: none;
+}
+
 .navbar-buttons:hover {
     background-color: var(--color-hover);
     border-radius: 12px;
@@ -53,9 +87,25 @@
     border-radius: 12px;
 }
 
+.navbar.collapsed .navbar-buttons {
+    justify-content: center;
+    gap: 0;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.navbar.collapsed #auth-buttons {
+    display: none;
+}
+
 .navbar-icons {
     margin-right: 20px;
     margin-left: 6px;
+}
+
+.navbar.collapsed .navbar-icons {
+    margin-right: 0;
+    margin-left: 0;
 }
 
 .navbar-text {
@@ -72,11 +122,5 @@
 }
 
 .user-avatar {
-    margin-right: 20px;
-    width: 40px;
-    height: 40px;
     border-radius: 50%;
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    border: 2px solid transparent;
 }

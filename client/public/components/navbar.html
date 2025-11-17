@@ -1,33 +1,45 @@
-<nav class="navbar flex-navbar">
-  <!--TODO: <div class="navbar-toggle" id="menu-toggle" style="display: none;">☰</div>  Handle the mobile toggle of the sidebar-->
-  <img src="/assets/images/shipu-logo.svg" class="logo" alt="shipu logo" />
+<nav class="navbar flex-navbar" id="navbar">
+  <div class="nav-head">
+    <img src="/assets/images/shipu-logo.svg" class="logo" alt="shipu logo" id="logo" />
+    <img src="/assets/images/grid.png" alt="grid icon" class="navbar-toggle png" id="menu-toggle">
+  </div>
   <ul class="nav-links" id="nav-menu">
-    <li class="navbar-buttons">
-      <img src="/assets/images/home.png" alt="home icon" class="navbar-icons png">
-      <a class="navbar-text" href="/" data-nav="spa">Home</a>
+    <li>
+      <a href="/" data-nav="spa" class="navbar-buttons">
+        <img src="/assets/images/home.png" class="navbar-icons png">
+        <span class="navbar-text">Home</span>
+      </a>
     </li>
 
-    <li class="navbar-buttons">
-      <img src="/assets/images/about.png" alt="home icon" class="navbar-icons png">
-      <a class="navbar-text" href="/about" data-nav="spa">About</a>
+    <li>
+      <a href="/about" data-nav="spa" class="navbar-buttons">
+        <img src="/assets/images/about.png" alt="about icon" class="navbar-icons png">
+        <span class="navbar-text">About</span>
+      </a>
     </li>
 
-    <li class="navbar-buttons">
-      <img src="/assets/images/projects.png" alt="home icon" class="navbar-icons png">
-      <a class="navbar-text" href="/projects" data-nav="spa">Projects</a>
+    <li>
+      <a href="/projects" data-nav="spa" class="navbar-buttons">
+        <img src="/assets/images/projects.png" alt="projects icon" class="navbar-icons png">
+        <span class="navbar-text">Projects</span>
+      </a>
     </li>
 
-    <li class="navbar-buttons">
-      <img src="/assets/images/finance.png" alt="home icon" class="navbar-icons png">
-      <a class="navbar-text" href="/finance" data-nav="spa">Finance</a>
+    <li>
+      <a href="/finance" data-nav="spa" class="navbar-buttons">
+        <img src="/assets/images/finance.png" alt="finance icon" class="navbar-icons png">
+        <span class="navbar-text">Finance</span>
+      </a>
     </li>
 
-    <li class="navbar-buttons" id="create-page" style="display: none;">
-      <img src="/assets/images/create.png" alt="home icon" class="navbar-icons png">
-      <a class="navbar-text" href="/create" data-nav="spa">Create</a>
+    <li id="create-page" style="display: none;">
+      <a href="/create" data-nav="spa" class="navbar-buttons">
+        <img src="/assets/images/create.png" alt="create icon" class="navbar-icons png">
+        <span class="navbar-text">Create</span>
+      </a>
     </li>
 
-    <li class="navbar-buttons" id="profile" style="display: none;">
+    <li id="profile" style="display: none;">
     </li>
   </ul>
 

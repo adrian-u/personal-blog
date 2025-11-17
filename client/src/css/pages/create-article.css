@@ -6,13 +6,12 @@
 }
 
 #article-form {
-    flex: 3;
-    max-width: 1000px;
+    flex: 1;
+    margin: 1rem;
 }
 
 #wip-article {
-    flex: 1;
-    min-width: 400px;
+    min-width: 450px;
 }
 
 .wip-container {
@@ -223,7 +222,7 @@
 #article-preview-content.modal-content {
     width: 1000px;
     background-color: var(--color-background-details);
-    border-radius: 1.5rem;
+    border-radius: 2rem;
     border: 1px solid var(--color-gray);
     color: var(--color-snow);
     line-height: 2rem;
