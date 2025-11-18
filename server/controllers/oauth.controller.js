@@ -25,7 +25,7 @@ export async function handleOAuthToken(req, res) {
 
     const createdUser = await saveUser(userData, provider, req.traceId);
     const refreshToken = generateRefreshToken();
-    await storeRefreshToken(createdUser.id, refreshToken, new Date(Date.now() + REFRESH_TOKEN_EXPIRATION_MS));
+    await storeRefreshToken(createdUser.id, refreshToken, new Date(Date.now() + REFRESH_TOKEN_EXPIRATION_MS), req.traceId);
     const jwt = createJWT(createdUser);
 
     res.writeHead(200,
@@ -43,7 +43,7 @@ export async function handleLogout(req, res) {
     logger("info", req.traceId, `${LOCAL_LOG_CONTEXT}-${LOG_CONTEXT}`, "Start Logout flow");
 
     const token = req.cookies.refreshToken;
-    if (token) await deleteRefreshToken(token);
+    if (token) await deleteRefreshToken(token, req.traceId);
 
     res.writeHead(200, {
         "Set-Cookie": `refreshToken=; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=0}`
