@@ -3,7 +3,10 @@ import htmlImporter from "../../utils/html-importer";
 import latestArticles from "./home-latest-articles";
 
 export default async function homeInit() {
-    await _createInfoModal();
+
+    const infoModal = document.getElementById("info-modal");
+    if (!infoModal) await _createInfoModal();
+
     await latestArticles();
     extraSiteInfo();
 }

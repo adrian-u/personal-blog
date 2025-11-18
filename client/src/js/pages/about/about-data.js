@@ -20,6 +20,7 @@ import angularJS from "../../../assets/images/tech/angular-js.svg";
 import tomcat from "../../../assets/images/tech/tomcat.svg";
 import atlasReply from "../../../assets/images/work/atlas-reply.svg";
 import logstash from "../../../assets/images/tech/Logstash.svg";
+import ts from "../../../assets/images/tech/ts.svg";
 
 export const aboutData = {
     descriptions: {
@@ -46,13 +47,31 @@ export const aboutData = {
     },
     experience: [
         {
-            id: 1,
             title: "Software Developer @ Clan Ingegno Digitale",
             company: "Clan Ingegno Digitale",
             period: "May 2022 - Present",
             icon: clan,
             description: "Design and implementation of distributed, secure, and efficient backend systems.",
             subExperiences: [
+                {
+                    title: "Software Developer @ Clan Ingegno Digitale",
+                    icon: clan,
+                    period: "Jan 2025 - Present",
+                    description: "Maintenance of internal company software. Learning support for junior developers.",
+                    technologies: [
+                        { name: "Java", icon: java },
+                        { name: "Spring", icon: spring },
+                        { name: "Maven", icon: maven },
+                        { name: "Gradle", icon: gradle },
+                        { name: "HTML", icon: html },
+                        { name: "CSS", icon: css },
+                        { name: "JS", icon: js },
+                        { name: "TS", icon: ts },
+                        { name: "React", icon: react },
+                        { name: "Postgre", icon: postgre },
+                        { name: "Git", icon: git },
+                    ]
+                },
                 {
                     title: "Consultant Software Developer @ Atlas Reply",
                     icon: atlasReply,
@@ -66,6 +85,7 @@ export const aboutData = {
                         { name: "HTML", icon: html },
                         { name: "CSS", icon: css },
                         { name: "JS", icon: js },
+                        { name: "TS", icon: ts },
                         { name: "React", icon: react },
                         { name: "Postgre", icon: postgre },
                         { name: "MongoDB", icon: mongo_db },
@@ -77,7 +97,6 @@ export const aboutData = {
             ]
         },
         {
-            id: 2,
             title: "Junior Developer @ Almaviva",
             company: "Almaviva",
             period: "Feb 2020 - Apr 2022",
@@ -114,6 +133,7 @@ export const aboutData = {
         { name: "HTML", icon: html },
         { name: "CSS", icon: css },
         { name: "JS", icon: js },
+        { name: "TS", icon: ts },
         { name: "React", icon: react },
         { name: "NodeJS", icon: node_js },
         { name: "PostgreSQL", icon: postgre },
