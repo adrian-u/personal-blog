@@ -8,17 +8,47 @@ import { REFRESH_TOKEN_EXPIRATION_MS } from '../config/tokens.js';
 
 const LOG_CONTEXT = "Refresh Token Repository";
 
-export async function storeRefreshToken(userId, rtoken, expiresAt) {
+export async function storeRefreshToken(userId, rtoken, expiresAt, traceId) {
+    const LOCAL_LOG_CONTEXT = "Store Refresh Token";
+    logger("info", traceId, `${LOCAL_LOG_CONTEXT}-${LOG_CONTEXT}`, "Storing refresh token");
     const hashed = crypto.createHash("sha256").update(rtoken).digest("hex");
+    const client = await db.connect();
 
-    await db.query(
-        `INSERT INTO refresh_tokens (user_id, token_hash, expires_at) VALUES ($1, $2, $3);`,
-        [userId, hashed, expiresAt]);
+    try {
+        await client.query("BEGIN");
+        await client.query(
+            `DELETE FROM refresh_tokens WHERE user_id = $1`,
+            [userId]
+        );
+
+        await client.query(
+            `INSERT INTO refresh_tokens (user_id, token_hash, expires_at)
+             VALUES ($1, $2, $3);`,
+            [userId, hashed, expiresAt]
+        );
+
+        await client.query("COMMIT");
+    } catch (error) {
+        logger("error", traceId, `${LOCAL_LOG_CONTEXT}-${LOG_CONTEXT}`, `refresh token not found on database`);
+        await client.query("ROLLBACK");
+        throw error;
+    } finally {
+        client.release();
+    }
 }
 
-export async function deleteRefreshToken(token) {
+export async function deleteRefreshToken(token, traceId) {
+    const LOCAL_LOG_CONTEXT = "Delete Refresh Token";
+
+    logger("info", traceId, `${LOCAL_LOG_CONTEXT}-${LOG_CONTEXT}`, "Deleting refresh token");
     const hashed = crypto.createHash("sha256").update(token).digest("hex");
-    await db.query(`DELETE FROM refresh_tokens WHERE token_hash=$1`, [hashed]);
+
+    try {
+        await db.query(`DELETE FROM refresh_tokens WHERE token_hash=$1`, [hashed]);
+    } catch (error) {
+        logger("error", traceId, `${LOCAL_LOG_CONTEXT}-${LOG_CONTEXT}`, `refresh token not found on database`);
+        throw error;
+    }
 }
 
 export async function refreshTokens(rToken, traceId) {
