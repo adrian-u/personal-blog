@@ -263,7 +263,7 @@ function _buildCommentActions(comment, currentUser, articleId) {
 
     const likeButton = document.createElement("button");
     likeButton.classList.add("action-btn");
-    if (isLogged && currentUser.likedComments.includes(comment.id)) {
+    if (isLogged && currentUser.likedComments.includes(Number(comment.id))) {
         likeButton.classList.add("liked");
     }
     likeButton.textContent = `👍 ${comment.like}`;
@@ -271,18 +271,17 @@ function _buildCommentActions(comment, currentUser, articleId) {
     if (isLogged) {
         likeButton.onclick = async () => {
             likeButton.disabled = true;
-            const isLiked = currentUser.likedComments.includes(comment.id);
-
+            const isLiked = currentUser.likedComments.includes(Number(comment.id));
             try {
                 if (isLiked) {
-                    const res = await removeCommentLike(comment.id);
-                    currentUser.likedComments = currentUser.likedComments.filter(id => id !== comment.id);
+                    const res = await removeCommentLike(Number(comment.id));
+                    currentUser.likedComments = currentUser.likedComments.filter(id => id !== Number(comment.id));
                     likeButton.classList.remove("liked");
                     likeButton.textContent = `👍 ${res.likes}`;
                 } else {
-                    const res = await addLikeToComment(comment.id);
-                    if (!currentUser.likedComments.includes(comment.id)) {
-                        currentUser.likedComments.push(comment.id);
+                    const res = await addLikeToComment(Number(comment.id));
+                    if (!currentUser.likedComments.includes(Number(comment.id))) {
+                        currentUser.likedComments.push(Number(comment.id));
                     }
                     likeButton.classList.add("liked");
                     likeButton.textContent = `👍 ${res.likes}`;

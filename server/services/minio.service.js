@@ -48,7 +48,7 @@ export async function getAvatar(fileName, traceId) {
         );
         return objectStream;
     } catch (error) {
-        logger("error", req.traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Avatar not found: [${fileName}] - ${err}`);
+        logger("error", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Avatar not found: [${fileName}] - ${error}`);
         throw Error("Avatar not found");
     }
 }

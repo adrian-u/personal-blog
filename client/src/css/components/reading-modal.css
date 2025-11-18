@@ -4,7 +4,7 @@
     width: 90%;
     height: auto;
     max-height: 90vh;
-    border: 1px solid var(--color-primary);
+    box-shadow: 0 20px 40px var(--color-black-shadow);
     overflow: auto;
     scrollbar-width: none;
     -ms-overflow-style: none;

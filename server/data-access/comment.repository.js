@@ -90,7 +90,7 @@ export async function fetchParentComments(articleId, traceId, limit, offset) {
     logger("info", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Fetching the parent comments for articleId: [${articleId}]`);
 
     const query = `SELECT c.id, c.article_id, c.user_id, c.content, c.created_at, u.name, u.avatarurl, u.role,
-                COUNT(*) OVER() AS total_count, COUNT(child.id) AS child_count, COUNT(likes.comment_id) AS total_likes
+                COUNT(*) OVER() AS total_count, COUNT(DISTINCT child.id) AS child_count, COUNT(likes.comment_id) AS total_likes
                 FROM comments as c JOIN users as u ON c.user_id = u.id LEFT JOIN comments as child ON child.parent_id = c.id
                 LEFT JOIN user_comment_likes as likes ON likes.comment_id = c.id
                 WHERE c.article_id = $1 AND c.parent_id IS NULL
