@@ -14,10 +14,20 @@ export async function initNavbar() {
     const toggle = document.getElementById("menu-toggle");
     const navbar = document.getElementById("navbar");
     const logo = document.getElementById("logo");
+    const logoCollapsed = document.getElementById("logo-small");
 
     toggle.addEventListener("click", () => {
-      navbar.classList.toggle("collapsed");
-      logo.classList.toggle("collapsed");
+      navbar.classList.add("collapsed");
+      logo.classList.add("collapsed");
+      toggle.classList.add("remove-from-layout");
+      logoCollapsed.classList.add("show");
+    });
+
+    logoCollapsed.addEventListener("click", () => {
+      navbar.classList.remove("collapsed");
+      logo.classList.remove("collapsed");
+      toggle.classList.remove("remove-from-layout");
+      logoCollapsed.classList.remove("show");
     });
 
     if (!loginBtn || !profileNavbar) return;

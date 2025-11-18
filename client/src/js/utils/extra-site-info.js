@@ -45,8 +45,7 @@ function _shipuInfo() {
         it’s simply the username I’ve been using online for years.
         I came up with it when I was 13, and it’s stuck with me ever since.
         I use it for games and most online platforms that
-        ask for a username. I decided to use it here too,
-        mainly because it fits nicely in the navbar.
+        ask for a username. I decided to use it here too.
     </span>`
 
     closeButton.addEventListener("click", () => {
@@ -65,7 +64,9 @@ function _disclaimerInfo() {
     modalHeader.textContent = "Disclaimer";
     modalText.innerHTML = `
     <span>
-        A quick reminder for anyone reading my finance-related articles:
+        A quick reminder for anyone reading my finance-related articles.
+        <br>
+        <br>
         I’m not a market guru, a visionary, or anything of that sort.
         I don’t hold any financial certifications, degrees, or formal education in finance.
         In my professional life, I’m a web developer, not someone who spends most of their time in the markets or financial industry.
