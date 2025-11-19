@@ -2,7 +2,6 @@
     background-color: var(--color-background-details);
     max-width: 1100px;
     width: 90%;
-    height: auto;
     max-height: 90vh;
     box-shadow: 0 20px 40px var(--color-black-shadow);
     overflow: auto;
@@ -103,8 +102,9 @@
 
 @media (max-width: 768px) {
     .modal.read {
+        max-width: 95%;
+        min-height: 95%;
         width: 95%;
-        max-width: none;
         padding: 1rem;
     }
 

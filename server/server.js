@@ -18,8 +18,9 @@ const port = process.env.PORT;
 const server = createServer(async (req, res) => {
 
     req.traceId = crypto.randomUUID();
-
-    if (handleCors(req, res)) return;
+    if (process.env.NODE_ENV === "dev") {
+        if (handleCors(req, res)) return;
+    }
 
     parseCookies(req);
 
