@@ -193,11 +193,11 @@ export async function fetchFavoriteArticles(user, traceId, limit, offset) {
 
     const query = `SELECT a.id, a.title, a.icon, a.description, a.created_at, COUNT(*) OVER() AS total_count
     FROM articles AS a JOIN user_article_likes AS al ON a.id = al.article_id
-    WHERE al.user_id = $1
-    ORDER BY a.created_at DESC LIMIT $2 OFFSET $3`;
+    WHERE al.user_id = $1 AND a.published = $2
+    ORDER BY a.created_at DESC LIMIT $3 OFFSET $4`;
 
     try {
-        const { rowCount, rows } = await db.query(query, [user.id, limit, offset]);
+        const { rowCount, rows } = await db.query(query, [user.id, true, limit, offset]);
         if (rowCount === 0) {
             return { totalCount: 0, articles: [] }
         }
@@ -232,10 +232,20 @@ export async function updatePublishStatus(id, traceId) {
     const LOCAL_LOG_CONTEXT = "Publish Article";
     logger("info", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Update status to published fro article with id: [${id}]`);
 
+    const readQuery = `SELECT id, published FROM articles WHERE id = $1`;
     const query = `UPDATE articles SET published = $1 WHERE id = $2`;
 
     try {
-        await db.query(query, [true, id]);
+
+        const { rows: [row] } = await db.query(readQuery, [id]);
+
+        if (row.published) {
+            logger("info", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Article with id: [${id}] is public. Start making it private.`);
+            await db.query(query, [false, id]);
+        } else {
+            logger("info", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Article with id: [${id}] is private. Start making it public.`);
+            await db.query(query, [true, id]);
+        }
     } catch (error) {
         logger("error", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, error.message);
         throw new DbError(`Failed to publish article with id: [${id}]`);

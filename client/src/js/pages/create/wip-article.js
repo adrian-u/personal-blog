@@ -8,7 +8,7 @@ export default async function buildArticleWip() {
     const wipArticle = document.getElementById("wip-article");
     wipArticle.className = "articles-wip-section";
 
-    if(wipArticle.firstChild) {
+    if (wipArticle.firstChild) {
         wipArticle.innerHTML = "";
     }
 
@@ -29,7 +29,7 @@ export default async function buildArticleWip() {
 export function renderArticle(article) {
     const workInProgressBox = document.createElement("div");
     workInProgressBox.className = "article-wip-box";
-    workInProgressBox.id = article.id; 
+    workInProgressBox.id = article.id;
     workInProgressBox.addEventListener('click', () => {
         _buildLoadWipArticleConfirmationModal(article.title, workInProgressBox.id);
         openConfirmationModal();
@@ -48,7 +48,7 @@ function _createIconSection(icon) {
 
 function _createInfoSection(article) {
     const infoSection = document.createElement("div");
-
+    infoSection.style = "width: 100%"
     const boxHeader = document.createElement("div");
     boxHeader.className = "wip-header-box";
 
@@ -86,13 +86,8 @@ function _createInfoSection(article) {
     date.className = "article-date";
     date.textContent = new Date(article.createdAt).toLocaleDateString();
 
-    meta.appendChild(category);
-    meta.appendChild(date);
-
-    infoSection.appendChild(boxHeader);
-    infoSection.appendChild(greenLine);
-    infoSection.appendChild(description);
-    infoSection.appendChild(meta);
+    meta.append(category, date)
+    infoSection.append(boxHeader, greenLine, description, meta);
 
     return infoSection;
 }

@@ -188,6 +188,8 @@ export async function publish(id, traceId) {
     logger("info", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Sending request to the repository layer to publish article with id: [${id}]`);
 
     try {
+        const article = await checkIfArticleExists(id);
+        if (!article) throw new NotFoundError("Article not found");
         await updatePublishStatus(id, traceId);
         await deleteUnusedImages(traceId);
     } catch (error) {
