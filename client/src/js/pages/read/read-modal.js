@@ -1,14 +1,15 @@
 import htmlImporter from "../../utils/html-importer";
-import { closeModal, openReadModal } from "../../utils/modals";
+import { closeModal, openConfirmationModal, openReadModal } from "../../utils/modals";
 import { MDParser } from "@pardnchiu/nanomd";
 import logger from "../../utils/logger";
 import { showToast } from "../../utils/toast";
-import { addArticleToFavorites, getArticleForReading, removeArticleFromFavorites } from "../../apis/article";
+import { addArticleToFavorites, getArticleForReading, publishArticle, removeArticleFromFavorites } from "../../apis/article";
 import { getCurrentUser } from "../../context/user-context";
 import { addCommentSection } from "./comment/add-comment-section";
 import { commentsSection } from "./comment/comments-section";
 import star from "../../../assets/images/star.png";
 import star_full from "../../../assets/images/star-full.png";
+import { navigateTo } from "../../router/router";
 
 const LOG_CONTEXT = "Read Article";
 
@@ -86,10 +87,19 @@ async function _buildReadModal(id) {
         articleOptions.appendChild(favoriteIcon);
 
         const closeButton = document.createElement("button");
-        closeButton.classList.add("btn", "btn-blue", "close");
+        closeButton.classList.add("btn", "btn-blue", "read");
         closeButton.textContent = "Close";
-        closeButton.onclick = () => closeModal(modal);
+        closeButton.addEventListener("click", () => closeModal(modal));
         articleOptions.appendChild(closeButton)
+
+        const editButton = document.createElement("button");
+        editButton.classList.add("btn", "btn-green", "read",
+            currentUser?.role === "creator"
+                ? "show"
+                : "remove-from-layout");
+        editButton.textContent = "Private";
+        editButton.addEventListener("click", async () => await _buildChangeArticleVisibilityModal(id));
+        articleOptions.appendChild(editButton);
 
         const domParser = new MDParser({
             standard: 1
@@ -109,4 +119,37 @@ async function _buildReadModal(id) {
         logger("error", `${LOG_CONTEXT}`, error);
         showToast("Failed to load article", "error");
     }
+}
+
+async function _buildChangeArticleVisibilityModal(id) {
+    const modalContainer = document.getElementById("confirmation-modal");
+    modalContainer.classList.add("visibility");
+    const contentModal = modalContainer.querySelector("#confirmation-content");
+    contentModal.classList.add("modal-confirmation");
+    const modalHeader = contentModal.querySelector("#conf-header");
+    const modalText = contentModal.querySelector("#conf-text");
+    const confirmButton = contentModal.querySelector("#confirm");
+    const cancelButton = contentModal.querySelector("#cancel");
+
+    modalHeader.textContent = "Make Private";
+    modalText.innerHTML = `
+    <span>Are you sure you want to make this article private?</span>`
+
+    confirmButton.onclick = async () => {
+        try {
+            await publishArticle(id);
+            navigateTo(window.location.href);
+        } catch (error) {
+            logger("error", "Make the article private", `Failed to make article with id: [${id}] private`);
+            showToast("Failed to make the article private", "error");
+        } finally {
+            closeModal(modalContainer);
+        }
+    };
+
+    cancelButton.onclick = () => {
+        closeModal(modalContainer);
+    };
+
+    openConfirmationModal();
 }
