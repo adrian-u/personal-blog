@@ -3,6 +3,9 @@
     flex-direction: column;
     gap: 1rem;
     align-items: center;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 1rem;
 }
 
 
@@ -33,7 +36,7 @@
 
 .two-column {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
     gap: 2rem;
     margin: 0 2rem;
 }
@@ -58,7 +61,7 @@
 }
 
 .content-card h3 {
-    font-size: 2rem;
+    font-size: clamp(1.2rem, 2.5vw, 2rem);
     font-weight: 700;
     margin-bottom: 1.5rem;
     color: var(--color-secondary);
@@ -257,7 +260,7 @@
 
 .section-title {
     text-align: center;
-    font-size: 2rem;
+    font-size: clamp(1.4rem, 3vw, 2rem);
     color: var(--color-primary);
     margin-bottom: 1rem;
 }
@@ -271,7 +274,6 @@
 }
 
 .tech-grid {
-    max-width: 900px;
     margin: 0 auto;
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
@@ -345,21 +347,24 @@
     }
 }
 
-@media (max-width: 1300px) {
-    .two-column {
-        grid-template-columns: 1fr;
-        gap: 2rem;
-    }
-}
-
 @media (max-width: 768px) {
 
     .about-title {
-        font-size: 0.8rem;
+        font-size: 1rem;
+        padding: 1rem;
+    }
+
+    .two-column {
+        margin: 0;
+        grid-template-columns: 1fr;
+    }
+
+    .content-card {
+        padding: 1.2rem;
     }
 
     .content-card h3 {
-        font-size: 1.5rem;
+        font-size: clamp(1.1rem, 4vw, 1.6rem);
     }
 
     #about-overview .png {
@@ -368,37 +373,43 @@
     }
 
     .content-card p {
-        font-size: 0.9rem;
+        font-size: clamp(0.7rem, 4vw, 0.95rem); ;
+        padding: 1rem;
     }
 
     .section-title {
-        font-size: 1.25rem;
+        font-size: clamp(1.2rem, 4vw, 1.5rem);
     }
 
     .experience-item {
-        max-width: 500px;
+        max-width: 100%;
     }
 
-    .about-title {
-        flex-direction: column;
-        text-align: center;
+    .experience-header {
+        padding: 15px 20px;
     }
 
-    #about-skills p {
-        font-size: 0.9rem;
+    .experience-description {
+        padding-left: 0;
+    }
+
+    .sub-experience-item {
+        margin-left: 0;
+        padding: 1rem;
     }
 
     .tech-grid {
         grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+        gap: 1rem;
     }
 
     .tech-icon {
-        font-size: 1.5rem;
-        width: 35px;
-        height: 35px;
+        font-size: 2rem;
+        width: 40px;
+        height: 40px;
     }
 
     .tech-name {
-        font-size: 0.5rem;
+        font-size: clamp(0.7rem, 2vw, 0.9rem);
     }
 }
