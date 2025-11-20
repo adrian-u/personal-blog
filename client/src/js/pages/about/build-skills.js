@@ -22,9 +22,17 @@ export default function buildSkills(techStack) {
 function _buildTechItem(grid, tech) {
 	const item = document.createElement("div");
 	item.classList.add("tech-item");
-	item.innerHTML = `
-                <img class="tech-icon" src=${tech.icon} alt=${tech.name + "icon"}></img>
-                <div class="tech-name">${tech.name}</div>
-            `;
+
+	const techIcon = document.createElement("img");
+	techIcon.classList.add("tech-icon");
+	techIcon.src = tech.icon;
+	techIcon.alt = tech.name + "icon";
+
+	const techName = document.createElement("div");
+	techName.classList.add("tech-name");
+	techName.textContent = tech.name;
+
+	item.append(techIcon, techName);
+
 	grid.appendChild(item);
 }

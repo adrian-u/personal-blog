@@ -1,6 +1,7 @@
 import htmlImporter from "../../utils/html-importer";
 import { closeModal, openConfirmationModal, openReadModal } from "../../utils/modals";
 import { MDParser } from "@pardnchiu/nanomd";
+import DOMPurify from "dompurify";
 import logger from "../../utils/logger";
 import { showToast } from "../../utils/toast";
 import { addArticleToFavorites, getArticleForReading, publishArticle, removeArticleFromFavorites } from "../../apis/article";
@@ -98,16 +99,21 @@ async function _buildReadModal(id) {
                 ? "show"
                 : "remove-from-layout");
         editButton.textContent = "Private";
-        editButton.addEventListener("click", async () => await _buildChangeArticleVisibilityModal(id));
+        editButton.addEventListener("click", async () => await _buildChangeArticleVisibilityModal(id, modal));
         articleOptions.appendChild(editButton);
 
         const domParser = new MDParser({
             standard: 1
         });
 
+        const clean = DOMPurify.sanitize(domParser.parse(article.markdown), {
+            ALLOWED_TAGS: ["p", "h1", "h2", "h3", "strong", "em", "code", "pre", "ul", "li", "img"],
+            ALLOWED_ATTR: ["src", "alt"]
+        });
+
         const articleContent = document.createElement("p");
         articleContent.classList.add("article-body")
-        articleContent.innerHTML = domParser.parse(article.markdown);
+        articleContent.innerHTML = clean;
 
         modalContent.append(headerRow,
             articleContent,
@@ -121,7 +127,7 @@ async function _buildReadModal(id) {
     }
 }
 
-async function _buildChangeArticleVisibilityModal(id) {
+async function _buildChangeArticleVisibilityModal(id, readModal) {
     const modalContainer = document.getElementById("confirmation-modal");
     modalContainer.classList.add("visibility");
     const contentModal = modalContainer.querySelector("#confirmation-content");
@@ -138,6 +144,7 @@ async function _buildChangeArticleVisibilityModal(id) {
     confirmButton.onclick = async () => {
         try {
             await publishArticle(id);
+            closeModal(readModal);
             navigateTo(window.location.href);
         } catch (error) {
             logger("error", "Make the article private", `Failed to make article with id: [${id}] private`);

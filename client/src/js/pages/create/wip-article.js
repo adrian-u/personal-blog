@@ -104,10 +104,24 @@ function _buildLoadWipArticleConfirmationModal(title, id) {
     const cancelButton = contentModal.querySelector("#cancel");
 
     modalHeader.textContent = "Load Article";
-    modalText.innerHTML = `
-    <span>This operation will overide all not saved work.</span>
-    <br> 
-    <span>Make sure to save all the current work before loading <strong class="modal-conf-title">${title}</strong> article</span>`
+    modalText.innerHTML = "";
+
+    const spanOne = document.createElement("span");
+    spanOne.textContent = "This operation will override all not saved work.";
+
+    const br = document.createElement("br");
+
+    const spanTwo = document.createElement("span");
+    spanTwo.textContent = "Make sure to save all the current work before loading ";
+
+    const strong = document.createElement("strong");
+    strong.classList.add("modal-conf-title");
+    strong.textContent = title;
+
+    spanTwo.appendChild(strong);
+    spanTwo.append(" article");
+
+    modalText.append(spanOne, br, spanTwo);
 
     confirmButton.onclick = async () => {
         await loadWipArticle(id);
@@ -128,11 +142,27 @@ function _buildDeleteConfirmationModal(title, id) {
     const confirmButton = contentModal.querySelector("#confirm");
     const cancelButton = contentModal.querySelector("#cancel");
 
+    modalContainer.innerHTML = "";
+
     modalHeader.textContent = "Confirm Deletion";
-    modalText.innerHTML = `
-    <span>Are you sure you want to delete <strong class="modal-conf-title">${title}</strong>?</span>
-    <br>
-    <span class="delete-subtext">This action cannot be undone.</span>`
+    const mainText = document.createElement("span");
+    mainText.textContent = "Are you sure you want to delete ";
+
+    const strong = document.createElement("strong");
+    strong.classList.add("modal-conf-title");
+    strong.textContent = title;
+
+    const questionMark = document.createTextNode("?");
+
+    const br = document.createElement("br");
+
+    const subText = document.createElement("span");
+    subText.classList.add("delete-subtext");
+    subText.textContent = "This action cannot be undone.";
+
+    mainText.append(strong, questionMark);
+
+    modalContainer.append(mainText, br, subText);
 
     confirmButton.onclick = async () => {
         try {

@@ -59,7 +59,11 @@ export async function renderRoute(path = location.pathname) {
     }
 
     const file = routes[path] || routes["/"];
-    container.innerHTML = await _fetchHTML(file);
+    const html = await _fetchHTML(file);
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, "text/html");
+    container.innerHTML = "";
+    container.appendChild(doc.body.firstElementChild.cloneNode(true));
     setActiveNav(path)
 
     if (path === "/oauth2/auth") {
@@ -137,7 +141,7 @@ async function _fetchHTML(file) {
         }
 
     } catch (error) {
-        console.error("Error loading route:", error);
+        logger("error", "Loading route:", error);
         return "<p>Error loading page</p>";
     }
 }
