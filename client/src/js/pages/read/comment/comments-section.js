@@ -97,9 +97,22 @@ function _buildCommentHeader(comment, currentUser) {
     const userInfo = document.createElement("div");
 
     const authorName = document.createElement("div");
-    authorName.innerHTML = `<div class="comment-author-name">${author.name} ${author.role === "creator"
-        ? '<span class="comment-badge">Creator</span>'
-        : '<span class="comment-badge">User</span>'}</div>`;
+
+    const wrapper = document.createElement("div");
+    wrapper.classList.add("comment-author-name");
+
+    const nameNode = document.createElement("span");
+    nameNode.textContent = author.name;
+
+    wrapper.appendChild(nameNode);
+
+    const badge = document.createElement("span");
+    badge.classList.add("comment-badge");
+    badge.textContent = author.role === "creator" ? "Creator" : "User";
+
+    wrapper.appendChild(badge);
+
+    authorName.appendChild(wrapper);
 
     const commentDate = document.createElement("div");
     commentDate.classList.add("comment-date");
@@ -481,24 +494,37 @@ function _replyForm(comment, currentUser, articleId) {
 
 function _buildDeleteConfirmationModal(comment) {
     const modalContainer = document.getElementById("confirmation-modal");
-    modalContainer.classList.add("visibility");
-    const contentModal = modalContainer.querySelector("#confirmation-content");
-    contentModal.classList.add("modal-confirmation");
+    if (!modalContainer) return;
 
+    modalContainer.classList.add("visibility");
+
+    const contentModal = modalContainer.querySelector("#confirmation-content");
     const modalHeader = contentModal.querySelector("#conf-header");
     const modalText = contentModal.querySelector("#conf-text");
     const confirmButton = contentModal.querySelector("#confirm");
     const cancelButton = contentModal.querySelector("#cancel");
 
     modalHeader.textContent = "Confirm Deletion";
-    modalText.innerHTML = `
-        <span>Are you sure you want to delete the comment:
-        <br> 
-        <strong class="modal-conf-title">${comment.content}</strong>?</span>
-        <br>
-        <span class="delete-subtext">This action cannot be undone.</span>`;
+    modalText.innerHTML = "";
+    const spanOne = document.createElement("span");
+    spanOne.textContent = "Are you sure you want to delete the comment:";
+    const brOne = document.createElement("br");
+    const strong = document.createElement("strong");
+    strong.classList.add("modal-conf-title");
+    strong.textContent = comment.content;
+    const questionMark = document.createTextNode("?");
+    const brTwo = document.createElement("br");
+    const spanTwo = document.createElement("span");
+    spanTwo.classList.add("delete-subtext");
+    spanTwo.textContent = "This action cannot be undone.";
 
-    confirmButton.onclick = async () => {
+    spanOne.append(brOne, strong, questionMark);
+    modalText.append(spanOne, brTwo, spanTwo);
+
+    confirmButton.replaceWith(confirmButton.cloneNode(true));
+    const newConfirmButton = contentModal.querySelector("#confirm");
+
+    newConfirmButton.addEventListener("click", async () => {
         try {
             await deleteCommentByOwnerOrCreator(comment.id);
 
@@ -519,7 +545,9 @@ function _buildDeleteConfirmationModal(comment) {
             logger("error", "Delete Comment", `Failed to delete the comment with id: [${comment.id}]. Error: [${error}]`);
             showToast("Failed to delete the comment", "error");
         }
-    };
+    });
 
-    cancelButton.onclick = () => closeModal(modalContainer);
+    cancelButton.replaceWith(cancelButton.cloneNode(true));
+    const newCancelButton = contentModal.querySelector("#cancel");
+    newCancelButton.addEventListener("click", () => closeModal(modalContainer));
 }

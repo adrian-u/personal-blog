@@ -5,16 +5,29 @@ import logger from "../utils/logger.js";
 
 const LOG_CONTEXT = "Image Service";
 
+const allowed = ["image/png", "image/jpeg"];
+
 export async function saveImage(req, res) {
     return new Promise((resolve, reject) => {
-        const busboy = Busboy({ headers: req.headers });
+        const busboy = Busboy({
+            headers: req.headers,
+            limits: {
+                fileSize: 2 * 1024 * 1024,
+                files: 1
+            }
+        });
         let uploadedFileName;
         let uploadPromise;
 
         busboy.on("file", (fieldname, file, info) => {
             const { filename, mimeType } = info;
 
-            const objectName = `${randomUUID()}-${filename}`;
+            if (!allowed.includes(mimeType)) {
+                return reject(new Error("Invalid file type"));
+            }
+
+            const safeName = filename.replace(/[^a-zA-Z0-9.\-_]/g, "");
+            const objectName = `${randomUUID()}-${safeName}`;
             uploadedFileName = objectName;
 
             uploadPromise = minioClient.putObject(
@@ -25,6 +38,8 @@ export async function saveImage(req, res) {
                 { "Content-Type": mimeType }
             );
         });
+
+        busboy.on("field", () => { });
 
         busboy.on("finish", async () => {
             try {

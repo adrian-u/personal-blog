@@ -12,6 +12,7 @@
     "vite": "^6.3.5"
   },
   "dependencies": {
-    "@pardnchiu/nanomd": "^1.11.6"
+    "@pardnchiu/nanomd": "^1.11.6",
+    "dompurify": "^3.3.0"
   }
 }

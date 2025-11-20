@@ -187,7 +187,7 @@ function _fillArticleMetadata(article) {
 
 function _reloadArticleEditor(content) {
     const editorContainer = document.getElementById('article-editor');
-    editorContainer.innerHTML = '';
+    editorContainer.innerHTML = "";
 
     mdEditor = buildArticleEditor(content);
 }

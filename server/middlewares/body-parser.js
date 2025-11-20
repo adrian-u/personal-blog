@@ -1,5 +1,7 @@
 import logger from "../utils/logger.js";
 
+const MAX_BODY_SIZE = 400 * 1024;
+
 export default async function bodyParser(req, res) {
     return new Promise((resolve, reject) => {
         try {
@@ -9,8 +11,20 @@ export default async function bodyParser(req, res) {
             }
 
             let body = "";
+            let size = 0;
+            req.on("data", chunk => {
+                size += chunk.length;
 
-            req.on("data", chunk => (body += chunk));
+                if (size > MAX_BODY_SIZE) {
+                    res.writeHead(413, { "Content-Type": "application/json" });
+                    return res.end(JSON.stringify({
+                        name: "request body error",
+                        error: "Request body too large"
+                    }));
+                }
+
+                body += chunk;
+            });
 
             req.on("end", () => {
                 try {

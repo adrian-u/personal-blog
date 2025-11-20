@@ -72,55 +72,74 @@ function _buildExperiences(experienceList, experience) {
 }
 
 function _buildSubExperencies(experience) {
+    const subExperiencesContainer = document.createElement("div");
 
-    const subExperiences = document.createElement("div");
-
-    if (experience.subExperiences && experience.subExperiences.length > 0) {
-        subExperiences.classList.add("sub-experiences");
-        experience.subExperiences.forEach(subExp => {
-            const technologies = subExp.technologies.map(tech => {
-                if (typeof tech === 'object' && tech.icon) {
-                    return `<span class="tech-tag">${tech.name} <img src="${tech.icon}" alt="${tech.name}" class="tech-icon-exp"></span>`;
-                }
-                return `<span class="tech-tag">${tech.name}</span>`;
-            }).join('');
-
-            const subExpItem = document.createElement("div");
-            subExpItem.classList.add("sub-experience-item");
-
-            const subExpHead = document.createElement("div");
-            subExpHead.classList.add("sub-experience-header");
-            const subExpIcon = document.createElement("img");
-            subExpIcon.classList.add("sub-experience-icon");
-            subExpIcon.src = subExp.icon;
-
-            const subExpInfo = document.createElement("div");
-            subExpInfo.classList.add("sub-experience-info");
-
-            const subExpTitle = document.createElement("div");
-            subExpTitle.classList.add("sub-experience-title");
-            subExpTitle.textContent = subExp.title;
-
-            const subExpPeriod = document.createElement("div");
-            subExpPeriod.classList.add("sub-experience-period");
-            subExpPeriod.textContent = subExp.period;
-
-            subExpInfo.append(subExpTitle, subExpPeriod);
-            subExpHead.append(subExpIcon, subExpInfo);
-
-            const subExpDesc = document.createElement("div");
-            subExpDesc.classList.add("sub-experience-description");
-            subExpDesc.textContent = subExp.description;
-
-            const techTags = document.createElement("div");
-            techTags.classList.add("tech-tags");
-            techTags.innerHTML = technologies;
-
-            subExpItem.append(subExpHead, subExpDesc, techTags);
-
-            subExperiences.appendChild(subExpItem);
-        });
+    if (!experience.subExperiences || experience.subExperiences.length === 0) {
+        return subExperiencesContainer;
     }
 
-    return subExperiences;
+    subExperiencesContainer.classList.add("sub-experiences");
+
+    experience.subExperiences.forEach(subExp => {
+
+        const subExpItem = document.createElement("div");
+        subExpItem.classList.add("sub-experience-item");
+
+        const subExpHead = document.createElement("div");
+        subExpHead.classList.add("sub-experience-header");
+
+        const subExpIcon = document.createElement("img");
+        subExpIcon.classList.add("sub-experience-icon");
+        subExpIcon.src = subExp.icon;
+        subExpIcon.alt = subExp.title;
+
+        const subExpInfo = document.createElement("div");
+        subExpInfo.classList.add("sub-experience-info");
+
+        const subExpTitle = document.createElement("div");
+        subExpTitle.classList.add("sub-experience-title");
+        subExpTitle.textContent = subExp.title;
+
+        const subExpPeriod = document.createElement("div");
+        subExpPeriod.classList.add("sub-experience-period");
+        subExpPeriod.textContent = subExp.period;
+
+        subExpInfo.append(subExpTitle, subExpPeriod);
+        subExpHead.append(subExpIcon, subExpInfo);
+
+        const subExpDesc = document.createElement("div");
+        subExpDesc.classList.add("sub-experience-description");
+        subExpDesc.textContent = subExp.description;
+
+        const techTags = document.createElement("div");
+        techTags.classList.add("tech-tags");
+
+        const techFragment = document.createDocumentFragment();
+
+        if (subExp.technologies && subExp.technologies.length > 0) {
+            subExp.technologies.forEach(tech => {
+                const span = document.createElement("span");
+                span.className = "tech-tag";
+                span.textContent = tech.name;
+
+                if (tech.icon && typeof tech.icon === "string") {
+                    const img = document.createElement("img");
+                    img.className = "tech-icon-exp";
+                    img.src = tech.icon;
+                    img.alt = tech.name;
+                    span.appendChild(document.createTextNode(" "));
+                    span.appendChild(img);
+                }
+
+                techFragment.appendChild(span);
+            });
+        }
+
+        techTags.appendChild(techFragment);
+
+        subExpItem.append(subExpHead, subExpDesc, techTags);
+        subExperiencesContainer.appendChild(subExpItem);
+    });
+
+    return subExperiencesContainer;
 }

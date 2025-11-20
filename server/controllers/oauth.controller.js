@@ -14,6 +14,10 @@ export async function handleOAuthToken(req, res) {
 
     logger("info", req.traceId, LOG_CONTEXT, `Start exchange for JWT with provider: [${provider}]`);
 
+    if (redirect_uri !== process.env.AUTH_REDIRECT_URI) {
+        throw new Error("Invalid redirect_uri");
+    }
+
     const strategy = OAUTH_PROVIDERS[provider];
     if (!strategy) {
         logger("error", req.traceId, LOG_CONTEXT, `The provider: [${provider}] is not supported`);
