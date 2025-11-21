@@ -8,7 +8,7 @@ export default function buildSkills(techStack) {
 
 	const description = document.createElement("p");
 	description.textContent = "These are the tools I use most frequently, both for work and personal projects." +
-		"They’re not the only ones I’ve used — depending on the project " +
+		"They’re not the only ones I’ve used. Depending on the project " +
 		"I’ve also worked with additional technologies such as Camunda or AngularJS or other in the past, " +
 		" but the ones listed here are the ones I rely on most regularly rather than one-off tools."
 	const techGrid = document.createElement("div");

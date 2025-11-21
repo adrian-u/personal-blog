@@ -9,7 +9,12 @@ export default async function latestArticles() {
         const latestArticlesContainer = document.getElementById("latest-articles");
 
         const latestTitle = document.createElement("h1");
-        latestTitle.textContent = "Latest Articles 📰";
+
+        const span = document.createElement("span");
+        span.classList.add("emoji");
+        span.textContent = "📰";
+
+        latestTitle.append("Latest Articles", span);
         latestTitle.classList.add("home-section-title", "fade-in");
 
         const grid = document.createElement("div");

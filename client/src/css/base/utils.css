@@ -66,6 +66,25 @@
     }
 }
 
+
+@keyframes swing {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    25% {
+        transform: rotate(40deg);
+    }
+
+    75% {
+        transform: rotate(-40deg);
+    }
+
+    100% {
+        transform: rotate(0deg);
+    }
+}
+
 @keyframes fadeInUp {
     from {
         opacity: 0;
