@@ -19,6 +19,7 @@
     font-weight: 700;
     color: var(--color-primary);
     text-align: center;
+    outline: none;
 }
 
 .home-text {
@@ -53,7 +54,8 @@
     margin: 1rem;
 }
 
-.latest-articles>h1 {
+.latest-articles>h1,
+h2 {
     text-align: center;
 }
 
@@ -81,7 +83,18 @@
     padding: 0.3rem;
 }
 
-.site-information>h4:hover {
+.site-information > button {
+    background: none;
+    border: none;
+    color: var(--color-gray);
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.3s;
+    padding: 0;
+}
+
+.site-information > button:hover {
     color: var(--color-secondary);
     cursor: pointer;
 }
@@ -95,6 +108,12 @@
 
 .star-icon {
     transition: 0.3s;
+}
+
+section[aria-labelledby="more-about-title"] {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 @media (max-width: 768px) {

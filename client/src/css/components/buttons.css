@@ -1,101 +1,113 @@
 .btn {
-    padding: 0.75rem 1.5rem;
-    border-radius: 1rem;
-    text-decoration: none;
-    cursor: pointer;
-    border-width: 0 0 4px 0;
-    border-style: solid; 
-    font-size: var(--font-size);
-    letter-spacing: var(--letter-spacing);
-    text-transform: uppercase;
-    font-weight: 700;
-    line-height: 1;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+  padding: 0.75rem 1.5rem;
+  border-radius: 1rem;
+  text-decoration: none;
+  cursor: pointer;
+  border-width: 0 0 4px 0;
+  border-style: solid;
+  font-size: var(--font-size);
+  letter-spacing: var(--letter-spacing);
+  text-transform: uppercase;
+  font-weight: 700;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .btn:active {
-    border-bottom-width: 0;
+  border-bottom-width: 0;
 }
 
 #auth-buttons {
-    margin-top: 50px;
+  margin-top: 50px;
 }
 
 .btn-blue {
-    background-color: var(--color-secondary);
-    color: var(--color-snow);
-    border-color: var(--color-borders-blue-cosmo);
-    outline: none;
+  background-color: var(--color-secondary);
+  color: var(--color-snow);
+  border-color: var(--color-borders-blue-cosmo);
 }
 
 .btn-blue:hover {
-    background-color: var(--color-secondary-hover);
+  background-color: var(--color-secondary-hover);
 }
 
 .btn-danger {
-    background-color: var(--color-danger);
-    border-color: var(--color-danger-border);
-    color: var(--color-snow);
-    outline: none;
+  background-color: var(--color-danger);
+  border-color: var(--color-danger-border);
+  color: var(--color-snow);
 }
 
 .btn-danger:hover {
-    background-color: var(--color-danger-hover);
+  background-color: var(--color-danger-hover);
 }
 
 .btn-green {
-    background-color: var(--color-primary);
-    color: var(--color-snow);
-    border-color: var(--color-primary-border);
-    outline: none;
+  background-color: var(--color-primary);
+  color: var(--color-snow);
+  border-color: var(--color-primary-border);
+
 }
 
 .btn-green:hover {
-    background-color: var(--color-primary-hover);
+  background-color: var(--color-primary-hover);
 }
 
 .btn-neutral {
-    background-color: var(--color-background-details);
-    color: var(--color-snow);
-    border-color: var(--color-borders);
-    outline: none;
+  background-color: var(--color-background-details);
+  color: var(--color-snow);
+  border-color: var(--color-borders);
+
 }
 
 .btn-neutral:hover {
-    background-color: var(--color-background-details-hover);
+  background-color: var(--color-background-details-hover);
 }
 
 .delete-btn {
-    background: none;
-    border: none;
-    color: var(--color-danger);
-    font-size: 1.2rem;
-    cursor: pointer;
-    opacity: 0;
-    transform: scale(0.8);
-    transition: opacity 0.2s ease, transform 0.2s ease;
+  background: none;
+  border: none;
+  color: var(--color-danger);
+  font-size: 1.2rem;
+  cursor: pointer;
+  opacity: 0;
+  transform: scale(0.8);
+  transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
 .delete-btn:hover {
-    color: var(--color-danger-hover);
-    transform: scale(1.2);
+  color: var(--color-danger-hover);
+  transform: scale(1.2);
 }
 
 .edit-button {
-    background: none;
-    border: none;
-    color: var(--color-danger);
-    font-size: 1.2rem;
-    cursor: pointer;
-    transform: scale(0.8);
-    transition: opacity 0.2s ease, transform 0.2s ease;
+  background: none;
+  border: none;
+  color: var(--color-danger);
+  font-size: 1.2rem;
+  cursor: pointer;
+  transform: scale(0.8);
+  transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
 .edit-button:hover {
-    color: var(--color-danger-hover);
-    transform: scale(1.2);
+  color: var(--color-danger-hover);
+  transform: scale(1.2);
+}
+
+.btn-icon {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.5rem;
+  color: var(--color-snow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 .oauth-buttons {

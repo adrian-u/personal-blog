@@ -17,21 +17,26 @@ export default function buildContacts() {
     const emailLink = document.createElement("a");
     emailLink.href = "mailto:adryian@outlook.it";
     emailLink.classList.add("contact-link");
+    emailLink.setAttribute("aria-label", "Send me an email");
 
     const emailImg = document.createElement("img");
     emailImg.src = emailIcon;
     emailImg.alt = "Email icon";
+    emailImg.setAttribute("aria-hidden", "true");
     emailImg.classList.add("contact-icon");
     emailLink.append(emailImg);
 
     const linkedIn = document.createElement("a");
     linkedIn.href = "https://www.linkedin.com/in/ungureanuab/";
     linkedIn.classList.add("contact-link");
-    linkedIn.target = "blank";
+    linkedIn.rel = "noopener noreferrer";
+    linkedIn.target = "_blank";
+    linkedIn.setAttribute("aria-label", "Visit my LinkedIn profile (opens in a new tab)");
 
     const linkedInImg = document.createElement("img");
     linkedInImg.src = linkedInIcon;
     linkedInImg.alt = "LinkedIn icon";
+    linkedInImg.setAttribute("aria-hidden", "true");
     linkedInImg.classList.add("contact-icon");
     linkedIn.append(linkedInImg);
 

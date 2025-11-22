@@ -1,11 +1,11 @@
-<div id="confirmation-modal" class="modal-container hidden">
-    <div class="modal">
+<div id="confirmation-modal" class="modal-container hidden" role="dialog" aria-modal="true" aria-labelledby="conf-header" aria-describedby="conf-text" tabindex="-1" data-modal="confirmation">
+    <div class="modal" role="document">
         <div id="confirmation-content" class="modal-content">
-            <div id="conf-header" class="confirmation-header"></div>
+            <h2 id="conf-header" class="confirmation-header" role="alertdialog" tabindex="-1"></h2>
             <p id="conf-text" class="confirmation-text"></p>
-            <div class="conf-buttons">
+            <div class="conf-buttons" role="group" aria-label="Confirmation actions">
                 <button id="confirm" class="btn btn-danger">Confirm</button>
-                <button id="cancel" class="btn btn-green">Go Back</button>
+                <button id="cancel" class="btn btn-green" data-action="close-modal">Go Back</button>
             </div>
         </div>
     </div>

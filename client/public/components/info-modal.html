@@ -1,9 +1,12 @@
-<div id="info-modal" class="modal-container hidden">
-    <div class="modal">
+<div id="info-modal" class="modal-container hidden" role="dialog" aria-modal="true" aria-hidden="true"
+    aria-labelledby="info-header" aria-describedby="info-text" tabindex="-1" data-modal="info">
+    <div class="modal" role="document">
         <div id="info-content" class="modal-content info">
-            <div id="info-header" class="confirmation-header"></div>
+            <h2 id="info-header" class="confirmation-header"></h2>
             <p id="info-text" class="confirmation-text"></p>
-            <button id="close" class="btn btn-blue">Close</button>
+            <div class="info-actions" role="group" aria-label="Information actions">
+                <button id="close" class="btn btn-blue" data-action="close-modal">Close</button>
+            </div>
         </div>
     </div>
 </div>

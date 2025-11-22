@@ -1,26 +1,40 @@
 <div class="main-page-container home-container">
-    <section>
-        <h1 class="home-title fade-in">Developer & Investor (Maybe <span class="emoji">😆</span>)</h1>
+    <section aria-labelledby="home-title">
+        <h1 class="home-title fade-in">Developer & Investor (Maybe <span class="emoji" aria-hidden="true">😆</span>)
+        </h1>
         <p class="fade-in home-text">Hi, I’m Adrian! I love creating software, whether it’s something useful
             or just a way to learn and explore new ideas.
             I also enjoy investing to build a better and stable financial future.
             If you’re interested, you can follow my journey through code, personal growth, and the markets.</p>
         <div class="home-buttons fade-in">
-            <a href="/projects" class="btn btn-blue">View Projects</a>
-            <a href="/finance" class="btn btn-green">Finance Journey</a>
+            <a href="/projects" class="btn btn-blue" aria-label="View all my projects">View Projects</a>
+            <a href="/finance" class="btn btn-green" aria-label="View my finance journey">Finance Journey</a>
         </div>
     </section>
-    <div id="latest-articles" class="latest-articles"></div>
-    <div class="more-me">
-        <h1 class="home-section-title fade-in">More About Me <span class="emoji">🙋</span></h1>
-        <p class="fade-ind subtitle home-text">
+    <section aria-labelledby="latest-articles-title">
+        <h2 id="latest-articles-title" class="home-section-title fade-in"> Latest Articles <span class="emoji"
+                aria-hidden="true">📰</span>
+        </h2>
+        <div id="latest-articles" class="latest-articles" role="region" aria-live="polite"></div>
+    </section>
+    <section aria-labelledby="more-about-title">
+        <h2 id="more-about-title" class="home-section-title fade-in">More About Me <span class="emoji"
+                aria-hidden="true">🙋</span>
+        </h2>
+        <p class="fade-in subtitle home-text">
             If you’d like to learn more about me, head over to the About section and take a look!
         </p>
-        <a href="/about" class="btn btn-blue">About</a>
-    </div>
-    <div class="site-information">
-        <h4 id="shipu">SHIPU?</h4>
-        <h4 id="disclaimer">DISCLAIMER</h4>
-        <h4 id="icons-provider">ICONS</h4>
-    </div>
+        <a href="/about" class="btn btn-blue" aria-label="Go to About section">About</a>
+    </section>
+    <nav class="site-information" aria-label="Site information">
+        <button type="button" id="shipu">
+            <h3> SHIPU?</h3>
+        </button>
+        <button type="button" id="disclaimer">
+            <h3>DISCLAIMER</h3>
+        </button>
+        <button type="button" id="icons-provider">
+            <h3>ICONS</h3>
+        </button>
+    </nav>
 </div>

@@ -6,7 +6,7 @@ import {
 } from "../data-access/article.repository.js";
 import { isEmpty } from "../utils/general.js";
 import logger from "../utils/logger.js";
-import { ValidationError } from "../errors/custom-errors.js";
+import { BadInput, ValidationError } from "../errors/custom-errors.js";
 import { Article } from "../models/article.model.js";
 import deleteUnusedImages from "./clean-minio.service.js";
 
@@ -52,13 +52,19 @@ export async function getWipArt(id, traceId) {
 
 export async function updateWipArticle(article, id, traceId) {
     const LOCAL_LOG_CONTEXT = "Update WIP Article";
-
+    const ALLOWED_UPDATE_FIELDS = ["title", "icon", "category", "description", "markdown"];
     logger("info", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Handling request with id: [${id}] and body: ${JSON.stringify(article, null, 4)}`);
 
     if (isEmpty(article)) return;
 
     const articleUpdatesMap = new Map();
     article.forEach(item => {
+
+        if (!ALLOWED_UPDATE_FIELDS.includes(item.field)) {
+            logger("error", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `The field: [${item.field}] is not valid`);
+            throw new BadInput(`The field: [${item.field}] is not valid`);
+        }
+
         if (item.op === "update") {
             if (item.field === "category") {
                 item.value = item.value.toLowerCase();

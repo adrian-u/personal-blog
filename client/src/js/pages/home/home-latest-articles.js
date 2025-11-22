@@ -8,20 +8,11 @@ export default async function latestArticles() {
         const articles = await fetchLatestArticles();
         const latestArticlesContainer = document.getElementById("latest-articles");
 
-        const latestTitle = document.createElement("h1");
-
-        const span = document.createElement("span");
-        span.classList.add("emoji");
-        span.textContent = "📰";
-
-        latestTitle.append("Latest Articles", span);
-        latestTitle.classList.add("home-section-title", "fade-in");
-
         const grid = document.createElement("div");
         grid.classList.add("card-grid");
         buildCards(grid, articles)
 
-        latestArticlesContainer.append(latestTitle, grid);
+        latestArticlesContainer.append(grid);
     } catch (error) {
         logger("error", "Load latest articles", `Failed to load latest articles: [${error}]`);
         showToast("Failed to load latest articles", "error");
