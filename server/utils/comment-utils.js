@@ -1,6 +1,7 @@
 import { isEmpty } from "./general.js";
 import logger from "./logger.js";
 import { BodyRequestValidationError } from "../errors/custom-errors.js";
+import { VALIDATION_LIMITS } from "./validation-constants.js";
 
 const LOG_CONTEXT = "Comment Utils";
 
@@ -22,5 +23,9 @@ export function checkIfCommentBodyIsValid(comment, traceId) {
 
     if (invalidFields.length > 0) {
         throw new BodyRequestValidationError(`The required fields: [${invalidFields.join(", ")}] are not present`);
+    }
+
+    if (comment.content && comment.content.length > VALIDATION_LIMITS.COMMENT_CONTENT_MAX) {
+        throw new BodyRequestValidationError(`Comment content exceeds maximum length of ${VALIDATION_LIMITS.COMMENT_CONTENT_MAX} characters`);
     }
 }

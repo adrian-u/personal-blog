@@ -5,10 +5,12 @@ import {
 } from "../controllers/comment.controller.js";
 import { withErrorHandling } from "../middlewares/error-handler.js";
 import { withAuthentication } from "../middlewares/oauth.js";
+import { withRateLimit } from "../middlewares/rate-limit.js";
 
 registerRoute("POST", "/api/v1/comment",
     withErrorHandling(
-        withAuthentication(createComment))
+        withRateLimit(
+            withAuthentication(createComment)))
 );
 
 registerRoute("GET", "/api/v1/comment/parent/:articleId",
@@ -26,12 +28,14 @@ registerRoute("GET", "/api/v1/comment/parent/:parentId/replies",
 
 registerRoute("PATCH", "/api/v1/comment/:id",
     withErrorHandling(
-        withAuthentication(editComment))
+        withRateLimit(
+            withAuthentication(editComment)))
 );
 
 registerRoute("POST", "/api/v1/comment/like/:id",
     withErrorHandling(
-        withAuthentication(addLikeComment))
+        withRateLimit(
+            withAuthentication(addLikeComment)))
 );
 
 registerRoute("DELETE", "/api/v1/comment/like/:id",

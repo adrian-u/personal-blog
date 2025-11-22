@@ -9,8 +9,8 @@ export function withErrorHandling(handler) {
             const status = error.statusCode || 500;
             res.writeHead(status, { "Content-Type": "application/json" });
             res.end(JSON.stringify({
-                name: error.name || "Internal Error",
-                error: error.message || "Unexpected error occurred",
+                name: "Internal Error",
+                error: "Unexpected error occurred",
             }));
         }
     }

@@ -104,7 +104,7 @@ export async function fetchParentComments(articleId, traceId, limit, offset) {
         }
         return { totalCount: rows[0].total_count, comments: rows };
     } catch (error) {
-        logger("error", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `DB query failed to get parent comments for articleId: [${id}]. Error: [${error}]`);
+        logger("error", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `DB query failed to get parent comments for articleId: [${articleId}]. Error: [${error}]`);
         throw new DbError(`Failed to fetch parent comments for articleId: [${articleId}]`);
     }
 }

@@ -69,3 +69,11 @@ export class MinIOSaveError extends Error {
         this.statusCode = 500;
     }
 }
+
+export class TooManyRequestsError extends Error {
+    constructor(message) {
+        super(message);
+        this.name = "Too Many Requests";
+        this.statusCode = 429;
+    }
+}

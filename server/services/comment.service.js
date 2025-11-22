@@ -6,6 +6,7 @@ import { AuthorizationError } from "../errors/custom-errors.js";
 import { isEmpty } from "../utils/general.js";
 import logger from "../utils/logger.js";
 import { Comment } from "../models/comment.model.js";
+import { sanitizeContent } from "../utils/sanitize.js";
 
 const LOG_CONTEXT = "Comment Service";
 
@@ -15,9 +16,15 @@ export async function saveComment(comment, traceId) {
     logger("info", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, "Sending request to the repository layer");
 
     try {
-        const result = await save(comment.isReply
-            ? new Comment(comment).toWriteReply()
-            : new Comment(comment).toWriteParent(), traceId);
+        // Sanitize comment content before saving
+        const sanitizedComment = {
+            ...comment,
+            content: sanitizeContent(comment.content)
+        };
+
+        const result = await save(sanitizedComment.isReply
+            ? new Comment(sanitizedComment).toWriteReply()
+            : new Comment(sanitizedComment).toWriteParent(), traceId);
         return Comment.fromDBRow(result)
     } catch (error) {
         logger("error", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Error saving the comment: [${error.message}]`);
@@ -109,7 +116,9 @@ export async function modifyComment(id, user, content, traceId) {
             throw new AuthorizationError("You are not allowed to edit this comment");
         }
 
-        return await edit(id, content, traceId);
+        const sanitizedContent = sanitizeContent(content);
+
+        return await edit(id, sanitizedContent, traceId);
 
     } catch (error) {
         logger("error", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Error edit comment with id: [${id}]. Error: [${error.message}]`);

@@ -6,11 +6,13 @@ import {
 } from "../controllers/article.controller.js";
 import { withAuthentication, withAuthorization } from "../middlewares/oauth.js";
 import { withErrorHandling } from "../middlewares/error-handler.js";
+import { withRateLimit } from "../middlewares/rate-limit.js";
 
 registerRoute("POST", "/api/v1/article",
     withErrorHandling(
-        withAuthentication(
-            withAuthorization(createArticle)))
+        withRateLimit(
+            withAuthentication(
+                withAuthorization(createArticle))))
 );
 
 registerRoute("GET", "/api/v1/article/wip",
@@ -27,8 +29,9 @@ registerRoute("GET", "/api/v1/article/wip/:id",
 
 registerRoute("PATCH", "/api/v1/article/wip/:id",
     withErrorHandling(
-        withAuthentication(
-            withAuthorization(updateArticle)))
+        withRateLimit(
+            withAuthentication(
+                withAuthorization(updateArticle))))
 );
 
 registerRoute("DELETE", "/api/v1/article/wip/:id",
@@ -47,12 +50,12 @@ registerRoute("GET", "/api/v1/article/:id",
 
 registerRoute("POST", "/api/v1/article/:id/favorite",
     withErrorHandling(
-        withAuthentication(addArticleToFavorites))
+        withAuthentication(withRateLimit(addArticleToFavorites)))
 );
 
 registerRoute("DELETE", "/api/v1/article/:id/favorite",
     withErrorHandling(
-        withAuthentication(removeArticleFromFavorites))
+        withAuthentication(withRateLimit(removeArticleFromFavorites)))
 );
 
 registerRoute("GET", "/api/v1/articles/favorites",
@@ -66,6 +69,7 @@ registerRoute("GET", "/api/v1/articles/latest",
 
 registerRoute("PATCH", "/api/v1/article/publish/:id",
     withErrorHandling(
-        withAuthentication(
-            withAuthorization(publishArticle)))
+        withRateLimit(
+            withAuthentication(
+                withAuthorization(publishArticle))))
 );
