@@ -117,6 +117,19 @@ export async function renderRoute(path = location.pathname) {
 
     requestAnimationFrame(() => {
         handleErrorToastFromSession();
+
+        const main = document.getElementById("view-container");
+        const firstHeading = main.querySelector("h1") || main.querySelector("h2, h3, h4, h5, h6");
+
+        if (firstHeading) {
+            firstHeading.setAttribute("tabindex", "-1");
+            firstHeading.focus({ preventScroll: false });
+            firstHeading.style.outline = "none";
+        } else {
+            main.setAttribute("tabindex", "-1");
+            main.focus();
+            main.style.outline = "none";
+        }
     });
 }
 

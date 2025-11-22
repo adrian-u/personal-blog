@@ -1,33 +1,39 @@
-<div id="login-modal" class="modal-container hidden">
-    <div class="login modal">
+<div id="login-modal" class="modal-container hidden" role="dialog" aria-modal="true" aria-labelledby="modal-title"
+    aria-describedby="modal-desc">
+    <div class="login modal" role="document">
+
         <div class="modal-header">
             <h2 id="modal-title">Welcome back</h2>
-            <p>Choose your preferred sign-in method</p>
+            <p id="modal-desc">Choose your preferred sign-in method</p>
         </div>
+
         <div class="modal-content">
             <div class="oauth-buttons">
-                <button id="btn-google" data-provider="google" class="btn-oauth btn-google">
-                    <div class="icon">
-                        <img src="/assets/images/google-logo.png" alt="Google" width="20" height="20" />
+
+                <button id="btn-google" data-provider="google" class="btn-oauth btn-google" type="button">
+                    <div class="icon" aria-hidden="true">
+                        <img src="/assets/images/google-logo.png" alt="" width="20" height="20" />
                     </div>
-                    Continue with Google
+                    <span>Continue with Google</span>
                 </button>
-                <button id="btn-github" data-provider="github" class="btn-oauth btn-github">
-                    <div class="icon">
-                        <div class="icon">
-                            <img src="/assets/images/github-logo.png" alt="Google" width="20" height="20" />
-                        </div>
+
+                <button id="btn-github" data-provider="github" class="btn-oauth btn-github" type="button">
+                    <div class="icon" aria-hidden="true">
+                        <img src="/assets/images/github-logo.png" alt="" width="20" height="20" />
                     </div>
-                    Continue with GitHub
+                    <span>Continue with GitHub</span>
                 </button>
+
             </div>
         </div>
+
         <div class="modal-footer">
             <div class="footer-actions">
-                <button id="btn-close-modal" class="btn btn-danger">
+                <button id="btn-close-modal" class="btn btn-danger" type="button">
                     Cancel
                 </button>
             </div>
         </div>
+
     </div>
 </div>

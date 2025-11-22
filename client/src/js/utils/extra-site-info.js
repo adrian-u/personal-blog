@@ -100,12 +100,11 @@ function _iconsInfo() {
         { desc: "Linkedin icons created by Freepik - Flaticon", href: "https://www.flaticon.com/free-icons/linkedin", src: linkedin, alt: "LinkedIn Icon", title: "linkedin icons" },
         { desc: "Rating icons created by pocike - Flaticon", href: "https://www.flaticon.com/free-icons/rating", src: starEmpty, alt: "Rating Icon", title: "rating icons", isStar: true, full: starFull },
         { desc: "Heart icons created by Kiranshastry - Flaticon", href: "https://www.flaticon.com/free-icons/heart", src: heart, alt: "Heart Icon", title: "heart icons" },
-        { desc: "Collapse icons created by Freepik - Flaticon", href: "https://www.flaticon.com/free-icons/collapse", src: "/assets/images/grid.png", alt: "sidebar icon", title: "collapse icons" }
+        { desc: "Collapse icons created by Freepik - Flaticon", href: "https://www.flaticon.com/free-icons/collapse", src: "/assets/images/grid.png", alt: "sidebar icon", title: "sidebar icons" }
     ];
 
     const modalContainer = document.getElementById("info-modal");
     const contentModal = modalContainer.querySelector("#info-content");
-
     const modalHeader = contentModal.querySelector("#info-header");
     const modalText = contentModal.querySelector("#info-text");
     const closeButton = contentModal.querySelector("#close");
@@ -113,6 +112,8 @@ function _iconsInfo() {
     modalHeader.textContent = "Icons";
     modalText.innerHTML = "";
     const iconsDiv = document.createElement("div");
+    iconsDiv.setAttribute("role", "group");
+    iconsDiv.setAttribute("aria-label", "Icons sources");
 
     icons.forEach(icon => {
         const span = document.createElement("span");

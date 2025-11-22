@@ -27,6 +27,7 @@ function _buildExperiences(experienceList, experience) {
     const experienceIcon = document.createElement("img");
     experienceIcon.classList.add("experience-icon");
     experienceIcon.src = experience.icon;
+    experienceIcon.setAttribute("aria-hidden", "true");
 
     const experienceInfo = document.createElement("div");
     experienceInfo.classList.add("experience-info");
@@ -53,6 +54,7 @@ function _buildExperiences(experienceList, experience) {
 
     const content = document.createElement("div");
     content.classList.add("experience-content");
+    content.setAttribute("role", "region");
 
     const experienceDescription = document.createElement("div");
     experienceDescription.classList.add("experience-description");
@@ -92,6 +94,7 @@ function _buildSubExperencies(experience) {
         subExpIcon.classList.add("sub-experience-icon");
         subExpIcon.src = subExp.icon;
         subExpIcon.alt = subExp.title;
+        subExpIcon.setAttribute("aria-hidden", "true");
 
         const subExpInfo = document.createElement("div");
         subExpInfo.classList.add("sub-experience-info");

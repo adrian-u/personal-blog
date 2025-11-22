@@ -1,5 +1,5 @@
 import htmlImporter from "../utils/html-importer.js";
-import { closeModal, openLoginModal, handleEscape } from "../utils/modals.js";
+import { closeModal, openLoginModal } from "../utils/modals.js";
 import { authWithProvider } from "../auth/auth.js";
 import { userAvatar } from "../utils/user-details.js";
 import { isCreator, getCurrentUser } from "../context/user-context.js";
@@ -63,9 +63,6 @@ export async function initLoginModal() {
         closeModal(modal);
       }
     });
-
-    document.removeEventListener("keydown", handleEscape);
-    document.addEventListener("keydown", handleEscape);
   });
 }
 

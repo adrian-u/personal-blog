@@ -1,13 +1,14 @@
-<nav class="navbar flex-navbar" id="navbar">
+<nav class="navbar flex-navbar" id="navbar" role="navigation" aria-label="Main Navigation">
   <div class="nav-head">
     <img src="/assets/images/shipu-logo.svg" class="logo" alt="shipu logo" id="logo" />
     <img src="/assets/images/s-logo.png" class="logo-small" alt="shipu logo" id="logo-small" />
-    <img src="/assets/images/grid.png" alt="grid icon" class="navbar-toggle png" id="menu-toggle">
+    <img src="/assets/images/grid.png" alt="grid icon" class="navbar-toggle png" id="menu-toggle"
+      aria-controls="nav-menu" aria-expanded="false" aria-label="Toggle menu">
   </div>
   <ul class="nav-links" id="nav-menu">
     <li>
       <a href="/" data-nav="spa" class="navbar-buttons">
-        <img src="/assets/images/home.png" class="navbar-icons png">
+        <img src="/assets/images/home.png" class="navbar-icons png" alt="home icon">
         <span class="navbar-text">Home</span>
       </a>
     </li>

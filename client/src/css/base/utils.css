@@ -56,8 +56,41 @@
     height: 32px;
 }
 
+:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+    border-radius: 1rem;
+}
+
+.skip-link {
+    position: absolute;
+    top: -999px;
+    left: 0;
+    background: var(--color-background);
+    color: var(--color-snow);
+    padding: 10px 20px;
+    z-index: 1000;
+    text-decoration: none;
+}
+
+.skip-link:focus {
+    top: 0;
+}
+
 .fade-in {
     animation: fadeInUp 1s ease forwards;
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+[tabindex]:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+:focus:not(:focus-visible) {
+    outline: none;
 }
 
 @keyframes spin {

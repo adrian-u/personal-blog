@@ -14,11 +14,17 @@ export default async function buildProjectsOverview() {
 
     const grid = document.createElement("div");
     grid.classList.add("card-grid");
+    grid.setAttribute("role", "list");
 
     const loadMoreButton = document.getElementById("load-more");
-    loadMoreButton.addEventListener("click", () => _loadArticles(grid, loadMoreButton));
+    loadMoreButton.style.display = "block";
 
-    _loadArticles(grid, loadMoreButton);
+    const newButton = loadMoreButton.cloneNode(true);
+    loadMoreButton.parentNode.replaceChild(newButton, loadMoreButton);
+
+    newButton.addEventListener("click", () => _loadArticles(grid, newButton));
+
+    await _loadArticles(grid, newButton, true);
 
     return grid;
 }
@@ -36,6 +42,7 @@ async function _loadArticles(grid, loadMoreButton) {
         loadMoreButton.disabled = false;
         loadMoreButton.classList.remove("loading");
         loadMoreButton.textContent = "Load More";
+        loadMoreButton.setAttribute("aria-busy", "true");
 
         if (offset >= totalCount) {
             loadMoreButton.style = "display: none";
@@ -45,37 +52,4 @@ async function _loadArticles(grid, loadMoreButton) {
         logger("error", `${LOG_CONTEXT} - "Loading Articles"`, error);
         showToast("Failed to load articles", "error");
     }
-}
-
-function _buildCardHeader(item) {
-    const cardHeader = document.createElement("div");
-    cardHeader.classList.add("card-header");
-
-    const cardIcon = document.createElement("div");
-    cardIcon.classList.add("card-icon");
-    cardIcon.textContent = item.icon;
-    cardHeader.appendChild(cardIcon);
-
-    const cardInfo = document.createElement("div");
-    cardInfo.classList.add("card-info");
-    cardHeader.appendChild(cardInfo);
-
-    const infoTitle = document.createElement("h3");
-    infoTitle.textContent = item.title;
-    cardInfo.appendChild(infoTitle);
-
-    const date = document.createElement("div");
-    date.classList.add("card-date");
-    date.textContent = new Date(item.createdAt).toLocaleDateString();
-    cardInfo.appendChild(date);
-
-    return cardHeader;
-}
-
-function _description(item) {
-    const description = document.createElement("p");
-    description.classList.add("card-description");
-    description.textContent = item.description;
-
-    return description;
 }
