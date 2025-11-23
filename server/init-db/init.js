@@ -78,6 +78,35 @@ const createIndexes = `
     CREATE INDEX IF NOT EXISTS idx_user_comment_likes_comment_id ON user_comment_likes (comment_id);
 `;
 
+const createUpdateTrigger = `
+    CREATE OR REPLACE FUNCTION update_timestamp()
+    RETURNS TRIGGER AS $$
+    BEGIN
+        NEW.updated_at = CURRENT_TIMESTAMP;
+        RETURN NEW;
+    END;
+    $$ LANGUAGE plpgsql;
+
+    DROP TRIGGER IF EXISTS users_update_timestamp ON users;
+    DROP TRIGGER IF EXISTS articles_update_timestamp ON articles;
+    DROP TRIGGER IF EXISTS comments_update_timestamp ON comments;
+
+    CREATE TRIGGER users_update_timestamp
+    BEFORE UPDATE ON users
+    FOR EACH ROW
+    EXECUTE FUNCTION update_timestamp();
+
+    CREATE TRIGGER articles_update_timestamp
+    BEFORE UPDATE ON articles
+    FOR EACH ROW
+    EXECUTE FUNCTION update_timestamp();
+
+    CREATE TRIGGER comments_update_timestamp
+    BEFORE UPDATE ON comments
+    FOR EACH ROW
+    EXECUTE FUNCTION update_timestamp();
+`;
+
 async function init() {
     try {
         console.log("Creating tables")
@@ -88,6 +117,7 @@ async function init() {
         await db.query(createUserCommentLikesTable);
         await db.query(createRefreshTokensTable);
         await db.query(createIndexes);
+        await db.query(createUpdateTrigger);
         console.log("Tables created successfully");
     } catch (error) {
         console.error("Error initializing database:", error);
