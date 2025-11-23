@@ -33,7 +33,6 @@ export default async function deleteUnusedImages(traceId) {
 }
 
 async function getMarkdownArticles() {
-    await db.connect();
     const res = await db.query('SELECT markdown FROM articles');
     return res.rows.map(r => r.markdown);
 }

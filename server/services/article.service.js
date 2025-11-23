@@ -6,7 +6,7 @@ import {
 } from "../data-access/article.repository.js";
 import { isEmpty } from "../utils/general.js";
 import logger from "../utils/logger.js";
-import { BadInput, ValidationError } from "../errors/custom-errors.js";
+import { BadInput, ValidationError, NotFoundError } from "../errors/custom-errors.js";
 import { Article } from "../models/article.model.js";
 import deleteUnusedImages from "./clean-minio.service.js";
 

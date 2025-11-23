@@ -4,7 +4,6 @@ import { handleCors } from './middlewares/cors.js';
 import { findRoute } from "./routes/router.manager.js";
 import bodyParser from "./middlewares/body-parser.js";
 
-// Importing routes to enable registration through the router.manager
 import './routes/user.route.js';
 import './routes/oauth.route.js';
 import './routes/article.route.js';

@@ -2,7 +2,7 @@ import {
     save, fetchParentComments, cancel, fetchCommentById,
     fetchReplies, edit, commentAddLike, deleteLike
 } from "../data-access/comment.repository.js";
-import { AuthorizationError } from "../errors/custom-errors.js";
+import { AuthorizationError, NotFoundError } from "../errors/custom-errors.js";
 import { isEmpty } from "../utils/general.js";
 import logger from "../utils/logger.js";
 import { Comment } from "../models/comment.model.js";
@@ -16,7 +16,6 @@ export async function saveComment(comment, traceId) {
     logger("info", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, "Sending request to the repository layer");
 
     try {
-        // Sanitize comment content before saving
         const sanitizedComment = {
             ...comment,
             content: sanitizeContent(comment.content)
