@@ -10,6 +10,7 @@ import './routes/article.route.js';
 import './routes/comment.route.js';
 import './routes/images.route.js';
 import { parseCookies } from "./middlewares/parse-cookies.js";
+import logger from "./utils/logger.js";
 
 const host = process.env.HOST;
 const port = process.env.PORT;
@@ -38,5 +39,5 @@ const server = createServer(async (req, res) => {
 });
 
 server.listen(port, host, () => {
-    console.log(`Server running on ${process.env.HOST}:${process.env.PORT}`);
+    logger("info", "", "Server start", `Server running on ${process.env.HOST}:${process.env.PORT}`);
 });

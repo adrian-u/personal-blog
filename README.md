@@ -51,3 +51,10 @@ After starting Docker for the first time, open the MinIO console in your browser
 These buckets are used to store:
 - User avatar images
 - Markdown images uploaded through the editor
+
+#### Extra
+Probably Loki will give some errors about permissions. To fix run this:
+```
+docker run --rm -v personal-blog_loki_data:/data busybox chown -R 10001:10001 /data
+docker run --rm -v personal-blog_loki_compactor:/data busybox chown -R 10001:10001 /data
+```
