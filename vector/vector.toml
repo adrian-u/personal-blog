@@ -1,0 +1,26 @@
+[sources.docker_logs]
+type = "docker_logs"
+include_containers = ["personal-blog-server"]
+
+[transforms.parse_node]
+type = "remap"
+inputs = ["docker_logs"]
+source = '''
+if is_string(.message) {
+  parsed, err = parse_json(.message)
+  
+  if err == null {
+    . = parsed
+  } else {
+    .vector_parse_error = "failed to parse message as JSON: " + err
+  }
+}
+'''
+
+[sinks.loki]
+type = "loki"
+inputs = ["parse_node"]
+endpoint = "http://loki:3100"
+encoding.codec = "json"
+
+labels = { level = "{{ level }}", context = "{{ context }}" }

@@ -1,20 +1,27 @@
 export default function logger(type, traceId, context, message) {
 
+    const log = {
+        level: type,
+        traceId,
+        context,
+        message,
+        timestamp: new Date().toISOString()
+    };
+
     switch (type) {
         case "info":
-            console.info(`[INFO]-[TRACE-ID: ${traceId}]-[${new Date().toISOString()}]-[CONTEXT: ${context}]-[MESSAGE: ${message}]`);
+            console.info(JSON.stringify(log));
             break;
         case "debug":
-            console.debug(`[DEBUG]-[TRACE-ID: ${traceId}]-[${new Date().toISOString()}]-[CONTEXT: ${context}]-[MESSAGE: ${message}]`);
+            console.debug(JSON.stringify(log));
             break;
         case "warn":
-            console.warn(`[WARN]-[TRACE-ID: ${traceId}]-[${new Date().toISOString()}]-[CONTEXT: ${context}]-[MESSAGE: ${message}]`);
+            console.warn(JSON.stringify(log));
             break;
         case "error":
-            console.error(`[ERROR]-[TRACE-ID: ${traceId}]-[${new Date().toISOString()}]-[CONTEXT: ${context}]-[MESSAGE: ${message}]`);
+            console.error(JSON.stringify(log));
             break;
         default:
-            console.log(`[LOG]-[TRACE-ID: ${traceId}]-[${new Date().toISOString()}]-[CONTEXT: ${context}]-[MESSAGE: ${message}]`);
-
+            console.log(JSON.stringify(log));
     }
 }

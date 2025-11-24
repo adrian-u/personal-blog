@@ -61,7 +61,7 @@ export async function refreshAccessToken(req, res) {
 
     const token = req.cookies.refreshToken;
     if (!token) {
-        logger("error", req.traceId, `${LOCAL_LOG_CONTEXT}-${LOG_CONTEXT}`, "Refresh token missing");
+        logger("warn", req.traceId, `${LOCAL_LOG_CONTEXT}-${LOG_CONTEXT}`, "Refresh token missing");
         res.writeHead(401, { "Content-Type": "application/json" });
         return res.end(JSON.stringify({ name: "Auth Error", message: "Unauthorized" }));
     }
