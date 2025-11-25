@@ -13,9 +13,11 @@ loki-wal
 node_modules
 dist
 dist-ssr
+nginx
 *.local
 .env
 .env.production
+docker-compose.prod.yml
 
 # Editor directories and files
 .vscode/*
