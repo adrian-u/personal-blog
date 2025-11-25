@@ -41,17 +41,6 @@ Then fill in the missing configuration values:
 - PostgreSQL
 - MinIO configuration
 
-#### 4. Create the MinIO buckets
-Node is not configured with MinIO to automatically create the buckets required by the application.
-
-After starting Docker for the first time, open the MinIO console in your browser (default: `http://localhost:9001`) and manually create the following buckets:
-- The bucket defined in MINIO_AVATARS_BUCKET
-- The bucket defined in MINIO_MARKDOWN_IMG_BUCKET
-
-These buckets are used to store:
-- User avatar images
-- Markdown images uploaded through the editor
-
 #### Extra
 Probably Loki will give some errors about permissions. To fix run this:
 ```

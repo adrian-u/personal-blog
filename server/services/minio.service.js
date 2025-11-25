@@ -10,8 +10,14 @@ export default async function insertAvatar(user, provider, traceId) {
     const LOCAL_LOG_CONTEXT = "Save Avatar";
     const exists = await minioClient.bucketExists(BUCKET);
     if (!exists) {
-        logger("info", traceId, `${LOCAL_LOG_CONTEXT}-${LOG_CONTEXT}`, `Bucket [${BUCKET}] not found`);
-        throw new MinIOSaveError("Bucket not found");
+        logger("info", traceId, `${LOCAL_LOG_CONTEXT}-${LOG_CONTEXT}`, `Bucket [${BUCKET}] not found. Creating bucket...`);
+        try {
+            await minioClient.makeBucket(BUCKET);
+            logger("info", traceId, `${LOCAL_LOG_CONTEXT}-${LOG_CONTEXT}`, `Bucket [${BUCKET}] created successfully`);
+        } catch (error) {
+            logger("error", traceId, `${LOCAL_LOG_CONTEXT}-${LOG_CONTEXT}`, `Failed to create bucket [${BUCKET}]: [${error}]`);
+            throw new MinIOSaveError("Failed to create bucket");
+        }
     }
 
     const objectName = `avatars/${provider}-${user.email}-avatar.png`;

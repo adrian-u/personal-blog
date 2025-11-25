@@ -8,7 +8,22 @@ const LOG_CONTEXT = "Image Service";
 const allowed = ["image/png", "image/jpeg"];
 
 export async function saveImage(req, res) {
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
+        const MARKDOWN_IMG_BUCKET = process.env.MINIO_MARKDOWN_IMG_BUCKET;
+        const LOCAL_LOG_CONTEXT = "Upload Markdown Image";
+
+        try {
+            const bucketExists = await minioClient.bucketExists(MARKDOWN_IMG_BUCKET);
+            if (!bucketExists) {
+                logger("info", req.traceId, LOCAL_LOG_CONTEXT, `Bucket [${MARKDOWN_IMG_BUCKET}] not found. Creating bucket...`);
+                await minioClient.makeBucket(MARKDOWN_IMG_BUCKET);
+                logger("info", req.traceId, LOCAL_LOG_CONTEXT, `Bucket [${MARKDOWN_IMG_BUCKET}] created successfully`);
+            }
+        } catch (error) {
+            logger("error", req.traceId, LOCAL_LOG_CONTEXT, `Failed to create bucket [${MARKDOWN_IMG_BUCKET}]: [${error}]`);
+            return reject(new Error("Failed to create bucket"));
+        }
+
         const busboy = Busboy({
             headers: req.headers,
             limits: {
