@@ -2,6 +2,7 @@ import Busboy from "busboy";
 import { minioClient } from "../config/minio.js";
 import { randomUUID } from "crypto";
 import logger from "../utils/logger.js";
+import { getPublicBaseURL } from "../utils/url.js";
 
 const LOG_CONTEXT = "Image Service";
 
@@ -59,8 +60,7 @@ export async function saveImage(req, res) {
         busboy.on("finish", async () => {
             try {
                 await uploadPromise;
-                const protocol = process.env.NODE_ENV === "prod" ? "https" : "http";
-                const fileUrl = `${protocol}://${process.env.PUBLIC_HOST}:${process.env.PUBLIC_PORT}/api/v1/images/${uploadedFileName}`;
+                const fileUrl = `${getPublicBaseURL()}/api/v1/images/${uploadedFileName}`;
                 const responseObject = {
                     href: fileUrl,
                     alt: uploadedFileName
