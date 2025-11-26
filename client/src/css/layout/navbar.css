@@ -3,13 +3,12 @@
     flex-shrink: 0;
     height: 100%;
     background-color: var(--color-background);
-    border-right: 2px solid var(--color-borders);
     transition: width 0.3s ease;
     z-index: 1000;
 }
 
 .navbar.collapsed {
-    width: 80px;
+    width: 60px;
 }
 
 .navbar.collapsed .navbar-text {

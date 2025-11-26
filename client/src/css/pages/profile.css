@@ -94,7 +94,6 @@
 }
 
 #preferred-articles {
-    padding-left: 2rem;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
@@ -103,6 +102,7 @@
 }
 
 .liked-title {
+    padding-left: 2rem;
     display: flex;
     justify-content: flex-start;
     align-items: center;
@@ -157,4 +157,9 @@
     .extra-details {
         flex-direction: column;
     }
+
+    .liked-title {
+        font-size: 0.8rem;
+    }
+
 }

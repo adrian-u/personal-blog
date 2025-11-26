@@ -61,7 +61,7 @@ export async function refreshAccessToken(req, res) {
 
     const token = req.cookies.refreshToken;
     if (!token) {
-        logger("warn", req.traceId, `${LOCAL_LOG_CONTEXT}-${LOG_CONTEXT}`, "Refresh token missing");
+        logger("warn", req.traceId, `${LOCAL_LOG_CONTEXT}-${LOG_CONTEXT}`, "Refresh token missing - user not logged in");
         res.writeHead(401, { "Content-Type": "application/json" });
         return res.end(JSON.stringify({ name: "Auth Error", message: "Unauthorized" }));
     }
@@ -76,6 +76,9 @@ export async function refreshAccessToken(req, res) {
         res.end(JSON.stringify({ token: newAccessToken }));
     } catch (error) {
         logger("error", req.traceId, `${LOCAL_LOG_CONTEXT}-${LOG_CONTEXT}`, `Failed to refresh tokens. Error: [${error}]`);
-        throw error;
+        // Return 401 for token not found or expired (client should handle logout)
+        // This prevents cascading errors for users who are not logged in
+        res.writeHead(401, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ name: "Auth Error", message: "Unauthorized" }));
     }
 }

@@ -8,10 +8,15 @@
     padding: 0 1rem;
     width: 100%;
     margin-top: 2rem;
+    min-height: 100vh;
 }
 
 #view-container {
     flex-grow: 1;
+    border-left: 2px solid var(--color-borders);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 @media (max-width: 768px) {
@@ -23,6 +28,10 @@
         flex-direction: column;
         align-items: stretch;
         padding: 0 0.5rem;
+        min-height: 100vh;
+    }
+    #view-container {
+        min-height: 100vh;
     }
 }
 
@@ -30,5 +39,9 @@
     .main-page-container {
         margin-top: 40px;
         padding: 0.25rem;
+        min-height: 100vh;
+    }
+    #view-container {
+        min-height: 100vh;
     }
 }

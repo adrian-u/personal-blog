@@ -1,11 +1,16 @@
-import { getJWT, logout, refreshAccessToken } from "../auth/auth";
+import { getJWT, logout, refreshAccessToken, isUserLoggedIn } from "../auth/auth";
 
 export async function fetchWithAuth(url, options = {}) {
     let JWT = getJWT();
 
-    if (!JWT || _isExpired(JWT)) {
-        JWT = await refreshAccessToken();
-        if (!JWT) {
+    if (!JWT || isExpired(JWT)) {
+        if (isUserLoggedIn()) {
+            JWT = await refreshAccessToken();
+            if (!JWT) {
+                logout();
+                throw new Error("Unauthorized");
+            }
+        } else {
             logout();
             throw new Error("Unauthorized");
         }
@@ -23,26 +28,31 @@ export async function fetchWithAuth(url, options = {}) {
     })
 
     if (res.status === 401) {
-        const newJWT = await refreshAccessToken();
-        if (!newJWT) {
+        if (isUserLoggedIn()) {
+            const newJWT = await refreshAccessToken();
+            if (!newJWT) {
+                logout();
+                throw new Error("Unauthorized");
+            }
+
+            res = await fetch(url, {
+                ...options,
+                headers: {
+                    ...options.headers,
+                    Authorization: `Bearer ${newJWT}`
+                },
+                credentials: "include"
+            });
+        } else {
             logout();
             throw new Error("Unauthorized");
         }
-
-        res = await fetch(url, {
-            ...options,
-            headers: {
-                ...options.headers,
-                Authorization: `Bearer ${newJWT}`
-            },
-            credentials: "include"
-        });
     }
 
     return res;
 }
 
-function _isExpired(jwt) {
+export function isExpired(jwt) {
     const payload = JSON.parse(atob(jwt.split(".")[1]));
     const now = Math.floor(Date.now() / 1000);
     return payload.exp < now;

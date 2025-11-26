@@ -9,7 +9,6 @@
     -ms-overflow-style: none;
     border-radius: 1rem;
     padding: 1.5rem;
-    box-sizing: border-box;
 }
 
 .modal.read::-webkit-scrollbar {
@@ -56,7 +55,10 @@
 }
 
 .article-body h2,
-.article-body h3 {
+.article-body h3,
+.article-body h4,
+.article-body h5,
+.article-body h6 {
     color: var(--color-snow);
     margin: 1.5rem 0 1rem;
     text-align: start;
@@ -109,16 +111,24 @@
         padding: 1rem;
     }
 
+    .card-title {
+        font-size: 1.7rem;
+    }
+
     .read-header {
         flex-direction: column;
         align-items: flex-start;
     }
-   
-}
 
-@media (max-width: 480px) {
-    .article-body p {
-        font-size: 0.9rem;
+    .article-body h1 {
+        font-size: 1.4rem;
     }
 
+    .article-body h2,
+    .article-body h3,
+    .article-body h4,
+    .article-body h5,
+    .article-body h6 {
+        font-size: 1.1rem;
+    }
 }

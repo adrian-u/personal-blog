@@ -1,5 +1,5 @@
 import { getUserData } from '../apis/user.js';
-import { logout, refreshAccessToken } from '../auth/auth.js';
+import { logout, refreshAccessToken, isUserLoggedIn } from '../auth/auth.js';
 
 let currentUser = null;
 
@@ -11,14 +11,15 @@ export async function getCurrentUser() {
         currentUser = await getUserData();
         return currentUser;
     } catch (error) {
-        const newJWT = await refreshAccessToken();
-        if (newJWT) {
-            currentUser = await getUserData();
-            return currentUser;
-        } else {
-            await logout();
-            return null;
+        if (isUserLoggedIn()) {
+            const newJWT = await refreshAccessToken();
+            if (newJWT) {
+                currentUser = await getUserData();
+                return currentUser;
+            }
         }
+        await logout();
+        return null;
     }
 }
 

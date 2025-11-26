@@ -25,13 +25,13 @@ import ts from "../../../assets/images/tech/ts.svg";
 export const aboutData = {
     descriptions: {
         developer: "My journey as a developer started back in 2014, though not as a conscious choice, more like a happy mistake. " +
-            "At the time, I was 13 and spent most of my days playing football or video games. " +
-            "In Italy, that’s the age when you finish what is called 'scuole medie' and have to choose a 'scuola superiore' for the next five years. " +
+            "At the time, I was 14 and spent most of my days playing football or video games. " +
+            "In Italy, that’s the age when you finish what is called 'scuola media (lower secondary school)' and have to choose a 'scuola superiore (upper secondary school)' for the next five years. " +
             "I didn’t really know what I wanted to do in life, and no one pushed or guided me toward any specific path. " +
             "So, since I was always on my computer, I decided to pick a school that “had something to do with computers 😂.” Little did I know what I was getting into. " +
             "At first, it was tough, I even thought about quitting because programming felt impossible to learn. " +
             "But I didn’t give up. Deep down, I knew there had to be a way, and I started to actually enjoy what I was learning. " +
-            "It was the first time I could see myself doing something like this as a future career. Looking back, I’m really glad my younger self didn’t quit. " +
+            "It was the moment when I started to like the idea of doing this as a job in the future. Looking back, I’m really glad my younger self didn’t quit. " +
             "Since 2020, I’ve been working as a web developer, and I genuinely love building and learning new things in this ever-changing world. " +
             "There are still tough moments where I question what I’m doing, but I’ve learned those doubts are temporary and I’m definitely not alone in feeling that way. ",
 

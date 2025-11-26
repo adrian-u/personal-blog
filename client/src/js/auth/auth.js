@@ -1,3 +1,4 @@
+import { isExpired } from '../apis/fetch-wrapper.js';
 import { navigateTo } from '../router/router.js';
 import logger from '../utils/logger.js';
 import { OAUTH_PROVIDERS } from './providers.js';
@@ -55,11 +56,17 @@ export async function handleOAuthCallback() {
             throw new Error(`Token exchange failed: ${response.status}`);
         }
 
-        const { token } = await response.json();
-        localStorage.setItem('jwt', token);
+        const data = await response.json();
+        
+        if (!data.token) {
+            throw new Error("No token received from server");
+        }
+        
+        localStorage.setItem('jwt', data.token);
         await _initOnRedirects();
     } catch (error) {
         logger("error", "OAuth Callback", `OAuth callback failed: [${error}]`);
+        localStorage.removeItem('jwt');
         await _handleLoginError();
     }
 }
@@ -100,6 +107,11 @@ export async function refreshAccessToken() {
     return token;
 }
 
+export function isUserLoggedIn() {
+    const jwt = getJWT();
+    return !!jwt && !isExpired(jwt);
+}
+
 export async function logout() {
     await fetch(`${import.meta.env.VITE_API_URL}/oauth/logout`, {
         method: "DELETE",
@@ -110,9 +122,11 @@ export async function logout() {
 }
 
 export async function tryInitialRefresh() {
-    try {
-        await refreshAccessToken();
-    } catch (e) {
+    if (isUserLoggedIn()) {
+        try {
+            await refreshAccessToken();
+        } catch (e) {
+        }
     }
 }
 

@@ -239,6 +239,15 @@
     display: none;
 }
 
+#article-preview-content h1,
+#article-preview-content h2,
+#article-preview-content h3,
+#article-preview-content h4,
+#article-preview-content h5,
+#article-preview-content h6 {
+    text-align: left;
+}
+
 .article-wip-box:hover {
     transform: translateY(-5px);
     box-shadow: 0 0 0.5rem 0 var(--color-primary);
