@@ -118,10 +118,33 @@ async function _buildReadModal(id) {
 
         const domParser = new MDParser({ standard: 1 });
         
-        const clean = DOMPurify.sanitize(domParser.parse(article.markdown), {
-            ALLOWED_TAGS: ["p", "h1", "h2", "h3", "h4", "strong", "em", "code", "pre", "ul", "ol", "li", "img", "blockquote", "br"],
-            ALLOWED_ATTR: ["src", "alt", "class"]
+        const dirty = domParser.parse(article.markdown);
+        const clean = DOMPurify.sanitize(dirty, {
+            ALLOWED_TAGS: [
+                "p", "h1", "h2", "h3", "h4", "h5", "h6",
+                "strong", "em", "code", "pre",
+                "ul", "ol", "li",
+                "img", "blockquote", "br", "hr",
+                "a",
+                "table", "thead", "tbody", "tr", "td", "th"
+            ],
+            ALLOWED_ATTR: ["src", "alt", "class", "href", "target", "rel", "title"]
         });
+
+        const tmp = document.createElement("div");
+        tmp.innerHTML = clean;
+        tmp.querySelectorAll("a[href]").forEach(a => {
+            try {
+                const href = a.getAttribute("href");
+                if (/^https?:\/\//i.test(href)) {
+                    a.setAttribute("target", "_blank");
+                    a.setAttribute("rel", "noopener noreferrer");
+                }
+            } catch (e) {
+            }
+        });
+
+        const finalClean = tmp.innerHTML;
 
         const articleContent = document.createElement("div");
         articleContent.classList.add("article-body");

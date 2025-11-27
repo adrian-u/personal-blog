@@ -91,6 +91,36 @@
     border-radius: 0.5rem;
 }
 
+.article-body hr {
+    border: 0;
+    height: 1px;
+    background: var(--color-gray);
+    margin: 1.5rem 0;
+}
+
+.article-body blockquote {
+    border-left: 4px solid var(--color-gray);
+    padding-left: 1rem;
+    color: var(--color-snow);
+    margin: 1rem 0;
+    font-style: italic;
+}
+
+.article-body pre {
+    background: var(--color-background-details);
+    padding: 1rem;
+    border-radius: 0.5rem;
+    overflow: auto;
+    margin: 1rem 0;
+}
+
+.article-body code {
+    background: rgba(255, 255, 255, 0.03);
+    padding: 0.15rem 0.35rem;
+    border-radius: 0.25rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Helvetica Neue", monospace;
+}
+
 @keyframes fadeInScale {
     from {
         opacity: 0;
