@@ -11,7 +11,6 @@ export async function fetchWithAuth(url, options = {}) {
                 throw new Error("Unauthorized");
             }
         } else {
-            logout();
             throw new Error("Unauthorized");
         }
     }

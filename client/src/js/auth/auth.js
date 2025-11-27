@@ -109,7 +109,7 @@ export async function refreshAccessToken() {
 
 export function isUserLoggedIn() {
     const jwt = getJWT();
-    return !!jwt && !isExpired(jwt);
+    return !!jwt;
 }
 
 export async function logout() {

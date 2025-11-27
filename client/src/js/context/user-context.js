@@ -12,10 +12,15 @@ export async function getCurrentUser() {
         return currentUser;
     } catch (error) {
         if (isUserLoggedIn()) {
-            const newJWT = await refreshAccessToken();
-            if (newJWT) {
-                currentUser = await getUserData();
-                return currentUser;
+            try {
+                const newJWT = await refreshAccessToken();
+                if (newJWT) {
+                    currentUser = await getUserData();
+                    return currentUser;
+                }
+            } catch (refreshError) {
+                await logout();
+                return null;
             }
         }
         await logout();
