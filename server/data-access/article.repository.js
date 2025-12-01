@@ -1,5 +1,5 @@
 import { db } from "../config/db.js";
-import { DbError } from "../errors/custom-errors.js";
+import { DbError, NotFoundError } from "../errors/custom-errors.js";
 import { Article } from "../models/article.model.js";
 import logger from "../utils/logger.js";
 
@@ -132,13 +132,17 @@ export async function getReadArticleById(id, traceId) {
     const LOCAL_LOG_CONTEXT = "Fetch Read Article";
 
     logger("info", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Fetching article with id: [${id}]`);
-
-    const query = `SELECT id, title, created_at, category, markdown FROM articles WHERE id = $1;`;
+    const query = `SELECT id, title, created_at, category, markdown, published FROM articles WHERE id = $1 AND published = $2;`;
 
     try {
-        const { rows: [row] } = await db.query(query, [id]);
+        const { rows: [row] } = await db.query(query, [id, true]);
+        if (!row) {
+            logger("info", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `Article with id: [${id}] not found or not published`);
+            throw new NotFoundError("Article not found");
+        }
         return Article.fromDBRow(row);
     } catch (error) {
+        if (error instanceof NotFoundError) throw error;
         logger("error", traceId, `${LOG_CONTEXT} - ${LOCAL_LOG_CONTEXT}`, `DB query failed to fetch the article with id: [${id}]. Error: [${error}]`);
         throw new DbError(`Failed to fetch the article with id: [${id}]`);
     }
