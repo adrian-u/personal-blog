@@ -108,6 +108,5 @@ export function closeModal(modal) {
 export function openLoginModal() { openModalById('login-modal', 'input, button, [tabindex]'); }
 export function openArticlePreviewModal() { openModalById('article-preview-modal', '[data-action="close-modal"], button, a, [tabindex]'); }
 export function openConfirmationModal() { openModalById('confirmation-modal', '#conf-header'); }
-export function openReadModal() { openModalById('read-article-modal', '[data-action="close-modal"], button, a'); }
 export function openInfoModal() { openModalById('info-modal', '#info-header'); }
 

@@ -58,7 +58,7 @@
 }
 
 .comment {
-    background: var(--color-background);
+    background: var(--color-background-details);
     border-left: 3px solid transparent;
     padding: 1.5rem;
     transition: all 0.3s;
@@ -190,7 +190,7 @@
 
 .reply {
     padding: 1rem 1.5rem;
-    background: var(--color-background);
+    background: var(--color-background-details);
 }
 
 .reply:hover .delete-btn {
@@ -207,7 +207,7 @@
     margin-left: 3rem;
     margin-top: 1rem;
     padding: 1rem;
-    background: var(--color-background);
+    background: var(--color-background-details);
     border-left: 2px solid var(--color-primary);
     border-radius: 0 0.5rem 0.5rem 0;
 }

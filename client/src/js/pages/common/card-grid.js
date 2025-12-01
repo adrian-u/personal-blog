@@ -1,4 +1,4 @@
-import { readArticle } from "../read/read-modal";
+import { navigateTo } from "../../router/router";
 
 export default function buildCards(grid, articles) {
 
@@ -43,9 +43,9 @@ function _buildCardHeader(item, headingId) {
     btn.textContent = item.title;
     btn.classList.add("card-stretched-link");
 
-    btn.addEventListener("click", async (e) => {
+    btn.addEventListener("click", (e) => {
         e.stopPropagation();
-        await readArticle(item.id)
+        navigateTo(`/article/${item.id}`);
     });
 
     infoTitle.appendChild(btn);

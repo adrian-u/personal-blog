@@ -54,14 +54,14 @@
     margin: 1rem;
 }
 
-.latest-articles>h1,
-h2 {
+.latest-articles h1 {
     text-align: center;
 }
 
 .home-section-title {
     margin-bottom: 1rem;
     color: var(--color-secondary);
+    text-align: center;
 }
 
 .more-me {
@@ -83,7 +83,7 @@ h2 {
     padding: 0.3rem;
 }
 
-.site-information > button {
+.site-information>button {
     background: none;
     border: none;
     color: var(--color-gray);
@@ -94,7 +94,7 @@ h2 {
     padding: 0;
 }
 
-.site-information > button:hover {
+.site-information>button:hover {
     color: var(--color-secondary);
     cursor: pointer;
 }

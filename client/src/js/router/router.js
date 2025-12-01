@@ -13,6 +13,7 @@ const routes = {
     "/finance": "/views/finance.html",
     "/create": "/views/create.html",
     "/profile": "/views/profile.html",
+    "/article/:id": "/views/article.html",
 };
 
 const protectedRoutes = {
@@ -58,7 +59,13 @@ export async function renderRoute(path = location.pathname) {
         }
     }
 
-    const file = routes[path] || routes["/"];
+    const articleMatch = path.match(/^\/article\/(\d+)$/);
+    let file = routes[path];
+    if (!file && articleMatch) {
+        file = routes["/article/:id"];
+    }
+    file = file || routes["/"];
+
     const html = await _fetchHTML(file);
     const parser = new DOMParser();
     const doc = parser.parseFromString(html, "text/html");
@@ -113,6 +120,12 @@ export async function renderRoute(path = location.pathname) {
     if (path === "/profile") {
         const { default: buildProfile } = await import("../pages/profile/build-profile.js");
         await buildProfile();
+    }
+
+    if (articleMatch) {
+        const articleId = articleMatch[1];
+        const { default: buildArticlePage } = await import("../pages/read/build-article-page.js");
+        await buildArticlePage(articleId);
     }
 
     requestAnimationFrame(() => {

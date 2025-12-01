@@ -16,11 +16,11 @@
 @import url('./pages/create-article.css');
 @import url('./pages/profile.css');
 @import url('./pages//finance.css');
+@import url('./pages/article-page.css');
 
 /* Components */
 @import url('./components/buttons.css');
 @import url('./components/cards.css');
 @import url('./components/toast.css');
 @import url('./components/modal.css');
-@import url('./components/reading-modal.css');
 @import url('./components/comments.css');

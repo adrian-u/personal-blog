@@ -1,88 +1,70 @@
-import htmlImporter from "../../utils/html-importer";
-import { closeModal, openConfirmationModal, openReadModal } from "../../utils/modals";
+import { getCurrentUser } from "../../context/user-context.js";
+import { addArticleToFavorites, getArticleForReading, publishArticle, removeArticleFromFavorites } from "../../apis/article.js";
 import { MDParser } from "@pardnchiu/nanomd";
 import DOMPurify from "dompurify";
-import logger from "../../utils/logger";
-import { showToast } from "../../utils/toast";
-import { addArticleToFavorites, getArticleForReading, publishArticle, removeArticleFromFavorites } from "../../apis/article";
-import { getCurrentUser } from "../../context/user-context";
-import { addCommentSection } from "./comment/add-comment-section";
-import { commentsSection } from "./comment/comments-section";
+import logger from "../../utils/logger.js";
+import { showToast } from "../../utils/toast.js";
+import { openConfirmationModal, closeModal } from "../../utils/modals.js";
+import { navigateTo } from "../../router/router.js";
+import { addCommentSection } from "./comment/add-comment-section.js";
+import { commentsSection } from "./comment/comments-section.js";
 import star from "../../../assets/images/star.png";
 import star_full from "../../../assets/images/star-full.png";
-import { navigateTo } from "../../router/router";
 
-const LOG_CONTEXT = "Read Article";
+const LOG_CONTEXT = "Article Page";
 
-export async function readArticle(id) {
-    await _importReadModal();
-    await _buildReadModal(id);
-}
-
-async function _importReadModal() {
-    if (!document.getElementById("read-article-modal")) {
-        await htmlImporter("body", "/components/read-article-modal.html");
-    }
-}
-
-async function _buildReadModal(id) {
-
+export default async function buildArticlePage(articleId) {
     try {
         const currentUser = await getCurrentUser();
-        const article = await getArticleForReading(id);
-        const modal = document.getElementById("read-article-modal");
-        
-        const modalContent = modal.querySelector("#article-read-content");
-        modalContent.innerHTML = "";
+        const article = await getArticleForReading(articleId);
+        const container = document.getElementById("article-view");
 
-        const headerRow = document.createElement("div");
-        headerRow.classList.add("read-header");
+        const header = document.createElement("div");
+        header.classList.add("article-page-header");
+
         const titleDate = document.createElement("div");
-
         const title = document.createElement("h1");
         title.textContent = article.title;
-        title.id = "read-modal-article-title"; 
-        title.classList.add("card-title");
+        title.id = "article-page-title";
         titleDate.appendChild(title);
 
-        modal.setAttribute("aria-labelledby", "read-modal-article-title");
-
         const date = document.createElement("time");
-        date.classList.add("card-date");
+        date.classList.add("article-page-date");
         date.textContent = new Date(article.createdAt).toLocaleDateString();
         date.setAttribute("datetime", new Date(article.createdAt).toISOString());
         titleDate.appendChild(date);
 
-        headerRow.appendChild(titleDate);
+        header.appendChild(titleDate);
 
         const articleOptions = document.createElement("div");
-        articleOptions.classList.add("article-options");
-        headerRow.appendChild(articleOptions);
+        articleOptions.classList.add("article-page-options");
+        header.appendChild(articleOptions);
 
         const favoriteBtn = document.createElement("button");
         favoriteBtn.type = "button";
         favoriteBtn.classList.add("btn-icon");
-        
+        favoriteBtn.setAttribute("aria-label", "Add to favorites");
+
         const favoriteIcon = document.createElement("img");
         favoriteIcon.classList.add("png");
         favoriteIcon.alt = "";
-        
+
         if (currentUser) {
-            const isInitiallyLiked = currentUser.likedArticles.includes(Number(id));
+            const isInitiallyLiked = currentUser.likedArticles.includes(Number(articleId));
             _updateFavoriteButtonState(favoriteBtn, favoriteIcon, isInitiallyLiked);
 
             favoriteBtn.addEventListener("click", async (e) => {
                 e.stopPropagation();
                 try {
                     const isLiked = favoriteBtn.getAttribute("aria-pressed") === "true";
-                    
+
                     if (isLiked) {
-                        await removeArticleFromFavorites(id);
-                        currentUser.likedArticles = currentUser.likedArticles.filter(aid => aid !== Number(id));
+                        await removeArticleFromFavorites(articleId);
+                        currentUser.likedArticles = currentUser.likedArticles.filter(aid => aid !== Number(articleId));
                         _updateFavoriteButtonState(favoriteBtn, favoriteIcon, false);
                     } else {
-                        await addArticleToFavorites(id);
-                        currentUser.likedArticles.push(Number(id));
+                        await addArticleToFavorites(articleId);
+                        currentUser.likedArticles.push(Number(articleId));
                         _updateFavoriteButtonState(favoriteBtn, favoriteIcon, true);
                     }
                 } catch (error) {
@@ -99,25 +81,45 @@ async function _buildReadModal(id) {
         favoriteBtn.appendChild(favoriteIcon);
         articleOptions.appendChild(favoriteBtn);
 
-        const closeButton = document.createElement("button");
-        closeButton.type = "button";
-        closeButton.classList.add("btn", "btn-blue", "read");
-        closeButton.textContent = "Close";
-        closeButton.addEventListener("click", () => closeModal(modal));
-        articleOptions.appendChild(closeButton);
+        const shareBtn = document.createElement("button");
+        shareBtn.type = "button";
+        shareBtn.classList.add("btn", "btn-neutral", "article-page");
+        shareBtn.textContent = "Share";
+        shareBtn.setAttribute("aria-label", "Copy article link");
+        shareBtn.addEventListener("click", async (e) => {
+            e.stopPropagation();
+            const url = window.location.href;
+            try {
+                await navigator.clipboard.writeText(url);
+                showToast("Article link copied to clipboard!", "success");
+            } catch (error) {
+                showToast("Failed to copy link to clipboard", "error");
+                logger("error", `${LOG_CONTEXT}`, error);
+            }
+        });
+        articleOptions.appendChild(shareBtn);
 
-        const editButton = document.createElement("button");
-        editButton.type = "button";
-        editButton.classList.add("btn", "btn-green", "read",
-            currentUser?.role === "creator"
-                ? "show"
-                : "remove-from-layout");
-        editButton.textContent = "Private";
-        editButton.addEventListener("click", async () => await _buildChangeArticleVisibilityModal(id, modal));
-        articleOptions.appendChild(editButton);
+        if (currentUser?.role === "creator") {
+            const editBtn = document.createElement("button");
+            editBtn.type = "button";
+            editBtn.classList.add("btn", "btn-green", "article-page");
+            editBtn.textContent = "Edit";
+            editBtn.addEventListener("click", async () => {
+                await _buildChangeArticleVisibilityModal(articleId);
+            });
+            articleOptions.appendChild(editBtn);
+        }
+
+        const backBtn = document.createElement("button");
+        backBtn.type = "button";
+        backBtn.classList.add("btn", "btn-blue", "article-page");
+        backBtn.textContent = "Back";
+        backBtn.addEventListener("click", () => {
+            window.history.back();
+        });
+        articleOptions.appendChild(backBtn);
 
         const domParser = new MDParser({ standard: 1 });
-        
         const dirty = domParser.parse(article.markdown);
         const clean = DOMPurify.sanitize(dirty, {
             ALLOWED_TAGS: [
@@ -136,7 +138,9 @@ async function _buildReadModal(id) {
         tmp.querySelectorAll("a[href]").forEach(a => {
             try {
                 const href = a.getAttribute("href");
-                if (/^https?:\/\//i.test(href)) {
+                if (href.startsWith("/article/")) {
+                    a.setAttribute("data-nav", "spa");
+                } else if (/^https?:\/\//i.test(href)) {
                     a.setAttribute("target", "_blank");
                     a.setAttribute("rel", "noopener noreferrer");
                 }
@@ -144,24 +148,24 @@ async function _buildReadModal(id) {
             }
         });
 
-        const finalClean = tmp.innerHTML;
-
         const articleContent = document.createElement("div");
-        articleContent.classList.add("article-body");
-        articleContent.innerHTML = clean;
+        articleContent.classList.add("article-page-body");
+        articleContent.innerHTML = tmp.innerHTML;
 
-        modalContent.append(
-            headerRow,
-            articleContent,
-            currentUser ? addCommentSection(id, currentUser) : "",
-            await commentsSection(id, currentUser)
-        );
+        container.innerHTML = "";
+        container.appendChild(header);
+        container.appendChild(articleContent);
 
-        openReadModal();
+        if (currentUser) {
+            container.appendChild(addCommentSection(articleId, currentUser));
+        }
+        container.appendChild(await commentsSection(articleId, currentUser));
 
     } catch (error) {
         logger("error", `${LOG_CONTEXT}`, error);
         showToast("Failed to load article", "error");
+        const container = document.getElementById("article-view");
+        container.innerHTML = "<p>Error loading article. Please try again.</p>";
     }
 }
 
@@ -171,13 +175,13 @@ function _updateFavoriteButtonState(btn, img, isLiked) {
     btn.setAttribute("aria-pressed", isLiked ? "true" : "false");
 }
 
-async function _buildChangeArticleVisibilityModal(id, readModal) {
+async function _buildChangeArticleVisibilityModal(articleId) {
     const modalContainer = document.getElementById("confirmation-modal");
     modalContainer.classList.add("visibility");
 
     const contentModal = modalContainer.querySelector("#confirmation-content");
     contentModal.classList.add("modal-confirmation");
-    
+
     const modalHeader = contentModal.querySelector("#conf-header");
     const modalText = contentModal.querySelector("#conf-text");
     const confirmButton = contentModal.querySelector("#confirm");
@@ -188,14 +192,12 @@ async function _buildChangeArticleVisibilityModal(id, readModal) {
 
     confirmButton.onclick = async () => {
         try {
-            await publishArticle(id);
-            closeModal(readModal);
-            navigateTo(window.location.href); 
-        } catch (error) {
-            logger("error", "Make the article private", `Failed to make article with id: [${id}] private`);
-            showToast("Failed to make the article private", "error");
-        } finally {
+            await publishArticle(articleId);
             closeModal(modalContainer);
+            navigateTo("/");
+        } catch (error) {
+            logger("error", "Make the article private", `Failed to make article with id: [${articleId}] private`);
+            showToast("Failed to make the article private", "error");
         }
     };
 
